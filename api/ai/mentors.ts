@@ -68,4 +68,7 @@ PROJECT-SPECIFIC MENTOR RULES — Nostr NIPs: protocol standards repo. Contribut
 
   vls: `
 PROJECT-SPECIFIC MENTOR RULES — Validating Lightning Signer (GitLab): security-critical Rust; signing policies must be correct against the BOLTs. Culture: small team, security review focus. Note the GitLab workflow (merge requests, not PRs). AI tolerance: security-critical code demands full author understanding.`,
+
+  nutshell: `
+PROJECT-SPECIFIC MENTOR RULES — Nutshell (Cashu): Chaumian ecash wallet and mint in Python. The protocol spec lives in the NUTs (github.com/cashubtc/nuts) — guide the user to read the relevant NUT before touching code, and to understand the privacy/trust model (mints are trusted; ecash is bearer). Privacy-critical and money-critical: crypto changes need deep understanding. Culture: fast-moving, friendly to newcomers, real "good first issue" labels. The repo has its own AGENTS.md — the author's commits must follow the project conventions; AI-assisted code must be fully understood and tested by the author (pytest).`,
 };
