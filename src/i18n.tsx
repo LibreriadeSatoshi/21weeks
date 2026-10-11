@@ -41,7 +41,7 @@ const dict = {
     "how.3.d": "La IA ordena las issues que mejor te vienen y genera un plan de 21 semanas. Un mentor senior te acompaña: te orienta, te pregunta, te revisa — pero el código lo escribes tú.",
 
     "catalog.eyebrow": "El ecosistema",
-    "catalog.title": "16 proyectos reales, cero ruido",
+    "catalog.title": "17 proyectos reales, cero ruido",
     "catalog.sub": "De la implementación de referencia a la especificación de Lightning. Todos aceptan contribuciones y tienen comunidad activa.",
 
     "quiz.eyebrow": "Tu perfil",
@@ -187,7 +187,7 @@ const dict = {
     "how.3.d": "AI ranks the issues that fit you best and generates a 21-week plan. A senior mentor walks with you: guides, asks, reviews — but you write the code.",
 
     "catalog.eyebrow": "The ecosystem",
-    "catalog.title": "16 real projects, zero noise",
+    "catalog.title": "17 real projects, zero noise",
     "catalog.sub": "From the reference implementation to the Lightning spec. All accept contributions and have active communities.",
 
     "quiz.eyebrow": "Your profile",
