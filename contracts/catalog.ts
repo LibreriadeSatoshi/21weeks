@@ -373,6 +373,28 @@ export const PROJECTS: Project[] = [
       docs: "https://vls.tech/",
     },
   },
+  {
+    id: "nutshell",
+    name: "Nutshell (Cashu)",
+    tagline: { es: "Ecash Chaumiano sobre Bitcoin", en: "Chaumian ecash on Bitcoin" },
+    summary: {
+      es: "Wallet y mint de ecash Chaumiano para Bitcoin, en Python. Privacidad, Lightning y el protocolo Cashu (NUTs).",
+      en: "Chaumian ecash wallet and mint for Bitcoin, in Python. Privacy, Lightning and the Cashu protocol (NUTs).",
+    },
+    host: "github",
+    repo: "cashubtc/nutshell",
+    labels: ["good first issue"],
+    languages: ["Python"],
+    tracks: ["privacy", "lightning", "wallets"],
+    difficulty: 2,
+    roles: ["developer", "researcher"],
+    urls: {
+      repo: "https://github.com/cashubtc/nutshell",
+      contributing: "https://github.com/cashubtc/nutshell/blob/main/CONTRIBUTING.md",
+      docs: "https://docs.cashu.space/",
+      chat: "https://github.com/cashubtc",
+    },
+  },
 ];
 
 // ---------- Issues ----------
