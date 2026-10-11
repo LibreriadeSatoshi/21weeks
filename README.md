@@ -7,7 +7,7 @@
 ## Qué hace
 
 1. **Quiz de perfil** — experiencia, intereses, tiempo disponible.
-2. **Catálogo de 15 proyectos** — Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs y VLS.
+2. **Catálogo de 16 proyectos** — Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs, VLS y Nutshell (Cashu).
 3. **Good-first-issues en vivo** — issues reales traídas de GitHub y GitLab, ordenadas por encaje con tu perfil (con filtro de issues ya reclamadas o con PRs en curso).
 4. **Plan de 21 semanas** — una IA genera un plan semana a semana (4 h/día) con objetivos, tareas y recursos reales verificados, exportable a Markdown para continuarlo desde cualquier otro agente (Claude Code, OpenCode…).
 5. **Mentor senior author-first** — un chat de mentoría que guía y pregunta pero **nunca hace el trabajo por ti**, inspirado en `doc/AI_POLICY.md` de Bitcoin Core. Fundamenta sus respuestas en fuentes primarias: [bitcoinknowledge.dev](https://bitcoinknowledge.dev) y [nostrbook.dev](https://nostrbook.dev).
@@ -84,7 +84,7 @@ api/          Backend Hono + tRPC (mentor IA, issues, auth)
 contracts/  Catálogo de proyectos y tipos compartidos front/back
 db/         Esquema Drizzle y migraciones
 src/        Frontend React (pages, components, i18n ES/EN)
-public/     Logos oficiales de los 15 proyectos
+public/     Logos oficiales de los 16 proyectos
 ```
 
 ## Licencia y contribuciones
