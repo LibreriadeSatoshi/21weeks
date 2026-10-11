@@ -1,0 +1,31 @@
+{
+  "name": "21w-mentor",
+  "version": "0.1.0",
+  "description": "Mentor autor-primero para contribuir a Bitcoin/Lightning FOSS: skill + comandos /21w:* para Claude Code y agentes compatibles",
+  "license": "MIT",
+  "bin": {
+    "21w-mentor": "./bin/21w.js",
+    "21w": "./bin/21w.js"
+  },
+  "files": [
+    "bin/",
+    "assets/"
+  ],
+  "keywords": [
+    "bitcoin",
+    "lightning",
+    "open-source",
+    "mentor",
+    "claude-code",
+    "skill",
+    "21weeks"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ifuensan/21weeks",
+    "directory": "packages/21w-mentor"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
