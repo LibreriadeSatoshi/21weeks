@@ -395,6 +395,28 @@ export const PROJECTS: Project[] = [
       chat: "https://github.com/cashubtc",
     },
   },
+  {
+    id: "mostro",
+    name: "Mostro",
+    tagline: { es: "Exchange P2P sobre Nostr", en: "P2P exchange on Nostr" },
+    summary: {
+      es: "Plataforma de intercambio P2P de bitcoin sobre Lightning usando Nostr como capa de comunicación. Rust, privacidad y custodia minimizada.",
+      en: "Peer-to-peer bitcoin exchange on Lightning using Nostr as the communication layer. Rust, privacy and minimized custody.",
+    },
+    host: "github",
+    repo: "MostroP2P/mostro",
+    labels: ["good first issue", "status: accepted"],
+    languages: ["Rust"],
+    tracks: ["lightning", "p2p", "privacy"],
+    difficulty: 2,
+    roles: ["developer", "researcher"],
+    urls: {
+      repo: "https://github.com/MostroP2P/mostro",
+      contributing: "https://github.com/MostroP2P/mostro/blob/main/CONTRIBUTING.md",
+      docs: "https://mostro.network/",
+      chat: "https://github.com/MostroP2P",
+    },
+  },
 ];
 
 // ---------- Issues ----------
