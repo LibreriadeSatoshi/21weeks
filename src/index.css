@@ -189,6 +189,68 @@
   animation: blink 0.9s steps(1) infinite;
 }
 
+/* Markdown de las respuestas del mentor */
+.md-chat p {
+  margin: 0 0 0.6em;
+}
+.md-chat p:last-child {
+  margin-bottom: 0;
+}
+.md-chat ul,
+.md-chat ol {
+  margin: 0.4em 0 0.8em;
+  padding-left: 1.2em;
+}
+.md-chat ul {
+  list-style: disc;
+}
+.md-chat ol {
+  list-style: decimal;
+}
+.md-chat li {
+  margin-bottom: 0.25em;
+}
+.md-chat h1,
+.md-chat h2,
+.md-chat h3,
+.md-chat h4 {
+  font-size: 1em;
+  margin: 0.8em 0 0.4em;
+}
+.md-chat code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85em;
+  background: rgba(36, 64, 216, 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.md-chat pre {
+  background: #171d36;
+  color: #f6f5f0;
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0.6em 0;
+}
+.md-chat pre code {
+  background: none;
+  padding: 0;
+}
+.md-chat a {
+  color: var(--ember);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.md-chat blockquote {
+  border-left: 2px solid var(--hairline);
+  padding-left: 0.8em;
+  margin: 0.6em 0;
+  opacity: 0.85;
+}
+.md-chat strong {
+  font-weight: 600;
+}
+
 /* Scrollbar discreta */
 ::-webkit-scrollbar {
   width: 10px;
