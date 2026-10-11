@@ -370,6 +370,7 @@ export const PROJECTS: Project[] = [
     roles: ["developer"],
     urls: {
       repo: "https://gitlab.com/lightning-signer/validating-lightning-signer",
+      contributing: "https://gitlab.com/lightning-signer/validating-lightning-signer/-/blob/main/CONTRIBUTING.md",
       docs: "https://vls.tech/",
     },
   },
