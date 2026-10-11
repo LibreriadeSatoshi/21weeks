@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { PROJECTS } from "@contracts/types";
 import { useI18n } from "@/i18n";
 import { useAppState } from "@/state";
@@ -98,16 +99,16 @@ export default function Mentor() {
         {chat.map((m, i) => (
           <div
             key={i}
-            className={`max-w-[88%] p-4 text-sm leading-relaxed whitespace-pre-wrap ${
-              m.role === "user" ? "self-end" : "self-start"
+            className={`max-w-[88%] p-4 text-sm leading-relaxed ${
+              m.role === "user" ? "self-end whitespace-pre-wrap" : "self-start md-chat"
             }`}
             style={
               m.role === "user"
-                ? { background: "var(--ember)", color: "var(--paper)", borderRadius: "14px 14px 2px 14px" }
+                ? { background: "var(--ember)", color: "#ffffff", borderRadius: "14px 14px 2px 14px" }
                 : { background: "var(--card-bg)", border: "1px solid var(--hairline)", borderRadius: "14px 14px 14px 2px" }
             }
           >
-            {m.content}
+            {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
             {m.role === "assistant" && streaming && i === chat.length - 1 && (
               <span className="chat-caret" />
             )}
