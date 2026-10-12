@@ -105,6 +105,21 @@ export function Layout({ children }: { children: ReactNode }) {
         className="hidden md:block py-8 text-center"
         style={{ borderTop: "1px solid var(--hairline)" }}
       >
+        <a
+          href="https://libreriadesatoshi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex flex-col items-center gap-2 no-underline mb-3"
+        >
+          <img
+            src="/logos/libreria-satoshi.png"
+            alt="Librería de Satoshi"
+            style={{ height: "44px", width: "auto" }}
+          />
+          <span className="font-mono2 text-[11px]" style={{ color: "var(--paper)", opacity: 0.75 }}>
+            {t("footer.sponsor")}
+          </span>
+        </a>
         <p className="font-mono2 text-[11px] opacity-50">{t("footer")}</p>
       </footer>
     </div>

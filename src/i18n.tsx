@@ -147,6 +147,7 @@ const dict = {
     "common.error": "Algo falló. Reintenta.",
     "common.retry": "Reintentar",
     "footer": "Hecho para la comunidad Bitcoin open source. Tu progreso se guarda solo en tu navegador.",
+    "footer.sponsor": "Este proyecto solo es posible gracias al soporte de Librería de Satoshi",
   },
   en: {
     "nav.home": "Home",
@@ -292,6 +293,7 @@ const dict = {
     "common.error": "Something failed. Retry.",
     "common.retry": "Retry",
     "footer": "Built for the Bitcoin open-source community. Your progress is stored only in your browser.",
+    "footer.sponsor": "This project is only possible thanks to Librería de Satoshi",
   },
 } as const;
 
