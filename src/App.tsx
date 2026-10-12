@@ -7,6 +7,7 @@ import Issues from "./pages/Issues";
 import PlanPage from "./pages/Plan";
 import Mentor from "./pages/Mentor";
 import Resources from "./pages/Resources";
+import MentorCli from "./pages/MentorCli";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/plan" element={<PlanPage />} />
         <Route path="/mentor" element={<Mentor />} />
         <Route path="/recursos" element={<Resources />} />
+        <Route path="/21w" element={<MentorCli />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

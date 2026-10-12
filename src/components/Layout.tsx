@@ -9,6 +9,7 @@ const NAV: { to: string; key: TKey }[] = [
   { to: "/plan", key: "nav.plan" },
   { to: "/mentor", key: "nav.mentor" },
   { to: "/recursos", key: "nav.resources" },
+  { to: "/21w", key: "nav.cli" },
 ];
 
 export function Logo() {
