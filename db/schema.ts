@@ -4,6 +4,7 @@ import {
   serial,
   varchar,
   text,
+  mediumtext,
   timestamp,
   // bigint,
 } from "drizzle-orm/mysql-core";
@@ -26,15 +27,15 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here. See docs/Database.md for schema examples and patterns.
-//
-// Example:
-// export const posts = mysqlTable("posts", {
-//   id: serial("id").primaryKey(),
-//   title: varchar("title", { length: 255 }).notNull(),
-//   content: text("content"),
-//   createdAt: timestamp("created_at").notNull().defaultNow(),
-// });
-//
-// Note: FK columns referencing a serial() PK must use:
-//   bigint("columnName", { mode: "number", unsigned: true }).notNull()
+// Trabajos de generación de planes (startPlanJob/planJob). En BD y no en
+// memoria porque la plataforma es serverless: cada petición puede caer en
+// una instancia distinta y solo MySQL es estado compartido entre ellas.
+export const planJobs = mysqlTable("plan_jobs", {
+  id: varchar("id", { length: 36 }).primaryKey(), // UUID
+  status: mysqlEnum("status", ["running", "done", "error"]).notNull().default("running"),
+  plan: mediumtext("plan"), // JSON del plan cuando status=done (hasta 16MB)
+  error: text("error"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PlanJobRow = typeof planJobs.$inferSelect;
