@@ -35,11 +35,37 @@ const commentsCache = new Map<string, { at: number; data: string[] }>();
 // el único estado compartido entre instancias.
 import { getDb } from "../queries/connection";
 import { planJobs as planJobsTable } from "@db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 type PlanResult = Awaited<ReturnType<typeof buildPlan>>;
 
+// La plataforma serverless no ejecuta `db:push` en el despliegue, así que la
+// tabla se crea perezosamente la primera vez que se toca. CREATE TABLE IF NOT
+// EXISTS es idempotente; el promise cacheado evita repetirlo por petición.
+let tableReady: Promise<void> | null = null;
+function ensurePlanJobsTable(): Promise<void> {
+  if (!tableReady) {
+    tableReady = (async () => {
+      await getDb().execute(sql`
+        CREATE TABLE IF NOT EXISTS plan_jobs (
+          id VARCHAR(36) PRIMARY KEY,
+          status ENUM('running','done','error') NOT NULL DEFAULT 'running',
+          plan MEDIUMTEXT,
+          error TEXT,
+          createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      console.log("[plan-job] tabla plan_jobs verificada/creada");
+    })().catch((e) => {
+      tableReady = null; // permitir reintento en la siguiente llamada
+      throw e;
+    });
+  }
+  return tableReady;
+}
+
 async function jobCreate(id: string) {
+  await ensurePlanJobsTable();
   await getDb().insert(planJobsTable).values({ id, status: "running" });
 }
 async function jobDone(id: string, plan: PlanResult) {
@@ -55,6 +81,7 @@ async function jobError(id: string, error: string) {
     .where(eq(planJobsTable.id, id));
 }
 async function jobGet(id: string) {
+  await ensurePlanJobsTable();
   const rows = await getDb().select().from(planJobsTable).where(eq(planJobsTable.id, id)).limit(1);
   return rows[0] ?? null;
 }
