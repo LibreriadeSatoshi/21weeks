@@ -28,6 +28,19 @@ const issueSchema = z.object({
 // caché de comentarios de issues (10 min) — señales de "ya hay PR", "está cogida", etc.
 const commentsCache = new Map<string, { at: number; data: string[] }>();
 
+// Trabajos de generación de planes en segundo plano (ver startPlanJob).
+// En memoria, con barrido de caducados cada 10 min (TTL 30 min).
+type PlanResult = Awaited<ReturnType<typeof buildPlan>>;
+type PlanJob =
+  | { status: "running"; at: number }
+  | { status: "done"; at: number; plan: PlanResult }
+  | { status: "error"; at: number; error?: string };
+const planJobs = new Map<string, PlanJob>();
+setInterval(() => {
+  const cutoff = Date.now() - 30 * 60 * 1000;
+  for (const [id, job] of planJobs) if (job.at < cutoff) planJobs.delete(id);
+}, 10 * 60 * 1000).unref();
+
 async function fetchRecentComments(issueId: string): Promise<string[]> {
   // solo GitHub: id = github:owner/repo:number
   const parts = issueId.split(":");
@@ -316,41 +329,108 @@ ${issuesDigest}`,
         ? `\nThe user has chosen this first issue to anchor the plan:\n#${input.issue.number} ${input.issue.title}\n${input.issue.url}\nlabels: ${input.issue.labels.join(", ")}\n${input.issue.body.slice(0, 400)}`
         : "";
 
-      try {
-        // El pool llega del cliente (fase 1 ya hecha en researchPlanResources);
-        // si no llega (llamada directa), investigamos aquí como fallback.
-        const resourcePool =
-          input.pool && input.pool.length > 0
-            ? input.pool
-            : await researchResources(project, input.profile as Profile, input.issue);
-        const poolBlock = resourcePool.map((r) => `- ${r.label} :: ${r.url}`).join("\n");
+      // El pool llega del cliente (fase 1 ya hecha en researchPlanResources);
+      // si no llega (llamada directa), investigamos aquí como fallback.
+      const resourcePool =
+        input.pool && input.pool.length > 0
+          ? input.pool
+          : await researchResources(project, input.profile as Profile, input.issue);
+      return { plan: await buildPlan(project, input, locale, langName, resourcePool, issueBlock) };
+    }),
 
-        // ---- Fase 2: generar el plan usando solo URLs verificadas ----
-        const planSchema = z.object({
-          intro: z.string(),
-          graduation: z.string(),
-          weeks: z
-            .array(
-              z.object({
-                week: z.number(),
-                phase: z.string(),
-                title: z.string(),
-                objectives: z.array(z.string()).max(4),
-                tasks: z.array(z.string()).max(5),
-                resources: z
-                  .array(z.object({ label: z.string(), url: z.string() }))
-                  .max(3),
-                outcome: z.string(),
-              }),
-            )
-            .length(21),
-        });
+  // ---- Generación asíncrona con sondeo -----------------------------------
+  // El proxy de producción corta las peticiones HTTP largas (~1 min), y un
+  // plan tarda 1-3 min. Solución: startPlanJob responde al instante con un
+  // jobId y el trabajo corre en segundo plano en el servidor; el cliente
+  // sondea planJob cada pocos segundos (peticiones de milisegundos) hasta
+  // que el estado sea "done" o "error". Los trabajos viven en memoria con
+  // caducidad de 30 min: suficiente para la sesión, sin base de datos.
+  startPlanJob: publicQuery
+    .input(
+      z.object({
+        locale: z.enum(["es", "en"]),
+        profile: profileSchema,
+        projectId: z.string(),
+        issue: issueSchema.nullish(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const project = PROJECTS.find((p) => p.id === input.projectId);
+      if (!project) throw new Error("unknown project");
+      const jobId = crypto.randomUUID();
+      planJobs.set(jobId, { status: "running", at: Date.now() });
+      // sin await: el trabajo corre en segundo plano
+      void (async () => {
+        try {
+          const locale = input.locale as Locale;
+          const langName = locale === "es" ? "Spanish" : "English";
+          const issueBlock = input.issue
+            ? `\nThe user has chosen this first issue to anchor the plan:\n#${input.issue.number} ${input.issue.title}\n${input.issue.url}\nlabels: ${input.issue.labels.join(", ")}\n${input.issue.body.slice(0, 400)}`
+            : "";
+          const resourcePool = await researchResources(project, input.profile as Profile, input.issue);
+          const plan = await buildPlan(project, input, locale, langName, resourcePool, issueBlock);
+          planJobs.set(jobId, { status: "done", at: Date.now(), plan });
+        } catch (err) {
+          const mapped = classifyAiError(err);
+          console.error(`[plan-job ${jobId}] falló:`, mapped.message);
+          planJobs.set(jobId, { status: "error", at: Date.now(), error: mapped.message });
+        }
+      })();
+      return { jobId };
+    }),
 
-        const result = await withAiRetry(async () =>
-          generateText({
-          model: kimiGw()(await defaultModelId()),
-          output: Output.object({ schema: planSchema }),
-          prompt: `${mentorSystemPrompt(locale, input.profile as Profile, project)}
+  planJob: publicQuery
+    .input(z.object({ jobId: z.string() }))
+    .query(async ({ input }) => {
+      const job = planJobs.get(input.jobId);
+      if (!job) return { status: "error" as const, error: "job not found" };
+      if (job.status === "done") return { status: "done" as const, plan: job.plan };
+      if (job.status === "error") return { status: "error" as const, error: job.error };
+      return { status: "running" as const };
+    }),
+});
+
+// Cuerpo compartido de la generación de planes (usado por generatePlan y por
+// el trabajador en segundo plano de startPlanJob).
+async function buildPlan(
+  project: (typeof PROJECTS)[number],
+  input: {
+    profile: z.infer<typeof profileSchema>;
+    hoursPerWeek?: number;
+    issue?: z.infer<typeof issueSchema> | null;
+  },
+  locale: Locale,
+  langName: string,
+  resourcePool: { label: string; url: string }[],
+  issueBlock: string,
+) {
+  const poolBlock = resourcePool.map((r) => `- ${r.label} :: ${r.url}`).join("\n");
+  try {
+    const planSchema = z.object({
+      intro: z.string(),
+      graduation: z.string(),
+      weeks: z
+        .array(
+          z.object({
+            week: z.number(),
+            phase: z.string(),
+            title: z.string(),
+            objectives: z.array(z.string()).max(4),
+            tasks: z.array(z.string()).max(5),
+            resources: z
+              .array(z.object({ label: z.string(), url: z.string() }))
+              .max(3),
+            outcome: z.string(),
+          }),
+        )
+        .length(21),
+    });
+
+    const result = await withAiRetry(async () =>
+      generateText({
+        model: kimiGw()(await defaultModelId()),
+        output: Output.object({ schema: planSchema }),
+        prompt: `${mentorSystemPrompt(locale, input.profile as Profile, project)}
 
 Task: design a realistic 21-week roadmap that takes this user from zero to recognized contributor of ${project.name} (${project.urls.repo}). Write EVERYTHING in ${langName}.
 
@@ -374,24 +454,21 @@ Rules:
 User profile:
 ${profileSummary(input.profile as Profile, locale)}
 ${issueBlock}`,
-          providerOptions: { "kimi-gw": { max_completion_tokens: 11000 } },
-          }),
-        );
+        providerOptions: { "kimi-gw": { max_completion_tokens: 11000 } },
+      }),
+    );
 
-        const object = await result.output;
-        return {
-          plan: {
-            projectId: project.id,
-            projectName: project.name,
-            generatedAt: new Date().toISOString(),
-            issueId: input.issue?.id,
-            intro: object.intro,
-            graduation: object.graduation,
-            weeks: object.weeks,
-          },
-        };
-      } catch (err) {
-        throw classifyAiError(err);
-      }
-    }),
-});
+    const object = await result.output;
+    return {
+      projectId: project.id,
+      projectName: project.name,
+      generatedAt: new Date().toISOString(),
+      issueId: input.issue?.id,
+      intro: object.intro,
+      graduation: object.graduation,
+      weeks: object.weeks,
+    };
+  } catch (err) {
+    throw classifyAiError(err);
+  }
+}
