@@ -9,6 +9,7 @@ const dict = {
     "nav.plan": "Plan 21 semanas",
     "nav.mentor": "Mentor",
     "nav.resources": "Recursos",
+    "nav.cli": "En tu terminal",
 
     "resources.eyebrow": "Aprender antes de contribuir",
     "resources.title": "Cursos y bibliotecas del ecosistema",
@@ -156,6 +157,7 @@ const dict = {
     "nav.plan": "21-week plan",
     "nav.mentor": "Mentor",
     "nav.resources": "Resources",
+    "nav.cli": "In your terminal",
 
     "resources.eyebrow": "Learn before contributing",
     "resources.title": "Courses and libraries from the ecosystem",
