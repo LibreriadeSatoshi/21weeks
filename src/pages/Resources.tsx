@@ -6,7 +6,12 @@ import { Reveal } from "@/components/Layout";
 const PROVIDER_META = {
   lds: {
     name: "Librería de Satoshi",
-    url: "https://moodle.libreriadesatoshi.com/",
+    url: "https://libreriadesatoshi.com/",
+    logo: "/logos/libreria-satoshi-mark.png",
+    links: [
+      { url: "https://libreriadesatoshi.com/", label: "libreriadesatoshi.com" },
+      { url: "https://moodle.libreriadesatoshi.com/", label: { es: "Campus (Moodle)", en: "Campus (Moodle)" } },
+    ],
     tag: { es: "Cursos en español — la academia bitcoiner de habla hispana", en: "Courses in Spanish — the Spanish-speaking bitcoiner academy" },
   },
   bdev: {
@@ -48,11 +53,26 @@ export default function Resources() {
         return (
           <section key={prov} className="mb-14">
             <Reveal>
-              <div className="flex flex-wrap items-baseline gap-4 mb-2">
+              <div className="flex flex-wrap items-center gap-4 mb-2">
+                {"logo" in PROVIDER_META[prov] && (
+                  <img
+                    src={PROVIDER_META[prov].logo}
+                    alt={PROVIDER_META[prov].name}
+                    style={{ height: "34px", width: "auto" }}
+                  />
+                )}
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight">{PROVIDER_META[prov].name}</h2>
-                <a href={PROVIDER_META[prov].url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
-                  {PROVIDER_META[prov].url.replace("https://", "")} ↗
-                </a>
+                {"links" in PROVIDER_META[prov]
+                  ? PROVIDER_META[prov].links.map((l) => (
+                      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
+                        {typeof l.label === "string" ? l.label : l.label[locale]} ↗
+                      </a>
+                    ))
+                  : (
+                    <a href={PROVIDER_META[prov].url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
+                      {PROVIDER_META[prov].url.replace("https://", "")} ↗
+                    </a>
+                  )}
               </div>
               <p className="text-sm opacity-60 mb-6">{PROVIDER_META[prov].tag[locale]}</p>
             </Reveal>
