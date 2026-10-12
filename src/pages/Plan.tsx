@@ -73,67 +73,85 @@ export default function PlanPage() {
     </span>
   );
 
-  const genMutation = trpc.mentor.generatePlan.useMutation({
+  // Generación asíncrona: startPlanJob responde al instante con un jobId y
+  // el plan se construye en segundo plano en el servidor; sondeamos planJob
+  // cada 4 s. Las peticiones largas las corta el proxy de producción; las
+  // de sondeo duran milisegundos, así que esto aguanta cualquier límite.
+  const trpcUtils = trpc.useUtils();
+  const [jobRunning, setJobRunning] = useState(false);
+  const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stopPolling = () => {
+    if (pollTimer.current) clearTimeout(pollTimer.current);
+    if (genTimer.current) clearTimeout(genTimer.current);
+    pollTimer.current = null;
+  };
+
+  const pollJob = async (jobId: string, elapsed = 0) => {
+    try {
+      const res = await trpcUtils.mentor.planJob.fetch({ jobId });
+      if (res.status === "done" && res.plan) {
+        stopPolling();
+        setJobRunning(false);
+        setPlan(res.plan);
+        setAiError(false);
+        return;
+      }
+      if (res.status === "error") {
+        stopPolling();
+        setJobRunning(false);
+        setAiError(true);
+        return;
+      }
+    } catch {
+      // un sondeo fallido no mata el trabajo: reintentamos
+    }
+    if (elapsed >= 300_000) {
+      // ~5 min: algo va muy mal en el servidor
+      stopPolling();
+      setJobRunning(false);
+      setAiError(true);
+      return;
+    }
+    pollTimer.current = setTimeout(() => pollJob(jobId, elapsed + 4000), 4000);
+  };
+
+  const startMutation = trpc.mentor.startPlanJob.useMutation({
     onSuccess: (data) => {
-      if (genTimer.current) clearTimeout(genTimer.current);
-      setPlan(data.plan);
-      setAiError(false);
+      pollJob(data.jobId);
     },
     onError: () => {
-      if (genTimer.current) clearTimeout(genTimer.current);
+      setJobRunning(false);
       setAiError(true);
     },
   });
 
-  // Fase 1 (rápida, ~20s): investigar recursos. Fase 2 (~60-70s): generar
-  // el plan con ese pool. Dos peticiones cortas aguantan mejor los límites
-  // de tiempo de la plataforma que una sola petición de ~90s.
-  const researchMutation = trpc.mentor.researchPlanResources.useMutation({
-    onSuccess: (data) => {
-      genMutation.mutate({ ...genInput(), pool: data.pool });
-    },
-    onError: () => {
-      // si la investigación falla, el servidor puede seguir con canónicos:
-      // intentamos generar sin pool (fallback inline en generatePlan)
-      genMutation.mutate({ ...genInput(), pool: null });
-    },
-  });
-
-  const genInput = () => ({
-    locale,
-    profile: profile!,
-    projectId: project!.id,
-    issue: pickedIssue
-      ? {
-          id: pickedIssue.id,
-          number: pickedIssue.number,
-          title: pickedIssue.title,
-          url: pickedIssue.url,
-          labels: pickedIssue.labels,
-          comments: pickedIssue.comments,
-          body: pickedIssue.body,
-        }
-      : null,
-  });
-
   const generate = () => {
     if (!profile || !project) return;
-    // red de seguridad: si en ~4 min no hay respuesta (proxy/saturation),
-    // mostramos error con reintento en vez de un spinner eterno
-    if (genTimer.current) clearTimeout(genTimer.current);
-    genTimer.current = setTimeout(() => {
-      if (researchMutation.isPending || genMutation.isPending) {
-        researchMutation.reset();
-        genMutation.reset();
-        setAiError(true);
-      }
-    }, 260_000);
-    researchMutation.mutate(genInput());
+    stopPolling();
+    setAiError(false);
+    setJobRunning(true);
+    startMutation.mutate({
+      locale,
+      profile,
+      projectId: project.id,
+      issue: pickedIssue
+        ? {
+            id: pickedIssue.id,
+            number: pickedIssue.number,
+            title: pickedIssue.title,
+            url: pickedIssue.url,
+            labels: pickedIssue.labels,
+            comments: pickedIssue.comments,
+            body: pickedIssue.body,
+          }
+        : null,
+    });
   };
 
   // autogenerar al llegar desde Issues con proyecto elegido y sin plan
   useEffect(() => {
-    if (!plan && profile && project && !researchMutation.isPending && !genMutation.isPending && !genMutation.isSuccess && !aiError) {
+    if (!plan && profile && project && !jobRunning && !aiError) {
       generate();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -162,7 +180,7 @@ export default function PlanPage() {
     );
   }
 
-  if (researchMutation.isPending || genMutation.isPending || (!plan && !aiError)) {
+  if (jobRunning || startMutation.isPending || (!plan && !aiError)) {
     return (
       <div className="mx-auto max-w-3xl px-5 py-32 text-center">
         <div className="font-mono2 text-sm chat-caret opacity-80">{t("plan.generating")}</div>
@@ -222,7 +240,7 @@ export default function PlanPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-4">
-          <button className="btn-ghost-ember" onClick={generate} disabled={researchMutation.isPending || genMutation.isPending}>
+          <button className="btn-ghost-ember" onClick={generate} disabled={jobRunning || startMutation.isPending}>
             ↻ {t("plan.regenerate")}
           </button>
           <button className="btn-ember" onClick={exportPlan}>
