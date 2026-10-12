@@ -29,17 +29,35 @@ const issueSchema = z.object({
 const commentsCache = new Map<string, { at: number; data: string[] }>();
 
 // Trabajos de generación de planes en segundo plano (ver startPlanJob).
-// En memoria, con barrido de caducados cada 10 min (TTL 30 min).
+// EN BASE DE DATOS, no en memoria: la plataforma de producción es serverless
+// (Function Compute) y cada petición puede caer en una instancia distinta —
+// un Map en memoria haría que el sondeo no encontrara el trabajo. MySQL es
+// el único estado compartido entre instancias.
+import { getDb } from "../queries/connection";
+import { planJobs as planJobsTable } from "@db/schema";
+import { eq } from "drizzle-orm";
+
 type PlanResult = Awaited<ReturnType<typeof buildPlan>>;
-type PlanJob =
-  | { status: "running"; at: number }
-  | { status: "done"; at: number; plan: PlanResult }
-  | { status: "error"; at: number; error?: string };
-const planJobs = new Map<string, PlanJob>();
-setInterval(() => {
-  const cutoff = Date.now() - 30 * 60 * 1000;
-  for (const [id, job] of planJobs) if (job.at < cutoff) planJobs.delete(id);
-}, 10 * 60 * 1000).unref();
+
+async function jobCreate(id: string) {
+  await getDb().insert(planJobsTable).values({ id, status: "running" });
+}
+async function jobDone(id: string, plan: PlanResult) {
+  await getDb()
+    .update(planJobsTable)
+    .set({ status: "done", plan: JSON.stringify(plan) })
+    .where(eq(planJobsTable.id, id));
+}
+async function jobError(id: string, error: string) {
+  await getDb()
+    .update(planJobsTable)
+    .set({ status: "error", error: error.slice(0, 1000) })
+    .where(eq(planJobsTable.id, id));
+}
+async function jobGet(id: string) {
+  const rows = await getDb().select().from(planJobsTable).where(eq(planJobsTable.id, id)).limit(1);
+  return rows[0] ?? null;
+}
 
 async function fetchRecentComments(issueId: string): Promise<string[]> {
   // solo GitHub: id = github:owner/repo:number
@@ -343,8 +361,8 @@ ${issuesDigest}`,
   // plan tarda 1-3 min. Solución: startPlanJob responde al instante con un
   // jobId y el trabajo corre en segundo plano en el servidor; el cliente
   // sondea planJob cada pocos segundos (peticiones de milisegundos) hasta
-  // que el estado sea "done" o "error". Los trabajos viven en memoria con
-  // caducidad de 30 min: suficiente para la sesión, sin base de datos.
+  // que el estado sea "done" o "error". Los trabajos viven en MySQL porque
+  // la plataforma es serverless: cada petición puede ir a otra instancia.
   startPlanJob: publicQuery
     .input(
       z.object({
@@ -358,7 +376,8 @@ ${issuesDigest}`,
       const project = PROJECTS.find((p) => p.id === input.projectId);
       if (!project) throw new Error("unknown project");
       const jobId = crypto.randomUUID();
-      planJobs.set(jobId, { status: "running", at: Date.now() });
+      await jobCreate(jobId);
+      console.log(`[plan-job ${jobId}] iniciado (proyecto ${input.projectId})`);
       // sin await: el trabajo corre en segundo plano
       void (async () => {
         try {
@@ -368,12 +387,14 @@ ${issuesDigest}`,
             ? `\nThe user has chosen this first issue to anchor the plan:\n#${input.issue.number} ${input.issue.title}\n${input.issue.url}\nlabels: ${input.issue.labels.join(", ")}\n${input.issue.body.slice(0, 400)}`
             : "";
           const resourcePool = await researchResources(project, input.profile as Profile, input.issue);
+          console.log(`[plan-job ${jobId}] investigación lista (${resourcePool.length} recursos), generando…`);
           const plan = await buildPlan(project, input, locale, langName, resourcePool, issueBlock);
-          planJobs.set(jobId, { status: "done", at: Date.now(), plan });
+          await jobDone(jobId, plan);
+          console.log(`[plan-job ${jobId}] completado`);
         } catch (err) {
           const mapped = classifyAiError(err);
           console.error(`[plan-job ${jobId}] falló:`, mapped.message);
-          planJobs.set(jobId, { status: "error", at: Date.now(), error: mapped.message });
+          await jobError(jobId, mapped.message ?? String(err)).catch(() => {});
         }
       })();
       return { jobId };
@@ -382,10 +403,15 @@ ${issuesDigest}`,
   planJob: publicQuery
     .input(z.object({ jobId: z.string() }))
     .query(async ({ input }) => {
-      const job = planJobs.get(input.jobId);
-      if (!job) return { status: "error" as const, error: "job not found" };
-      if (job.status === "done") return { status: "done" as const, plan: job.plan };
-      if (job.status === "error") return { status: "error" as const, error: job.error };
+      const job = await jobGet(input.jobId);
+      if (!job) {
+        console.warn(`[planJob] ${input.jobId} no encontrado en BD`);
+        return { status: "error" as const, error: "job not found" };
+      }
+      if (job.status === "done" && job.plan) {
+        return { status: "done" as const, plan: JSON.parse(job.plan) as PlanResult };
+      }
+      if (job.status === "error") return { status: "error" as const, error: job.error ?? "unknown" };
       return { status: "running" as const };
     }),
 });

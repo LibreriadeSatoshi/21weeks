@@ -90,7 +90,9 @@ export default function PlanPage() {
   const pollJob = async (jobId: string, elapsed = 0) => {
     try {
       const res = await trpcUtils.mentor.planJob.fetch({ jobId });
+      console.log(`[21w] job ${jobId.slice(0, 8)} → ${res.status} (${Math.round(elapsed / 1000)}s)`);
       if (res.status === "done" && res.plan) {
+        console.log(`[21w] plan recibido: ${res.plan.weeks?.length ?? "?"} semanas`);
         stopPolling();
         setJobRunning(false);
         setPlan(res.plan);
@@ -98,16 +100,19 @@ export default function PlanPage() {
         return;
       }
       if (res.status === "error") {
+        console.error(`[21w] job falló en el servidor:`, res.error);
         stopPolling();
         setJobRunning(false);
         setAiError(true);
         return;
       }
-    } catch {
+    } catch (e) {
       // un sondeo fallido no mata el trabajo: reintentamos
+      console.warn(`[21w] sondeo falló (reintentamos):`, e);
     }
     if (elapsed >= 300_000) {
       // ~5 min: algo va muy mal en el servidor
+      console.error(`[21w] job ${jobId.slice(0, 8)} sigue sin terminar tras 5 min`);
       stopPolling();
       setJobRunning(false);
       setAiError(true);
@@ -118,9 +123,11 @@ export default function PlanPage() {
 
   const startMutation = trpc.mentor.startPlanJob.useMutation({
     onSuccess: (data) => {
+      console.log(`[21w] trabajo de plan iniciado: ${data.jobId}`);
       pollJob(data.jobId);
     },
-    onError: () => {
+    onError: (err) => {
+      console.error("[21w] startPlanJob rechazado:", err);
       setJobRunning(false);
       setAiError(true);
     },
