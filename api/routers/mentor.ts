@@ -53,9 +53,16 @@ function ensurePlanJobsTable(): Promise<void> {
           plan MEDIUMTEXT,
           error TEXT,
           createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
+        ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
-      console.log("[plan-job] tabla plan_jobs verificada/creada");
+      // La BD de producción (Aliyun) puede usar utf8 (3 bytes) por defecto, lo
+      // que rechaza emojis y cualquier UTF-8 de 4 bytes del plan JSON con
+      // "Incorrect string value". CONVERT TO es idempotente y también arregla
+      // una tabla ya creada con el charset equivocado.
+      await getDb().execute(
+        sql`ALTER TABLE plan_jobs CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
+      );
+      console.log("[plan-job] tabla plan_jobs verificada/creada (utf8mb4)");
     })().catch((e) => {
       tableReady = null; // permitir reintento en la siguiente llamada
       throw e;
@@ -69,10 +76,22 @@ async function jobCreate(id: string) {
   await getDb().insert(planJobsTable).values({ id, status: "running" });
 }
 async function jobDone(id: string, plan: PlanResult) {
-  await getDb()
-    .update(planJobsTable)
-    .set({ status: "done", plan: JSON.stringify(plan) })
-    .where(eq(planJobsTable.id, id));
+  const json = JSON.stringify(plan);
+  try {
+    await getDb()
+      .update(planJobsTable)
+      .set({ status: "done", plan: json })
+      .where(eq(planJobsTable.id, id));
+  } catch (err) {
+    // respaldo: si la columna sigue rechazando UTF-8 de 4 bytes, guardamos el
+    // plan sin esos caracteres (solo afecta a emojis/símbolos exóticos)
+    console.warn(`[plan-job ${id}] update falló, reintento sin chars >BMP:`, err);
+    const asciiSafe = json.replace(/[^\u0000-\uFFFF]/g, "");
+    await getDb()
+      .update(planJobsTable)
+      .set({ status: "done", plan: asciiSafe })
+      .where(eq(planJobsTable.id, id));
+  }
 }
 async function jobError(id: string, error: string) {
   await getDb()
@@ -388,8 +407,9 @@ ${issuesDigest}`,
   // plan tarda 1-3 min. Solución: startPlanJob responde al instante con un
   // jobId y el trabajo corre en segundo plano en el servidor; el cliente
   // sondea planJob cada pocos segundos (peticiones de milisegundos) hasta
-  // que el estado sea "done" o "error". Los trabajos viven en MySQL porque
-  // la plataforma es serverless: cada petición puede ir a otra instancia.
+  // que el estado sea "done" o "error". Los trabajos viven en MySQL (tabla
+  // plan_jobs autocreada) porque la plataforma es serverless: cada petición
+  // puede caer en una instancia distinta y la memoria no se comparte.
   startPlanJob: publicQuery
     .input(
       z.object({
@@ -420,8 +440,12 @@ ${issuesDigest}`,
           console.log(`[plan-job ${jobId}] completado`);
         } catch (err) {
           const mapped = classifyAiError(err);
-          console.error(`[plan-job ${jobId}] falló:`, mapped.message);
-          await jobError(jobId, mapped.message ?? String(err)).catch(() => {});
+          // el mensaje raíz de MySQL/Drizzle suele estar en la causa o el stack;
+          // lo volcamos entero a los logs del servidor para no quedarnos ciegos
+          const cause = (err as { cause?: { message?: string } })?.cause?.message;
+          const fullMsg = [mapped.message, cause].filter(Boolean).join(" | causa: ");
+          console.error(`[plan-job ${jobId}] falló:`, fullMsg, err);
+          await jobError(jobId, fullMsg || String(err)).catch(() => {});
         }
       })();
       return { jobId };
@@ -460,30 +484,30 @@ async function buildPlan(
   const poolBlock = resourcePool.map((r) => `- ${r.label} :: ${r.url}`).join("\n");
   try {
     const planSchema = z.object({
-      intro: z.string(),
-      graduation: z.string(),
-      weeks: z
-        .array(
-          z.object({
-            week: z.number(),
-            phase: z.string(),
-            title: z.string(),
-            objectives: z.array(z.string()).max(4),
-            tasks: z.array(z.string()).max(5),
-            resources: z
-              .array(z.object({ label: z.string(), url: z.string() }))
-              .max(3),
-            outcome: z.string(),
-          }),
-        )
-        .length(21),
-    });
+          intro: z.string(),
+          graduation: z.string(),
+          weeks: z
+            .array(
+              z.object({
+                week: z.number(),
+                phase: z.string(),
+                title: z.string(),
+                objectives: z.array(z.string()).max(4),
+                tasks: z.array(z.string()).max(5),
+                resources: z
+                  .array(z.object({ label: z.string(), url: z.string() }))
+                  .max(3),
+                outcome: z.string(),
+              }),
+            )
+            .length(21),
+        });
 
-    const result = await withAiRetry(async () =>
-      generateText({
-        model: kimiGw()(await defaultModelId()),
-        output: Output.object({ schema: planSchema }),
-        prompt: `${mentorSystemPrompt(locale, input.profile as Profile, project)}
+        const result = await withAiRetry(async () =>
+          generateText({
+          model: kimiGw()(await defaultModelId()),
+          output: Output.object({ schema: planSchema }),
+          prompt: `${mentorSystemPrompt(locale, input.profile as Profile, project)}
 
 Task: design a realistic 21-week roadmap that takes this user from zero to recognized contributor of ${project.name} (${project.urls.repo}). Write EVERYTHING in ${langName}.
 
@@ -507,21 +531,21 @@ Rules:
 User profile:
 ${profileSummary(input.profile as Profile, locale)}
 ${issueBlock}`,
-        providerOptions: { "kimi-gw": { max_completion_tokens: 11000 } },
-      }),
-    );
+          providerOptions: { "kimi-gw": { max_completion_tokens: 11000 } },
+          }),
+        );
 
-    const object = await result.output;
-    return {
-      projectId: project.id,
-      projectName: project.name,
-      generatedAt: new Date().toISOString(),
-      issueId: input.issue?.id,
-      intro: object.intro,
-      graduation: object.graduation,
-      weeks: object.weeks,
-    };
-  } catch (err) {
-    throw classifyAiError(err);
-  }
+        const object = await result.output;
+        return {
+          projectId: project.id,
+          projectName: project.name,
+          generatedAt: new Date().toISOString(),
+          issueId: input.issue?.id,
+          intro: object.intro,
+          graduation: object.graduation,
+          weeks: object.weeks,
+        };
+      } catch (err) {
+        throw classifyAiError(err);
+      }
 }
