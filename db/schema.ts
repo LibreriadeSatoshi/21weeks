@@ -33,9 +33,23 @@ export type InsertUser = typeof users.$inferInsert;
 export const planJobs = mysqlTable("plan_jobs", {
   id: varchar("id", { length: 36 }).primaryKey(), // UUID
   status: mysqlEnum("status", ["running", "done", "error"]).notNull().default("running"),
+  stage: varchar("stage", { length: 40 }), // fase visible para la UI: researching | writing | done
   plan: mediumtext("plan"), // JSON del plan cuando status=done (hasta 16MB)
   error: text("error"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
 export type PlanJobRow = typeof planJobs.$inferSelect;
+
+// TODO: Add your tables here. See docs/Database.md for schema examples and patterns.
+//
+// Example:
+// export const posts = mysqlTable("posts", {
+//   id: serial("id").primaryKey(),
+//   title: varchar("title", { length: 255 }).notNull(),
+//   content: text("content"),
+//   createdAt: timestamp("created_at").defaultNow(),
+// });
+//
+// Note: FK columns referencing a serial() PK must use:
+//   bigint("columnName", { mode: "number", unsigned: true }).notNull()
