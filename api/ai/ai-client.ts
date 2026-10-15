@@ -11,15 +11,14 @@
  *
  * 生图/生视频/生语音**不在本技能范围**（本批只有 LLM 接入）。
  *
- * 环境变量（平台按站点注入，不要向用户索要、不要硬编码）：
+ * 环境变量：优先 AI_BASE_URL / AI_API_KEY / AI_MODEL_ID（ servidor propio,
+ * cualquier endpoint OpenAI-compatible），fallback a las de la plataforma:
  *   KIMI_AGENTGW_API_KEY  — 平台网关鉴权 key（**仅服务端可用**，禁止下发浏览器）
  *   KIMI_AGENTGW_BASE_URL — 网关入口（含 /coding/v1 后缀）
  *
  * 这两个变量由平台写进项目根的 .env。网站运行时由后端加载；独立脚本
  * （npx tsx xxx.ts）不会自动加载 —— 本模块兜底调一次 process.loadEnvFile()
  * （Node >= 20.12，已存在的变量优先），仍读不到才报 AiMisconfigured。
- * 排查顺序：① .env 里有没有 KIMI_AGENTGW_ ② 有 → 是脚本没加载，别误报
- * ③ 没有 → 站点未供给，让用户「发布（或重新打开）一次站点」后重试。
  *
  * 运行环境适配：不声明 process / Buffer 等全局（会与 @types/node 打架），
  * 环境变量用 globalThis 收窄读取。
@@ -128,12 +127,14 @@ interface GatewayConfig {
 }
 
 function config(): GatewayConfig {
-  const baseUrl = readEnv("KIMI_AGENTGW_BASE_URL");
-  const apiKey = readEnv("KIMI_AGENTGW_API_KEY");
+  // Prioridad: variables genéricas (servidor propio) → variables de la
+  // plataforma Kimi. Cualquier endpoint OpenAI-compatible sirve.
+  const baseUrl = readEnv("AI_BASE_URL") || readEnv("KIMI_AGENTGW_BASE_URL");
+  const apiKey = readEnv("AI_API_KEY") || readEnv("KIMI_AGENTGW_API_KEY");
   if (!baseUrl || !apiKey) {
     throw new AiMisconfigured(
-      "KIMI_AGENTGW_BASE_URL / KIMI_AGENTGW_API_KEY 未注入：站点可能尚未供给。" +
-        "先确认 .env 里有这两个变量；没有则让用户发布（或重新打开）一次站点后重试。",
+      "AI_BASE_URL / AI_API_KEY (o KIMI_AGENTGW_*) no configuradas. " +
+        "Define un endpoint OpenAI-compatible en el .env del servidor.",
     );
   }
   return { baseUrl: baseUrl.replace(/\/+$/, ""), apiKey };
@@ -254,6 +255,7 @@ export function isRetryableAiError(err: unknown): boolean {
 /**
  * 可用模型清单。**站点不要硬编码模型 id**：可用集合由该站点的 scope/权益决定，
  * 会不告而变。显式传一个过期 id 不会被网关拒绝（原样回显），因此硬编码是静默降级。
+ * En servidor propio, fija AI_MODEL_ID y no hace falta llamar a esto.
  */
 export async function listModels(): Promise<ModelList> {
   const { baseUrl, apiKey } = config();

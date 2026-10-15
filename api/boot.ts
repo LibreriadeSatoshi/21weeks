@@ -5,7 +5,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { streamText, stepCountIs } from "ai";
 import { appRouter } from "./router";
 import { createContext } from "./context";
-import { env } from "./lib/env";
+import { env, kimiAuthEnabled } from "./lib/env";
 import { createOAuthCallbackHandler } from "./kimi/auth";
 import { Paths } from "@contracts/constants";
 import { PROJECTS, type Locale, type Profile } from "@contracts/types";
@@ -17,7 +17,12 @@ import { knowledgeTools } from "./ai/knowledge";
 const app = new Hono<{ Bindings: HttpBindings }>();
 
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
-app.get(Paths.oauthCallback, createOAuthCallbackHandler());
+// Login "Sign in with Kimi": solo disponible dentro de la plataforma Kimi.
+// Fuera de ella (servidor propio) la app corre en modo anónimo.
+app.get(Paths.oauthCallback, async (c, next) => {
+  if (!kimiAuthEnabled) return c.json({ error: "auth disabled (anonymous mode)" }, 501);
+  return createOAuthCallbackHandler()(c, next);
+});
 
 // Chat streaming del mentor (texto plano por chunk; el frontend lo acumula)
 app.post("/api/mentor/chat", async (c) => {
