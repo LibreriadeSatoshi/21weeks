@@ -101,6 +101,16 @@ export default function Issues() {
               docs ↗
             </a>
           )}
+          {project.urls.chat && (
+            <a href={project.urls.chat} target="_blank" rel="noreferrer" className="pill no-underline">
+              chat ↗
+            </a>
+          )}
+          {project.urls.chatAlt && (
+            <a href={project.urls.chatAlt} target="_blank" rel="noreferrer" className="pill no-underline">
+              dev chat ↗
+            </a>
+          )}
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4">
