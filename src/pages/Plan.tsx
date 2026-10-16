@@ -79,6 +79,8 @@ export default function PlanPage() {
   // de sondeo duran milisegundos, así que esto aguanta cualquier límite.
   const trpcUtils = trpc.useUtils();
   const [jobRunning, setJobRunning] = useState(false);
+  const [jobStage, setJobStage] = useState<string | null>(null);
+  const [elapsedSec, setElapsedSec] = useState(0);
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const stopPolling = () => {
@@ -91,6 +93,11 @@ export default function PlanPage() {
     try {
       const res = await trpcUtils.mentor.planJob.fetch({ jobId });
       console.log(`[21w] job ${jobId.slice(0, 8)} → ${res.status} (${Math.round(elapsed / 1000)}s)`);
+      setElapsedSec(Math.round(elapsed / 1000));
+      if (res.status === "running") {
+        // la fase viene del servidor: starting | researching | writing
+        setJobStage(res.stage ?? "starting");
+      }
       if (res.status === "done" && res.plan) {
         console.log(`[21w] plan recibido: ${res.plan.weeks?.length ?? "?"} semanas`);
         stopPolling();
@@ -112,7 +119,6 @@ export default function PlanPage() {
     }
     if (elapsed >= 300_000) {
       // ~5 min: algo va muy mal en el servidor
-      console.error(`[21w] job ${jobId.slice(0, 8)} sigue sin terminar tras 5 min`);
       stopPolling();
       setJobRunning(false);
       setAiError(true);
@@ -188,9 +194,16 @@ export default function PlanPage() {
   }
 
   if (jobRunning || startMutation.isPending || (!plan && !aiError)) {
+    const stageKey = `plan.stage.${jobStage ?? "starting"}` as Parameters<typeof t>[0];
     return (
-      <div className="mx-auto max-w-3xl px-5 py-32 text-center">
+      <div className="mx-auto max-w-2xl px-5 py-32 text-center">
         <div className="font-mono2 text-sm chat-caret opacity-80">{t("plan.generating")}</div>
+        <p className="mt-6 text-base font-medium" style={{ color: "var(--ember)" }}>
+          {t(stageKey)}
+        </p>
+        <p className="mt-3 text-sm opacity-60">
+          {t("plan.generating.hint")} · {elapsedSec}s
+        </p>
       </div>
     );
   }
@@ -346,6 +359,18 @@ export default function PlanPage() {
             <span className="font-mono2 text-[10px] uppercase tracking-[0.15em]" style={{ color: "var(--gold)" }}>
               {t("plan.funding")}
             </span>
+            <a href="https://libreriadesatoshi.com/" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
+              Librería de Satoshi ↗
+            </a>
+            <a href="https://vinteum.org/" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
+              Vinteum ↗
+            </a>
+            <a href="https://bitshala.org/fellowship/" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
+              Bitshala ↗
+            </a>
+            <a href="https://www.btrust.tech/grants" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
+              Btrust ↗
+            </a>
             <a href="https://bitcoindevs.xyz/get-funded" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
               bitcoindevs.xyz/get-funded ↗
             </a>

@@ -154,6 +154,43 @@ export default function Home() {
           </div>
         </Reveal>
       </section>
+
+      {/* MENTOR EN TU TERMINAL */}
+      <section
+        className="py-24"
+        style={{ borderTop: "1px solid var(--hairline)", background: "var(--card-bg)" }}
+      >
+        <div className="mx-auto max-w-6xl px-5">
+          <Reveal>
+            <p className="eyebrow mb-4" style={{ color: "var(--ember)" }}>
+              §3 · {t("cli.eyebrow")}
+            </p>
+            <h2 className="text-3xl md:text-5xl font-extrabold tracking-[-0.03em] mb-4 max-w-3xl">
+              {t("cli.title")}
+            </h2>
+            <p className="max-w-2xl opacity-75 mb-12">{t("cli.sub")}</p>
+          </Reveal>
+          <div className="grid md:grid-cols-3 gap-px" style={{ background: "var(--hairline)" }}>
+            {[1, 2, 3].map((n) => (
+              <div key={n} style={{ background: "var(--ink)" }} className="p-8">
+                <Reveal delay={n * 120}>
+                  <p className="font-mono2 text-sm mb-5" style={{ color: "var(--ember)" }}>
+                    {t(`cli.p${n}.t` as TKey)}
+                  </p>
+                  <p className="leading-relaxed opacity-80 text-sm">{t(`cli.p${n}.d` as TKey)}</p>
+                </Reveal>
+              </div>
+            ))}
+          </div>
+          <Reveal delay={200}>
+            <div className="mt-10 text-center">
+              <Link to="/21w" className="btn-ember no-underline">
+                {t("cli.cta")} →
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </div>
   );
 }

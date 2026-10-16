@@ -50,6 +50,7 @@ function ensurePlanJobsTable(): Promise<void> {
         CREATE TABLE IF NOT EXISTS plan_jobs (
           id VARCHAR(36) PRIMARY KEY,
           status ENUM('running','done','error') NOT NULL DEFAULT 'running',
+          stage VARCHAR(40) NULL,
           plan MEDIUMTEXT,
           error TEXT,
           createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -62,6 +63,14 @@ function ensurePlanJobsTable(): Promise<void> {
       await getDb().execute(
         sql`ALTER TABLE plan_jobs CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
       );
+      // la columna stage puede faltar en tablas creadas por versiones viejas;
+      // MySQL no admite ADD COLUMN IF NOT EXISTS, así que ignoramos el error
+      // de columna duplicada y propagamos cualquier otro.
+      await getDb()
+        .execute(sql`ALTER TABLE plan_jobs ADD COLUMN stage VARCHAR(40) NULL`)
+        .catch((e) => {
+          if (!String((e as Error)?.message ?? e).includes("Duplicate column")) throw e;
+        });
       console.log("[plan-job] tabla plan_jobs verificada/creada (utf8mb4)");
     })().catch((e) => {
       tableReady = null; // permitir reintento en la siguiente llamada
@@ -98,6 +107,11 @@ async function jobError(id: string, error: string) {
     .update(planJobsTable)
     .set({ status: "error", error: error.slice(0, 1000) })
     .where(eq(planJobsTable.id, id));
+}
+// fase visible para la UI mientras el trabajo corre (nada sensible: solo
+// nombres de paso genéricos que el frontend traduce a mensajes amigables)
+async function jobStage(id: string, stage: string) {
+  await getDb().update(planJobsTable).set({ stage }).where(eq(planJobsTable.id, id));
 }
 async function jobGet(id: string) {
   await ensurePlanJobsTable();
@@ -210,9 +224,13 @@ async function researchResources(
   profile: Profile,
   issue: { title: string } | null | undefined,
 ): Promise<{ label: string; url: string }[]> {
-  const canonicalLinks = [project.urls.repo, project.urls.contributing, project.urls.docs].filter(
-    Boolean,
-  ) as string[];
+  const canonicalLinks = [
+    project.urls.repo,
+    project.urls.contributing,
+    project.urls.docs,
+    project.urls.chat,
+    project.urls.chatAlt,
+  ].filter(Boolean) as string[];
 
   let researched: { label: string; url: string }[] = [];
   try {
@@ -268,8 +286,16 @@ Every URL must come verbatim from a tool result. No invented URLs.`,
 
   // Cursos curados (Librería de Satoshi / Bitcoin Dev Project) que
   // solapan con las tracks del proyecto y el nivel del usuario.
+  // Excepción: un CURSO de la materia del proyecto vale como rampa al
+  // protocolo aunque esté pensado para un nivel menor — un dev avanzado
+  // que entra en Cashu se beneficia igual del curso "beginner" de Cashu.
+  const LEVEL_RANK: Record<string, number> = { beginner: 1, intermediate: 2, advanced: 3 };
+  const userRank = LEVEL_RANK[profile.level] ?? 2;
   const curated = LEARNING_RESOURCES.filter(
-    (r) => r.tracks.some((t) => project.tracks.includes(t)) && r.levels.includes(profile.level),
+    (r) =>
+      r.tracks.some((t) => project.tracks.includes(t)) &&
+      (r.levels.includes(profile.level) ||
+        (r.kind === "course" && r.levels.some((l) => (LEVEL_RANK[l] ?? 2) < userRank))),
   );
 
   return [
@@ -424,6 +450,7 @@ ${issuesDigest}`,
       if (!project) throw new Error("unknown project");
       const jobId = crypto.randomUUID();
       await jobCreate(jobId);
+      await jobStage(jobId, "researching").catch(() => {});
       console.log(`[plan-job ${jobId}] iniciado (proyecto ${input.projectId})`);
       // sin await: el trabajo corre en segundo plano
       void (async () => {
@@ -435,7 +462,9 @@ ${issuesDigest}`,
             : "";
           const resourcePool = await researchResources(project, input.profile as Profile, input.issue);
           console.log(`[plan-job ${jobId}] investigación lista (${resourcePool.length} recursos), generando…`);
+          await jobStage(jobId, "writing").catch(() => {});
           const plan = await buildPlan(project, input, locale, langName, resourcePool, issueBlock);
+          await jobStage(jobId, "done").catch(() => {});
           await jobDone(jobId, plan);
           console.log(`[plan-job ${jobId}] completado`);
         } catch (err) {
@@ -463,7 +492,7 @@ ${issuesDigest}`,
         return { status: "done" as const, plan: JSON.parse(job.plan) as PlanResult };
       }
       if (job.status === "error") return { status: "error" as const, error: job.error ?? "unknown" };
-      return { status: "running" as const };
+      return { status: "running" as const, stage: job.stage ?? "starting" };
     }),
 });
 
@@ -524,7 +553,8 @@ Structure the 21 weeks in phases, roughly:
 Rules:
 - The plan must respect their availability of ${input.profile.hoursPerWeek} hours/week. Tasks must be concrete actions the USER does (read X file, run Y test, ask Z in the dev channel), never "the mentor will do".
 - Resource labels should be short and specific (what the user will read there), never "Bitcoin Knowledge Base: …" — that site is the search tool, not a reading resource.
-- Items prefixed [course] in the pool are curated courses (Librería de Satoshi, Spanish; Bitcoin Dev Project, English): place them in the EARLY weeks (1-6) where they fit the week's topic, at most one course per week, and label them in ${langName}.
+- Items prefixed [course] in the pool are curated courses (Librería de Satoshi, Spanish; Bitcoin Dev Project, English): place them in the EARLY weeks (1-6) where they fit the week's topic, at most one course per week, and label them in ${langName}. If a [course] teaches THIS project's own protocol or stack (e.g. a Cashu course for a Cashu project), always include it in weeks 1-4 as the structured ramp-up, even if it targets a lower level than the user.
+- The project's official docs (its docs URL in the pool) are the primary "learn here" destination: assign them explicitly in weeks 1-3 as required reading, not just as an occasional link.
 - Each week: phase (2-4 words), title (short), 2-4 objectives, 3-5 concrete tasks, 1-3 resources, one tangible outcome. Keep every objective/task/outcome under 14 words — concise beats verbose.
 - intro: 2-3 sentences framing the journey. graduation: what "being a contributor" looks like at week 21 (3-4 sentences max).
 
