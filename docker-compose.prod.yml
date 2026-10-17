@@ -1,0 +1,66 @@
+# Producción en Lightsail: app + MySQL + Caddy (HTTPS automático).
+# Uso: docker compose -f docker-compose.prod.yml up -d --build
+# Variables en .env junto a este fichero (ver deploy/README.md).
+services:
+  app:
+    build:
+      context: .
+      args:
+        BASE_PATH: ${BASE_PATH:-/21weeks/}
+        VITE_API_URL: https://${DOMAIN:?define DOMAIN en .env}${BASE_PATH:-/21weeks/}api
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      BASE_PATH: ${BASE_PATH:-/21weeks/}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://ismos.xyz}
+      DATABASE_URL: mysql://21weeks:${MYSQL_PASSWORD:?define MYSQL_PASSWORD en .env}@db:3306/21weeks
+      AI_BASE_URL: ${AI_BASE_URL:?define AI_BASE_URL en .env}
+      AI_API_KEY: ${AI_API_KEY:?define AI_API_KEY en .env}
+      AI_MODEL_ID: ${AI_MODEL_ID:?define AI_MODEL_ID en .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    # Sin "ports": MySQL solo es accesible desde la red interna de Docker.
+    environment:
+      MYSQL_DATABASE: 21weeks
+      MYSQL_USER: 21weeks
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?define MYSQL_PASSWORD en .env}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -u21weeks -p$$MYSQL_PASSWORD",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.10
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      BASE_PATH: ${BASE_PATH:-/21weeks/}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  dbdata:
+  caddy_data:
+  caddy_config:

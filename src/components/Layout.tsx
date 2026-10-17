@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { useI18n, type TKey } from "@/i18n";
+import { asset } from "@/lib/paths";
 
 const NAV: { to: string; key: TKey }[] = [
   { to: "/", key: "nav.home" },
@@ -113,7 +114,7 @@ export function Layout({ children }: { children: ReactNode }) {
           className="inline-flex flex-col items-center gap-2 no-underline mb-3"
         >
           <img
-            src="/logos/libreria-satoshi.png"
+            src={asset("logos/libreria-satoshi.png")}
             alt="Librería de Satoshi"
             style={{ height: "44px", width: "auto" }}
           />

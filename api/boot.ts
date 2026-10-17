@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
+import { cors } from "hono/cors";
 import type { HttpBindings } from "@hono/node-server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { streamText, stepCountIs } from "ai";
@@ -14,9 +15,17 @@ import { classifyAiError } from "./ai/ai-client";
 import { mentorSystemPrompt } from "./ai/mentor";
 import { knowledgeTools } from "./ai/knowledge";
 
-const app = new Hono<{ Bindings: HttpBindings }>();
+// Todo cuelga de BASE_PATH (p. ej. /21weeks) para servirse en ismos.xyz/21weeks.
+const app = new Hono<{ Bindings: HttpBindings }>().basePath(env.basePath || "/");
 
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
+// La web en ismos.xyz llama a la API directamente (sin el proxy de Netlify).
+if (env.corsOrigins.length > 0) {
+  app.use("/api/*", cors({ origin: env.corsOrigins, credentials: true }));
+}
+
+app.get("/api/health", (c) => c.json({ ok: true }));
+
 // Login "Sign in with Kimi": solo disponible dentro de la plataforma Kimi.
 // Fuera de ella (servidor propio) la app corre en modo anónimo.
 app.get(Paths.oauthCallback, async (c) => {
@@ -53,7 +62,7 @@ app.post("/api/mentor/chat", async (c) => {
 
 app.use("/api/trpc/*", async (c) => {
   return fetchRequestHandler({
-    endpoint: "/api/trpc",
+    endpoint: `${env.basePath}/api/trpc`,
     req: c.req.raw,
     router: appRouter,
     createContext,
@@ -66,7 +75,7 @@ export default app;
 if (env.isProduction) {
   const { serve } = await import("@hono/node-server");
   const { serveStaticFiles } = await import("./lib/vite");
-  serveStaticFiles(app);
+  serveStaticFiles(app, env.basePath);
 
   const port = parseInt(process.env.PORT || "3000");
   serve({ fetch: app.fetch, port }, () => {

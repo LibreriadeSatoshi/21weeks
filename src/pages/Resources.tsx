@@ -2,12 +2,13 @@ import { LEARNING_RESOURCES } from "@contracts/types";
 import { useI18n } from "@/i18n";
 import { useAppState } from "@/state";
 import { Reveal } from "@/components/Layout";
+import { asset } from "@/lib/paths";
 
 const PROVIDER_META = {
   lds: {
     name: "Librería de Satoshi",
     url: "https://libreriadesatoshi.com/",
-    logo: "/logos/libreria-satoshi-mark.png",
+    logo: asset("logos/libreria-satoshi-mark.png"),
     links: [
       { url: "https://libreriadesatoshi.com/", label: "libreriadesatoshi.com" },
       { url: "https://moodle.libreriadesatoshi.com/", label: { es: "Campus (Moodle)", en: "Campus (Moodle)" } },

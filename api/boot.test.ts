@@ -21,3 +21,30 @@ describe("anonymous mode", () => {
     });
   });
 });
+
+describe("deployment under a base path", () => {
+  it("serves the API under BASE_PATH and allows the configured origin", async () => {
+    vi.stubEnv("NODE_ENV", "test");
+    vi.stubEnv("BASE_PATH", "/21weeks/");
+    vi.stubEnv("CORS_ORIGINS", "https://ismos.xyz");
+    vi.resetModules();
+
+    const { default: app } = await import("./boot");
+
+    const health = await app.request("/21weeks/api/health", {
+      headers: { Origin: "https://ismos.xyz" },
+    });
+    expect(health.status).toBe(200);
+    expect(health.headers.get("access-control-allow-origin")).toBe(
+      "https://ismos.xyz"
+    );
+
+    const outside = await app.request("/api/health");
+    expect(outside.status).toBe(404);
+
+    const otherOrigin = await app.request("/21weeks/api/health", {
+      headers: { Origin: "https://evil.example" },
+    });
+    expect(otherOrigin.headers.get("access-control-allow-origin")).toBeNull();
+  });
+});

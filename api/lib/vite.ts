@@ -6,10 +6,16 @@ import path from "path";
 
 type App = Hono<{ Bindings: HttpBindings }>;
 
-export function serveStaticFiles(app: App) {
+export function serveStaticFiles(app: App, basePath = "") {
   const distPath = path.resolve(import.meta.dirname, "../dist/public");
 
-  app.use("*", serveStatic({ root: "./dist/public" }));
+  app.use(
+    "*",
+    serveStatic({
+      root: "./dist/public",
+      rewriteRequestPath: (requestPath) => requestPath.slice(basePath.length) || "/",
+    }),
+  );
 
   app.notFound((c) => {
     const accept = c.req.header("accept") ?? "";

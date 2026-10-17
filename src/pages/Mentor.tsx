@@ -5,6 +5,7 @@ import { useI18n } from "@/i18n";
 import { useAppState } from "@/state";
 import { Reveal } from "@/components/Layout";
 import { ProjectLogo } from "@/components/ProjectLogo";
+import { API_URL } from "@/lib/paths";
 
 export default function Mentor() {
   const { t, locale } = useI18n();
@@ -38,7 +39,7 @@ export default function Mentor() {
     setStreaming(true);
 
     try {
-      const res = await fetch("/api/mentor/chat", {
+      const res = await fetch(`${API_URL}/mentor/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

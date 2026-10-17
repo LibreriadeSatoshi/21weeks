@@ -1,3 +1,5 @@
+import { asset } from "@/lib/paths";
+
 /**
  * Logo oficial del proyecto, normalizado a 128×128 en /public/logos/{id}.png.
  * Formato estándar en toda la app: tile cuadrado con esquinas redondeadas
@@ -14,7 +16,7 @@ export function ProjectLogo({
 }) {
   return (
     <img
-      src={`/logos/${id}.png`}
+      src={asset(`logos/${id}.png`)}
       alt=""
       loading="lazy"
       width={size}

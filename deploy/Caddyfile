@@ -1,0 +1,14 @@
+# Origen de la app (p. ej. app.ismos.xyz). Netlify hace de proxy desde
+# ismos.xyz/21weeks/* hacia aquí; la API se llama directamente a este dominio.
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Fuera del prefijo no hay nada: lleva a la app.
+	@outside not path {$BASE_PATH}*
+	redir @outside {$BASE_PATH} 302
+
+	reverse_proxy app:3000 {
+		# El chat del mentor va en streaming: no acumular la respuesta.
+		flush_interval -1
+	}
+}

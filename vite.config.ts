@@ -5,8 +5,12 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import { inspectAttr } from 'kimi-plugin-inspect-react'
 
+// BASE_PATH: prefijo de despliegue (p. ej. "/21weeks/"); "/" en local.
+const base = `/${(process.env.BASE_PATH ?? "").replace(/^\/+|\/+$/g, "")}/`.replace(/^\/\/$/, "/")
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     devServer({ entry: "api/boot.ts", exclude: [/^\/(?!api\/).*$/] }),
     inspectAttr(), react()],

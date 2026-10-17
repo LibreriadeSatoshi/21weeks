@@ -35,3 +35,35 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Despliegue a Lightsail tras pasar la verificación en main.
+  # No hace nada hasta configurar la variable DEPLOY_HOST (ver deploy/README.md).
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_HOST != ''
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    environment: production
+    steps:
+      - name: Configure SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: |
+          ssh -i ~/.ssh/deploy_key "${{ vars.DEPLOY_USER }}@${{ vars.DEPLOY_HOST }}" \
+            'set -e; cd ~/21weeks; git fetch --quiet origin main; git reset --hard origin/main; docker compose -f docker-compose.prod.yml up -d --build --remove-orphans; docker image prune -f'
+
+      - name: Health check
+        run: |
+          for i in $(seq 1 30); do
+            curl -fsS "${{ vars.DEPLOY_HEALTH_URL }}" && exit 0
+            sleep 5
+          done
+          echo "La app no responde en ${{ vars.DEPLOY_HEALTH_URL }}" >&2
+          exit 1
