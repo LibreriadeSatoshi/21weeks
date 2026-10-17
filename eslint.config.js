@@ -22,7 +22,6 @@ export default defineConfig([
   },
   {
     files: [
-      'src/components/ui/**/*.tsx',
       'src/i18n.tsx',
       'src/providers/trpc.tsx',
       'src/state.tsx',

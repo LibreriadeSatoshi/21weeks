@@ -4,19 +4,17 @@ Kit para meter el design system de ISMOS (v1 final, oct 2026) en cualquier repo 
 
 ## Estado en este repo (21weeks)
 
-El kit está copiado pero **sus estilos no están activados**: la app sigue con Tailwind 3.4 + shadcn (`tailwind.config.js`, `src/index.css`) y `design/ismos/tailwind/theme.css` es para Tailwind v4. Activarlo es una migración aparte.
+El kit está **activado**: la app usa Tailwind 4 con `design/ismos/tailwind/theme.css` y `ismos.css` desde `src/index.css`, el body lleva `ism-root` (en `index.html`) y los iconos son `iconoir-react@7.11.0`.
 
-- Ya integrado: `npm run ismos:tokens`, `npm run ismos:check` (sobre `src`, `contracts` e `index.html`) y `npm run test:ismos` (incluido en `npm test` y, por tanto, en CI).
-- No integrado todavía: la sección ISMOS de `AGENTS.md` del kit (aquí `AGENTS.md` es el del DCO), `CLAUDE.md.snippet` (no hay `CLAUDE.md`), la dependencia `iconoir` y el import de `ismos.css`.
+- Scripts: `npm run ismos:tokens`, `npm run ismos:check` (sobre `src`, `contracts` e `index.html`) y `npm run test:ismos` (incluido en `npm test` y, por tanto, en CI).
+- Instrucciones para agentes: sección "Design system" de `AGENTS.md` y el skill `.claude/skills/ismos-ui/`.
+- Pendiente: los SVG oficiales del logo en `logos/` (la cabecera muestra el nombre del producto hasta que lleguen).
 - Licencias de las fuentes: `fonts/OFL.txt` y `fonts/COPYRIGHT.md`.
-- Demo: `examples/tailwind-demo.html`. `examples/out.css` es generado con Tailwind v4.1.11 desde `examples/input.css` (que solo escanea `examples/`). Como el repo tiene Tailwind 3 en `node_modules`, regenéralo con un Tailwind 4 aislado:
+- Demo: `examples/tailwind-demo.html`. `examples/out.css` se genera desde `examples/input.css` (que solo escanea `examples/`):
   ```bash
-  TW=$(mktemp -d) && npm i --prefix "$TW" tailwindcss@4.1.11 @tailwindcss/cli@4.1.11
-  cp -r examples design "$TW"/ && npx --prefix "$TW" tailwindcss -i "$TW/examples/input.css" -o examples/out.css
+  npx @tailwindcss/cli@4.1.11 -i examples/input.css -o examples/out.css
   ```
   Ábrelo directamente en el navegador; las fuentes se cargan desde `design/ismos/css/fonts.css`.
-
-Para activarlo en la app: migrar a Tailwind v4 (o usar solo `ismos.css` y clases `ism-*` sin el tema), importar `ismos.css` en `src/index.css`, poner `ism-root` en el layout, añadir `iconoir@7.11.0` y fusionar las instrucciones de agente pendientes.
 
 ## Qué hay
 

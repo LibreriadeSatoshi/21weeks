@@ -161,6 +161,9 @@ const dict = {
 
     "common.loading": "Cargando…",
     "common.error": "Algo falló. Reintenta.",
+    "notFound.title": "Esta página no existe",
+    "notFound.body": "Puede que el enlace esté mal escrito o que la página se haya movido. Vuelve a la portada y empieza desde ahí.",
+    "notFound.cta": "Volver a la portada",
     "common.retry": "Reintentar",
     "footer": "Hecho para la comunidad Bitcoin open source. Tu progreso se guarda solo en tu navegador.",
     "footer.sponsor": "Este proyecto solo es posible gracias al soporte de Librería de Satoshi",
@@ -323,6 +326,9 @@ const dict = {
 
     "common.loading": "Loading…",
     "common.error": "Something failed. Retry.",
+    "notFound.title": "This page does not exist",
+    "notFound.body": "The link may be mistyped or the page may have moved. Go back to the home page and start from there.",
+    "notFound.cta": "Go to the home page",
     "common.retry": "Retry",
     "footer": "Built for the Bitcoin open-source community. Your progress is stored only in your browser.",
     "footer.sponsor": "This project is only possible thanks to Librería de Satoshi",

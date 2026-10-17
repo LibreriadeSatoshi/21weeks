@@ -32,3 +32,19 @@ de IA trabajando aquí, estas reglas son **obligatorias**:
   hace tu diff y por qué, de forma que pueda certificarlo de buena fe.
 - Sigue el estilo del proyecto (Prettier, ESLint) y no añadas dependencias
   sin justificarlo.
+
+## Design system (ISMOS)
+
+Cualquier trabajo de UI, estilos, maquetación, textos o iconos sigue el design
+system de ISMOS.
+
+- Lee `.claude/skills/ismos-ui/SKILL.md` antes de tocar UI. Es el resumen
+  operativo; la guía completa está en `design/ismos/docs/` (01–10) y manda en
+  caso de conflicto.
+- Usa los tokens y las clases `ism-*` (ya importados en `src/index.css`).
+  Nunca hex, espaciados en px, radios ni sombras fuera de los tokens.
+- No edites los ficheros generados de `design/ismos/css/` (salvo
+  `components.css`), `tailwind/` ni `js/`: cambia `design/ismos/tokens.json` y
+  ejecuta `npm run ismos:tokens`.
+- Antes de terminar, `npm run ismos:check` debe pasar. Revisa modo claro y
+  `data-theme="hacker"`, a 360 px y en escritorio.

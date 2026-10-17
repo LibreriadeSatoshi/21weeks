@@ -2,6 +2,7 @@ import devServer from "@hono/vite-dev-server"
 import path from "path"
 const __dirname = import.meta.dirname
 import react from "@vitejs/plugin-react"
+import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"
 import { inspectAttr } from 'kimi-plugin-inspect-react'
 
@@ -13,7 +14,7 @@ export default defineConfig({
   base,
   plugins: [
     devServer({ entry: "api/boot.ts", exclude: [/^\/(?!api\/).*$/] }),
-    inspectAttr(), react()],
+    inspectAttr(), react(), tailwindcss()],
   server: {
     port: 3000,
   },
