@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { generateObject, generateText, Output, stepCountIs } from "ai";
+import { generateObject, generateText, stepCountIs } from "ai";
 import { createRouter, publicQuery } from "../middleware";
 import { PROJECTS, LEARNING_RESOURCES, type Locale, type Profile } from "@contracts/types";
 import { kimiGw, defaultModelId } from "../ai/provider";
 import { classifyAiError, isRetryableAiError } from "../ai/ai-client";
 import { mentorSystemPrompt, profileSummary } from "../ai/mentor";
 import { knowledgeTools } from "../ai/knowledge";
+import { repairJsonObject } from "../ai/structured-output";
 
 const profileSchema = z.object({
   role: z.enum(["developer", "researcher"]),
@@ -69,7 +70,18 @@ function ensurePlanJobsTable(): Promise<void> {
       await getDb()
         .execute(sql`ALTER TABLE plan_jobs ADD COLUMN stage VARCHAR(40) NULL`)
         .catch((e) => {
-          if (!String((e as Error)?.message ?? e).includes("Duplicate column")) throw e;
+          const dbErrors = [e, (e as { cause?: unknown }).cause] as {
+            code?: string;
+            errno?: number;
+            message?: string;
+          }[];
+          const isDuplicate = dbErrors.some(
+            (error) =>
+              error?.code === "ER_DUP_FIELDNAME" ||
+              error?.errno === 1060 ||
+              error?.message?.includes("Duplicate column"),
+          );
+          if (!isDuplicate) throw e;
         });
       console.log("[plan-job] tabla plan_jobs verificada/creada (utf8mb4)");
     })().catch((e) => {
@@ -95,7 +107,7 @@ async function jobDone(id: string, plan: PlanResult) {
     // respaldo: si la columna sigue rechazando UTF-8 de 4 bytes, guardamos el
     // plan sin esos caracteres (solo afecta a emojis/símbolos exóticos)
     console.warn(`[plan-job ${id}] update falló, reintento sin chars >BMP:`, err);
-    const asciiSafe = json.replace(/[^\u0000-\uFFFF]/g, "");
+    const asciiSafe = json.replace(/[\u{10000}-\u{10FFFF}]/gu, "");
     await getDb()
       .update(planJobsTable)
       .set({ status: "done", plan: asciiSafe })
@@ -208,6 +220,13 @@ async function withAiRetry<T>(fn: () => Promise<T>, attempts = 2, delayMs = 4000
       return await fn();
     } catch (err) {
       lastErr = err;
+      const raw = err as { text?: unknown; finishReason?: unknown };
+      if (raw.text !== undefined || raw.finishReason !== undefined) {
+        console.warn("[ai] salida estructurada fallida:", {
+          finishReason: raw.finishReason,
+          text: typeof raw.text === "string" ? raw.text.slice(0, 4000) : raw.text,
+        });
+      }
       const mapped = classifyAiError(err);
       if (!isRetryableAiError(mapped) || i === attempts) throw mapped;
       console.warn(`[ai] error transitorio (${mapped.message?.slice(0, 120)}), reintento ${i + 1}/${attempts}`);
@@ -375,6 +394,7 @@ ${profileSummary(input.profile as Profile, locale)}
 Issues:
 ${issuesDigest}`,
           providerOptions: { "kimi-gw": { max_completion_tokens: 2500 } },
+          experimental_repairText: async ({ text }) => repairJsonObject(text),
           }),
         );
         return { rankings: object.rankings };
@@ -532,10 +552,10 @@ async function buildPlan(
             .length(21),
         });
 
-        const result = await withAiRetry(async () =>
-          generateText({
+        const { object } = await withAiRetry(async () =>
+          generateObject({
           model: kimiGw()(await defaultModelId()),
-          output: Output.object({ schema: planSchema }),
+          schema: planSchema,
           prompt: `${mentorSystemPrompt(locale, input.profile as Profile, project)}
 
 Task: design a realistic 21-week roadmap that takes this user from zero to recognized contributor of ${project.name} (${project.urls.repo}). Write EVERYTHING in ${langName}.
@@ -561,11 +581,10 @@ Rules:
 User profile:
 ${profileSummary(input.profile as Profile, locale)}
 ${issueBlock}`,
-          providerOptions: { "kimi-gw": { max_completion_tokens: 11000 } },
+          providerOptions: { "kimi-gw": { max_completion_tokens: 20000 } },
+          experimental_repairText: async ({ text }) => repairJsonObject(text),
           }),
         );
-
-        const object = await result.output;
         return {
           projectId: project.id,
           projectName: project.name,
