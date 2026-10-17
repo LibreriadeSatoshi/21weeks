@@ -10,6 +10,8 @@ const dict = {
     "nav.mentor": "Mentor",
     "nav.resources": "Recursos",
     "nav.cli": "En tu terminal",
+    "nav.label": "Secciones",
+    "nav.switchLang": "Read in English",
 
     "resources.eyebrow": "Aprender antes de contribuir",
     "resources.title": "Cursos y bibliotecas del ecosistema",
@@ -34,6 +36,12 @@ const dict = {
     "hero.noShitcoins": "Sin shitcoins. Solo Bitcoin, Lightning y libertad tecnológica.",
 
     "how.eyebrow": "Cómo funciona",
+    "how.title": "21 semanas, tres pasos",
+    "home.facts.weeks": "semanas",
+    "home.facts.hours": "al día",
+    "home.facts.projects": "proyectos",
+    "home.facts.forges": "forjas: GitHub y GitLab",
+    "home.cli.comment": "instala el mentor en ~/.claude",
     "how.1.t": "01 / Perfil",
     "how.1.d": "Cuéntanos si eres developer o researcher, qué lenguajes dominas y cuántas horas tienes por semana.",
     "how.2.t": "02 / Proyecto",
@@ -44,6 +52,7 @@ const dict = {
     "catalog.eyebrow": "El ecosistema",
     "catalog.title": "17 proyectos reales, cero ruido",
     "catalog.sub": "De la implementación de referencia a la especificación de Lightning. Todos aceptan contribuciones y tienen comunidad activa.",
+    "catalog.cta": "Ver los 17 proyectos",
 
     "cli.eyebrow": "Alternativa soberana",
     "cli.title": "El mentor en tu terminal: sin coste, con tu propio LLM",
@@ -54,7 +63,7 @@ const dict = {
     "cli.p2.d": "Sin intermediarios: el mentor habla con el modelo que tú elijas y el coste (si lo hay) es el de tu propia API.",
     "cli.p3.t": "Compatible con esta web",
     "cli.p3.d": "El plan es portable: genera en la web y sigue la mentoría en tu terminal, o al revés.",
-    "cli.cta": "Cómo instalarlo",
+    "cli.cta": "Instala el mentor",
 
     "quiz.eyebrow": "Tu perfil",
     "quiz.title": "¿Quién eres como contributor?",
@@ -166,7 +175,7 @@ const dict = {
     "notFound.cta": "Volver a la portada",
     "common.retry": "Reintentar",
     "footer": "Hecho para la comunidad Bitcoin open source. Tu progreso se guarda solo en tu navegador.",
-    "footer.sponsor": "Este proyecto solo es posible gracias al soporte de Librería de Satoshi",
+    "footer.code": "Código fuente (MIT)",
   },
   en: {
     "nav.home": "Home",
@@ -176,6 +185,8 @@ const dict = {
     "nav.mentor": "Mentor",
     "nav.resources": "Resources",
     "nav.cli": "In your terminal",
+    "nav.label": "Sections",
+    "nav.switchLang": "Leer en español",
 
     "resources.eyebrow": "Learn before contributing",
     "resources.title": "Courses and libraries from the ecosystem",
@@ -200,6 +211,12 @@ const dict = {
     "hero.noShitcoins": "No shitcoins. Only Bitcoin, Lightning and freedom tech.",
 
     "how.eyebrow": "How it works",
+    "how.title": "21 weeks, three steps",
+    "home.facts.weeks": "weeks",
+    "home.facts.hours": "a day",
+    "home.facts.projects": "projects",
+    "home.facts.forges": "forges: GitHub and GitLab",
+    "home.cli.comment": "installs the mentor in ~/.claude",
     "how.1.t": "01 / Profile",
     "how.1.d": "Tell us whether you're a developer or researcher, which languages you know and how many hours a week you have.",
     "how.2.t": "02 / Project",
@@ -210,6 +227,7 @@ const dict = {
     "catalog.eyebrow": "The ecosystem",
     "catalog.title": "17 real projects, zero noise",
     "catalog.sub": "From the reference implementation to the Lightning spec. All accept contributions and have active communities.",
+    "catalog.cta": "See all 17 projects",
 
     "cli.eyebrow": "Sovereign alternative",
     "cli.title": "The mentor in your terminal: free, with your own LLM",
@@ -220,7 +238,7 @@ const dict = {
     "cli.p2.d": "No middlemen: the mentor talks to the model you choose, and any cost is your own API's.",
     "cli.p3.t": "Compatible with this site",
     "cli.p3.d": "The plan is portable: generate on the web, continue the mentorship in your terminal — or vice versa.",
-    "cli.cta": "How to install it",
+    "cli.cta": "Install the mentor",
 
     "quiz.eyebrow": "Your profile",
     "quiz.title": "Who are you as a contributor?",
@@ -331,7 +349,7 @@ const dict = {
     "notFound.cta": "Go to the home page",
     "common.retry": "Retry",
     "footer": "Built for the Bitcoin open-source community. Your progress is stored only in your browser.",
-    "footer.sponsor": "This project is only possible thanks to Librería de Satoshi",
+    "footer.code": "Source code (MIT)",
   },
 } as const;
 

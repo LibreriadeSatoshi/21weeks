@@ -116,3 +116,190 @@
 .md-chat strong {
   font-weight: 600;
 }
+
+/* Barra de navegación (10 §2): Ink a todo el ancho, mark a 20 px, cuatro enlaces,
+   idioma siempre visible. En móvil los enlaces pasan a una segunda fila con scroll. */
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--ink);
+  color: var(--paper);
+}
+.app-nav__inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-margin-mobile);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "brand lang"
+    "links links";
+  align-items: center;
+  column-gap: var(--space-24);
+}
+.ism-root .app-nav a,
+.ism-root .app-nav a:hover {
+  color: var(--paper);
+  text-decoration: none;
+}
+.app-nav__brand {
+  grid-area: brand;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-12);
+  min-height: var(--tap-target);
+  font-weight: 600;
+}
+.app-nav__links {
+  grid-area: links;
+  display: flex;
+  gap: var(--space-24);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.app-nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: var(--rule-2) solid transparent;
+}
+.ism-root .app-nav__links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ism-root .app-nav__links a.active {
+  font-weight: 600;
+  border-bottom-color: var(--paper);
+  text-decoration: none;
+}
+.app-nav__lang {
+  grid-area: lang;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--tap-target);
+  padding-inline: var(--space-8);
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.app-nav :focus-visible {
+  outline-color: var(--paper);
+}
+@media (min-width: 640px) {
+  .app-nav__inner {
+    padding-inline: var(--page-margin);
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "brand links lang";
+    min-height: var(--space-64);
+  }
+  .app-nav__links {
+    justify-content: flex-end;
+  }
+}
+
+/* Pie: bloque Ink a todo el ancho con el mark en Paper */
+.app-footer {
+  background: var(--ink);
+  color: var(--paper);
+}
+.app-footer__inner {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-48) var(--page-margin-mobile);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+.app-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ism-root .app-footer a {
+  color: var(--mauveine-200);
+}
+.ism-root .app-footer a:hover {
+  color: var(--paper);
+}
+.app-footer :focus-visible {
+  outline-color: var(--paper);
+}
+@media (min-width: 640px) {
+  .app-footer__inner {
+    padding-inline: var(--page-margin);
+  }
+}
+
+/* Bloque Ink a todo el ancho: dentro, los roles semánticos pasan a los de Hacker
+   mode (mismos valores que tokens.css), así los componentes ism-* funcionan sin
+   colores sueltos. */
+.app-ink {
+  --surface: var(--ink);
+  --surface-raised: var(--logwood);
+  --text: var(--paper);
+  --text-heading: var(--paper);
+  --text-muted: var(--logwood-200);
+  --hairline: var(--logwood-700);
+  --rule-strong: var(--paper);
+  --link: var(--mauveine-200);
+  --link-hover: var(--paper);
+  --bar: var(--mauveine-300);
+  --track: var(--logwood-700);
+  --action: var(--mauveine);
+  --on-action: var(--paper);
+  --focus: var(--weld);
+  --border-input: var(--logwood-400);
+  --border-strong: var(--paper);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Contenedor de página: 12 columnas, máx. 1200, márgenes 16 / 32 */
+.app-container {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-margin-mobile);
+}
+@media (min-width: 640px) {
+  .app-container {
+    padding-inline: var(--page-margin);
+  }
+}
+
+/* Cifras de la portada: figura en Plex Mono + palabra */
+.app-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16) var(--space-32);
+  margin: 0;
+  padding-top: var(--space-16);
+  border-top: var(--rule-1) solid var(--hairline);
+}
+.app-facts div {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+.app-facts dt {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-heading);
+}
+.app-facts dd {
+  margin: 0;
+  color: var(--text-muted);
+}
