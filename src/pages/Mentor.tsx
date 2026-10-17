@@ -63,6 +63,8 @@ export default function Mentor() {
       }
       if (!acc.trim()) throw new Error("empty stream");
     } catch {
+      setInput((current) => current || content);
+      setChat(chat);
       setError(true);
     } finally {
       setStreaming(false);
