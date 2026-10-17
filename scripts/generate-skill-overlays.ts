@@ -45,7 +45,7 @@ function relatedResources(projectTracks: readonly string[]): string {
   if (hits.length === 0) return "";
   const lines = hits.map(
     (r) =>
-      `- [${r.title.es} / ${r.title.en}](${r.url}) — ${r.note.en} (niveles: ${r.levels.join(", ")}; idioma: ${r.lang})`,
+      `- [${r.title.es} / ${r.title.en}](${r.url}): ${r.note.en} (niveles: ${r.levels.join(", ")}; idioma: ${r.lang})`,
   );
   return `## Recursos de aprendizaje curados\n\n${lines.join("\n")}\n`;
 }
@@ -62,7 +62,7 @@ for (const p of PROJECTS) {
 
   const culture = CULTURE[p.id];
   const sections = [
-    `# Overlay de proyecto — ${p.name}\n\n${HEADER}\n`,
+    `# Overlay de proyecto: ${p.name}\n\n${HEADER}\n`,
     `- **Repo/host**: \`${p.repo}\` (${p.host})`,
     `- **Lenguajes**: ${p.languages.join(", ")}`,
     `- **Tracks**: ${p.tracks.join(", ")}`,

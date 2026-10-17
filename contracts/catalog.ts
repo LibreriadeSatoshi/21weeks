@@ -675,7 +675,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
 
 export const CULTURE: Record<string, { es: string; en: string }> = {
   "bitcoin-core": {
-    es: "Cultura autor-primero regulada por doc/AI_POLICY.md: tú escribes cada línea, cada test y cada mensaje de commit, y debes poder defenderlas en review. PRs pequeños, merge por ACKs de reviewers — la review es el cuello de botella, así que revisar PRs ajenos da más reputación que abrir los tuyos. Puerta de entrada concreta: los hallazgos LOW-2/LOW-3 de la auditoría Quarkslab 2025. La IA te explica y te hace preguntas; jamás te da un diff listo para pegar.",
+    es: "Cultura autor-primero regulada por doc/AI_POLICY.md: tú escribes cada línea, cada test y cada mensaje de commit, y debes poder defenderlas en review. PRs pequeños, merge por ACKs de reviewers; la review es el cuello de botella, así que revisar PRs ajenos da más reputación que abrir los tuyos. Puerta de entrada concreta: los hallazgos LOW-2/LOW-3 de la auditoría Quarkslab 2025. La IA te explica y te hace preguntas; jamás te da un diff listo para pegar.",
     en: "Author-first culture regulated by doc/AI_POLICY.md: you write every line, test and commit message, and you must defend them in review. Small PRs, merged by reviewer ACKs — review is the bottleneck, so reviewing others' PRs earns more reputation than opening your own. Concrete entry point: the LOW-2/LOW-3 findings of the 2025 Quarkslab audit. AI explains and questions you; it never hands you a ready-to-paste diff.",
   },
   "core-lightning": {
@@ -695,7 +695,7 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
     en: "One of the most welcoming communities for first-time contributors: active Discord, well-curated good first issue labels and kind review. Workspace of crates (bdk_wallet, bdk_chain…). AI: pragmatic, but understand and own every line.",
   },
   "rust-bitcoin": {
-    es: "Librería fundacional con un listón altísimo de corrección: cambios mínimos, tests fuertes y docs. Adyacente al consenso — la comprensión no es opcional. IA: autor-primero estricto.",
+    es: "Librería fundacional con un listón altísimo de corrección: cambios mínimos, tests fuertes y docs. Es adyacente al consenso, así que la comprensión no es opcional. IA: autor-primero estricto.",
     en: "Foundational library with a very high correctness bar: minimal changes, strong tests and docs. Consensus-adjacent — understanding is not optional. AI: strict author-first.",
   },
   electrum: {
@@ -719,11 +719,11 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
     en: "Alternative Go implementation: consensus compatibility with Bitcoin Core dominates everything; test against the reference implementation. AI: author-first.",
   },
   fedimint: {
-    es: "Adyacente a investigación (ecash chaumiano, federaciones). Rust + entorno Nix — el setup es el primer obstáculo real. Llamadas de comunidad activas. IA: pragmática, pero el autor responde del código.",
+    es: "Adyacente a investigación (ecash chaumiano, federaciones). Rust + entorno Nix; el setup es el primer obstáculo real. Llamadas de comunidad activas. IA: pragmática, pero el autor responde del código.",
     en: "Research-adjacent (Chaumian ecash, federations). Rust + Nix environment — the setup is the first real hurdle. Active community calls. AI: pragmatic, but the author owns the code.",
   },
   nutshell: {
-    es: "Comunidad rápida y amable con recién llegados, con 'good first issue' de verdad. La especificación son los NUTs (github.com/cashubtc/nuts): lee el NUT relevante antes de tocar código y entiende el modelo de confianza (los mints son custodios; el ecash es al portador). La comunidad general está en Telegram (t.me/CashuBTC) y el desarrollo se discute en Matrix (#dev:matrix.cashu.space) — preséntate allí antes de tu primer PR. El repo tiene AGENTS.md propio: sigue las convenciones del proyecto; el código asistido por IA debe ser entendido y testado por ti (pytest).",
+    es: "Comunidad rápida y amable con recién llegados, con 'good first issue' de verdad. La especificación son los NUTs (github.com/cashubtc/nuts): lee el NUT relevante antes de tocar código y entiende el modelo de confianza (los mints son custodios; el ecash es al portador). La comunidad general está en Telegram (t.me/CashuBTC) y el desarrollo se discute en Matrix (#dev:matrix.cashu.space); preséntate allí antes de tu primer PR. El repo tiene AGENTS.md propio: sigue las convenciones del proyecto; el código asistido por IA debe ser entendido y testado por ti (pytest).",
     en: "Fast-moving community, friendly to newcomers, with real 'good first issue' labels. The spec is the NUTs (github.com/cashubtc/nuts): read the relevant NUT before touching code and understand the trust model (mints are custodians; ecash is bearer). The general community lives on Telegram (t.me/CashuBTC) and dev discussion happens on Matrix (#dev:matrix.cashu.space) — introduce yourself there before your first PR. The repo has its own AGENTS.md: follow project conventions; AI-assisted code must be fully understood and tested by you (pytest).",
   },
   bolts: {
@@ -731,7 +731,7 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
     en: "This is the Lightning SPECIFICATION, not code: contributing means writing spec text, rationale and coordinating across implementations. Without adopting implementations, a change doesn't advance. AI: spec language must be precise and fully understood by you.",
   },
   nips: {
-    es: "Repositorio de estándares de Nostr: consenso aproximado y guiado por implementaciones — un NIP sin clientes que lo usen raramente avanza. IA: pragmática; tú defiendes el diseño.",
+    es: "Repositorio de estándares de Nostr: consenso aproximado y guiado por implementaciones; un NIP sin clientes que lo usen raramente avanza. IA: pragmática; tú defiendes el diseño.",
     en: "Nostr standards repo: rough consensus, implementation-driven — a NIP without clients using it rarely advances. AI: pragmatic; you defend the design.",
   },
   vls: {

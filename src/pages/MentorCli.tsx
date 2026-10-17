@@ -20,7 +20,7 @@ const COMMANDS = [
   },
   {
     cmd: "/21w:plan [proyecto] [#issue]",
-    es: "Genera el plan de 21 semanas en formato json21weeks@v1 — el mismo que exporta e importa esta web. Puedes traer tu plan de la web a tu agente, o llevar el de tu agente a la web.",
+    es: "Genera el plan de 21 semanas en formato json21weeks@v1, el mismo que exporta e importa esta web. Puedes traer tu plan de la web a tu agente, o llevar el de tu agente a la web.",
     en: "Generates the 21-week plan in json21weeks@v1 format — the same one this website exports and imports. Bring your plan from the web into your agent, or take your agent's plan to the web.",
   },
   {
@@ -50,7 +50,7 @@ export default function MentorCli() {
         </h1>
         <p className="opacity-70 max-w-2xl leading-relaxed">
           {es
-            ? "El mismo mentor autor-primero de esta web —el que guía y pregunta pero nunca hace el trabajo por ti— empaquetado para tu agente de código local (Claude Code y compatibles). Esta página vale para dos lectores: para ti, que quieres instalarlo, y para tu agente, que puede leerla como manual."
+            ? "El mismo mentor autor-primero de esta web, que guía y pregunta pero nunca hace el trabajo por ti, empaquetado para tu agente de código local (Claude Code y compatibles). Esta página vale para dos lectores: para ti, que quieres instalarlo, y para tu agente, que puede leerla como manual."
             : "The same author-first mentor from this website —the one that guides and asks but never does the work for you— packaged for your local coding agent (Claude Code and compatible). This page serves two readers: you, who want to install it, and your agent, which can read it as a manual."}
         </p>
       </Reveal>
@@ -68,13 +68,13 @@ export default function MentorCli() {
             <div><span style={{ color: "#f7931a" }}>$</span> npx 21w-mentor init</div>
             <div className="opacity-50 text-xs mt-1 mb-3">
               {es
-                ? "# global: ~/.claude — disponible en todos tus proyectos"
+                ? "# global: ~/.claude; disponible en todos tus proyectos"
                 : "# global: ~/.claude — available in all your projects"}
             </div>
             <div><span style={{ color: "#f7931a" }}>$</span> npx 21w-mentor init --project</div>
             <div className="opacity-50 text-xs mt-1 mb-3">
               {es
-                ? "# solo este repo: ./.claude — viaja con el proyecto y tu equipo"
+                ? "# solo este repo: ./.claude; viaja con el proyecto y tu equipo"
                 : "# this repo only: ./.claude — travels with the project and your team"}
             </div>
             <div><span style={{ color: "#f7931a" }}>$</span> npx 21w-mentor uninstall</div>
@@ -169,7 +169,7 @@ export default function MentorCli() {
           </h2>
           <p className="opacity-80 leading-relaxed mb-3">
             {es
-              ? "El agente nunca escribe diffs, tests, commit messages ni respuestas a review listos para pegar — y nunca prepara tu entorno ejecutando los comandos por ti. Guía con preguntas abiertas y comandos concretos que ejecutas tú. El setup del entorno es la primera prueba real, no un trámite."
+              ? "El agente nunca escribe diffs, tests, commit messages ni respuestas a review listos para pegar. Tampoco prepara tu entorno ejecutando los comandos por ti. Guía con preguntas abiertas y comandos concretos que ejecutas tú. El setup del entorno es la primera prueba real, no un trámite."
               : "The agent never writes ready-to-paste diffs, tests, commit messages or review replies — and never sets up your environment by running commands for you. It guides with open questions and concrete commands that you run. Environment setup is the first real test, not a formality."}
           </p>
           <p className="opacity-60 text-sm leading-relaxed">

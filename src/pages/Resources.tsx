@@ -12,7 +12,7 @@ const PROVIDER_META = {
       { url: "https://libreriadesatoshi.com/", label: "libreriadesatoshi.com" },
       { url: "https://moodle.libreriadesatoshi.com/", label: { es: "Campus (Moodle)", en: "Campus (Moodle)" } },
     ],
-    tag: { es: "Cursos en español — la academia bitcoiner de habla hispana", en: "Courses in Spanish — the Spanish-speaking bitcoiner academy" },
+    tag: { es: "Cursos en español de la academia bitcoiner de habla hispana", en: "Courses in Spanish — the Spanish-speaking bitcoiner academy" },
   },
   bdev: {
     name: "The Bitcoin Dev Project",
@@ -22,7 +22,7 @@ const PROVIDER_META = {
   nostrbook: {
     name: "Nostrbook",
     url: "https://nostrbook.dev/",
-    tag: { es: "Registro estructurado de documentación Nostr — kinds, tags y protocolo", en: "Structured registry of Nostr docs — kinds, tags and protocol" },
+    tag: { es: "Registro estructurado de documentación Nostr: kinds, tags y protocolo", en: "Structured registry of Nostr docs — kinds, tags and protocol" },
   },
 } as const;
 
@@ -47,6 +47,7 @@ export default function Resources() {
       </Reveal>
 
       {(["lds", "bdev", "nostrbook"] as const).map((prov) => {
+        const meta = PROVIDER_META[prov];
         const items = LEARNING_RESOURCES.filter((r) => r.provider === prov).sort(
           (a, b) => relevant(b.tracks) - relevant(a.tracks),
         );
@@ -54,27 +55,27 @@ export default function Resources() {
           <section key={prov} className="mb-14">
             <Reveal>
               <div className="flex flex-wrap items-center gap-4 mb-2">
-                {"logo" in PROVIDER_META[prov] && (
+                {"logo" in meta && (
                   <img
-                    src={PROVIDER_META[prov].logo}
-                    alt={PROVIDER_META[prov].name}
+                    src={meta.logo}
+                    alt={meta.name}
                     style={{ height: "34px", width: "auto" }}
                   />
                 )}
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">{PROVIDER_META[prov].name}</h2>
-                {"links" in PROVIDER_META[prov]
-                  ? PROVIDER_META[prov].links.map((l) => (
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight">{meta.name}</h2>
+                {"links" in meta
+                  ? meta.links.map((l) => (
                       <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
                         {typeof l.label === "string" ? l.label : l.label[locale]} ↗
                       </a>
                     ))
                   : (
-                    <a href={PROVIDER_META[prov].url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
-                      {PROVIDER_META[prov].url.replace("https://", "")} ↗
+                    <a href={meta.url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
+                      {meta.url.replace("https://", "")} ↗
                     </a>
                   )}
               </div>
-              <p className="text-sm opacity-60 mb-6">{PROVIDER_META[prov].tag[locale]}</p>
+              <p className="text-sm opacity-60 mb-6">{meta.tag[locale]}</p>
             </Reveal>
             <div className="grid md:grid-cols-2 gap-px" style={{ background: "var(--hairline)" }}>
               {items.map((r, i) => {

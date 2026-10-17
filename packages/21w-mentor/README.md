@@ -1,7 +1,7 @@
 # 21w-mentor
 
 Mentor **autor-primero** para entrar a contribuir a open source de Bitcoin,
-Lightning, Nostr y ecash — para tu agente de código (Claude Code y
+Lightning, Nostr y ecash para tu agente de código (Claude Code y
 compatibles). Tú escribes el código, los tests y los PRs; el agente guía,
 pregunta y revisa. Nunca hace el trabajo por ti.
 
@@ -36,10 +36,10 @@ Tras instalar, abre una **sesión nueva** de Claude Code.
 ## La regla central
 
 El agente nunca escribe diffs, tests, commit messages ni respuestas a review
-listos para pegar — y nunca prepara tu entorno ejecutando los comandos por
+listos para pegar. Tampoco prepara tu entorno ejecutando los comandos por
 ti. Guía con preguntas abiertas y comandos concretos que ejecutas tú. Si tu
 proyecto tiene su propio `AGENTS.md` o política de IA (Bitcoin Core, Cashu,
 Mostro, VLS la tienen), el mentor la respeta.
 
-Parte del proyecto [21weeks](https://github.com/ifuensan/21weeks) —
+Parte del proyecto [21weeks](https://github.com/ifuensan/21weeks):
 Librería de Satoshi / HackNodes Lab. Licencia MIT.

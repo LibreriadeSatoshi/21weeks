@@ -229,7 +229,7 @@ export default function PlanPage() {
     <div className="mx-auto max-w-4xl px-5 py-16 md:py-24">
       <Reveal>
         <p className="eyebrow mb-3 flex items-center gap-2" style={{ color: "var(--ember)" }}>
-          <ProjectLogo id={plan.projectId} size={18} /> {t("plan.eyebrow")} — {plan.projectName}
+          <ProjectLogo id={plan.projectId} size={18} /> {t("plan.eyebrow")} · {plan.projectName}
         </p>
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-[-0.03em]">{t("plan.title")}</h1>
         <p className="mt-4 max-w-2xl opacity-80 leading-relaxed">{plan.intro}</p>

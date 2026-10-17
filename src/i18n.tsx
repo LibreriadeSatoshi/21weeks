@@ -28,7 +28,7 @@ const dict = {
     "hero.title.b": "contributor",
     "hero.title.c": "en 21 semanas.",
     "hero.sub":
-      "Elige el proyecto del ecosistema Bitcoin y Lightning que encaja con tu perfil, encuentra tu primera issue real y sigue un plan de 21 semanas a 4 horas al día, con un mentor IA senior que te guía — pero nunca hace el trabajo por ti.",
+      "Elige el proyecto del ecosistema Bitcoin y Lightning que encaja con tu perfil, encuentra tu primera issue real y sigue un plan de 21 semanas a 4 horas al día, con un mentor IA senior que te guía, pero nunca hace el trabajo por ti.",
     "hero.cta": "Empezar por mi perfil",
     "hero.cta2": "Ver proyectos",
     "hero.noShitcoins": "Sin shitcoins. Solo Bitcoin, Lightning y libertad tecnológica.",
@@ -39,7 +39,7 @@ const dict = {
     "how.2.t": "02 / Proyecto",
     "how.2.d": "Te mostramos los proyectos del ecosistema ordenados por encaje con tu perfil, con sus good first issues en vivo desde GitHub y GitLab.",
     "how.3.t": "03 / Plan + Mentor",
-    "how.3.d": "La IA ordena las issues que mejor te vienen y genera un plan de 21 semanas. Un mentor senior te acompaña: te orienta, te pregunta, te revisa — pero el código lo escribes tú.",
+    "how.3.d": "La IA ordena las issues que mejor te vienen y genera un plan de 21 semanas. Un mentor senior te acompaña: te orienta, te pregunta y te revisa; el código lo escribes tú.",
 
     "catalog.eyebrow": "El ecosistema",
     "catalog.title": "17 proyectos reales, cero ruido",
@@ -92,7 +92,7 @@ const dict = {
     "projects.eyebrow": "Proyectos",
     "projects.title": "Tu ranking personal",
     "projects.sub": "Ordenados por encaje con tu perfil. El número de issues es en vivo, etiquetadas como good first issue.",
-    "projects.noProfile": "Aún sin perfil — haz el quiz para ordenar por encaje.",
+    "projects.noProfile": "Aún sin perfil; haz el quiz para ordenar por encaje.",
     "projects.match": "encaje",
     "projects.issues": "issues abiertas",
     "projects.view": "Ver issues",
@@ -119,7 +119,7 @@ const dict = {
     "issues.mentorSkill": "Mentor específico de proyecto activo",
     "issues.fallback.title": "Sin good first issues abiertas ahora mismo",
     "issues.fallback.body":
-      "Este proyecto no tiene issues abiertas con etiqueta de principiante. Lo que ves abajo son issues recientes SIN etiquetar: no están curadas para empezar y pueden tener PRs en curso o debates enredados. El ranking IA ahora lee los comentarios y te avisará de esos líos — y preguntar al mentor es buena idea aquí.",
+      "Este proyecto no tiene issues abiertas con etiqueta de principiante. Lo que ves abajo son issues recientes SIN etiquetar: no están curadas para empezar y pueden tener PRs en curso o debates enredados. El ranking IA ahora lee los comentarios y te avisará de esos líos; preguntar al mentor es buena idea aquí.",
 
     "plan.eyebrow": "El camino",
     "plan.title": "Tu plan de 21 semanas",
@@ -127,7 +127,7 @@ const dict = {
     "plan.generating.hint": "No cierres la pestaña: aquí ves en qué va el proceso",
     "plan.stage.starting": "Conectando con el mentor…",
     "plan.stage.researching": "Paso 1/2 · Buscando fuentes primarias: guías de contribución, documentación del proyecto, BIPs y PRs de referencia…",
-    "plan.stage.writing": "Paso 2/2 · Fuentes verificadas. Ahora escribe tus 21 semanas una a una — es la parte larga",
+    "plan.stage.writing": "Paso 2/2 · Fuentes verificadas. Ahora escribe tus 21 semanas una a una; es la parte larga.",
     "plan.regenerate": "Regenerar plan",
     "plan.week": "Semana",
     "plan.objectives": "Objetivos",

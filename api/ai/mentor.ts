@@ -14,7 +14,7 @@ export function mentorSystemPrompt(
 ): string {
   const lang =
     locale === "es"
-      ? "Responde SIEMPRE en español."
+      ? "Responde SIEMPRE en español. No uses rayas (—) para separar o unir frases; usa comas, puntos y coma o puntos según corresponda."
       : "ALWAYS reply in English.";
 
   const profileBlock = profile

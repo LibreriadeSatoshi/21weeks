@@ -132,7 +132,7 @@ export default function Quiz() {
     <div className="mx-auto max-w-3xl px-5 py-16 md:py-24">
       <Reveal>
         <p className="eyebrow mb-3" style={{ color: "var(--ember)" }}>
-          {t("quiz.eyebrow")} — {t("quiz.step")} {step + 1}/5
+          {t("quiz.eyebrow")} · {t("quiz.step")} {step + 1}/5
         </p>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-[-0.03em] mb-2">{t("quiz.title")}</h1>
         <h2 className="text-lg opacity-70 mb-10">{t(stepTitles[step])}</h2>

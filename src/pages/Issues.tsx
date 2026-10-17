@@ -44,7 +44,7 @@ export default function Issues() {
   if (!project) {
     return (
       <div className="mx-auto max-w-3xl px-5 py-24 text-center">
-        <p className="opacity-70">404 — {t("common.error")}</p>
+        <p className="opacity-70">404: {t("common.error")}</p>
         <Link to="/projects" className="btn-ghost-ember inline-block mt-6 no-underline">
           ← {t("issues.back")}
         </Link>

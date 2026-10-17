@@ -1,4 +1,4 @@
-# Formato de plan — `json21weeks@v1`
+# Formato de plan: `json21weeks@v1`
 
 El plan de 21 semanas es un archivo Markdown legible por humanos Y agentes,
 con un bloque JSON de estado al final. Es el formato de intercambio con la web
@@ -8,7 +8,7 @@ generados aquí se puedan importar allí.
 ## Estructura
 
 ```markdown
-# 21 Weeks to Bitcoin OSS — <Nombre del proyecto>
+# 21 Weeks to Bitcoin OSS: <Nombre del proyecto>
 
 > Plan de 21 semanas (mentoría autor-primero): la persona escribe el código,
 > los tests y los PRs; el agente guía, pregunta y revisa.
@@ -26,7 +26,7 @@ generados aquí se puedan importar allí.
 
 ## Las 21 semanas
 
-### [ ] Semana 1 — <fase>: <título>
+### [ ] Semana 1: <fase>. <título>
 
 **Objetivos**
 - <2-4 objetivos, ≤14 palabras cada uno>
@@ -41,7 +41,7 @@ generados aquí se puedan importar allí.
 
 (...semanas 2-21 igual; marcar `[x]` las completadas)
 
-## Graduación — semana 21
+## Graduación: semana 21
 
 <3-4 frases: qué significa "ser contribuidor" en ese proyecto>
 
@@ -94,4 +94,4 @@ Reglas:
 - `issue` es `null` o `{ "id": "github:owner/repo:N", "number": N, "title":
   "...", "url": "...", "labels": [...], "comments": 0, "body": "..." }`.
 - Versionado: este documento es `json21weeks@v1`. Cualquier cambio de
-  estructura es un cambio de protocolo — no edites campos existentes.
+  estructura es un cambio de protocolo; no edites campos existentes.

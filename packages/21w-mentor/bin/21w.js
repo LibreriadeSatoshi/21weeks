@@ -37,11 +37,11 @@ function install(base) {
   console.log(`✓ Comandos instalados en ${cmdDest}`);
   console.log();
   console.log("Abre una sesión NUEVA de Claude Code y escribe:");
-  console.log("  /21w:start     — perfil y elección de proyecto");
-  console.log("  /21w:issues    — good-first-issues vetadas");
-  console.log("  /21w:plan      — tu plan de 21 semanas");
-  console.log("  /21w:week <n>  — mentoría de la semana");
-  console.log("  /21w:review    — review de tu borrador con severidad de maintainer");
+  console.log("  /21w:start:     perfil y elección de proyecto");
+  console.log("  /21w:issues:    good-first-issues vetadas");
+  console.log("  /21w:plan:      tu plan de 21 semanas");
+  console.log("  /21w:week <n>:  mentoría de la semana");
+  console.log("  /21w:review:    review de tu borrador con severidad de maintainer");
 }
 
 function uninstall(base) {
@@ -64,7 +64,7 @@ switch (cmd) {
     uninstall(base);
     break;
   default:
-    console.log(`21w-mentor — mentor autor-primero para contribuir a Bitcoin FOSS
+    console.log(`21w-mentor: mentor autor-primero para contribuir a Bitcoin FOSS
 
   npx 21w-mentor init              instala en ~/.claude (global)
   npx 21w-mentor init --project    instala en ./.claude (este proyecto)
