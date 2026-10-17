@@ -1,16 +1,16 @@
 # 21 Weeks
 
-**Del interés a la primera contribución open source en Bitcoin — en 21 semanas.**
+**Del interés a la primera contribución open source en Bitcoin, en 21 semanas.**
 
 21 Weeks es una app web bilingüe (ES/EN) que ayuda a developers y researchers a empezar a contribuir a proyectos open source de Bitcoin y Lightning. Sin shitcoins: solo Bitcoin, Lightning, Nostr y su ecosistema de software libre.
 
 ## Qué hace
 
-1. **Quiz de perfil** — experiencia, intereses, tiempo disponible.
-2. **Catálogo de 17 proyectos** — Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs, VLS, Nutshell (Cashu) y Mostro.
-3. **Good-first-issues en vivo** — issues reales traídas de GitHub y GitLab, ordenadas por encaje con tu perfil (con filtro de issues ya reclamadas o con PRs en curso).
-4. **Plan de 21 semanas** — una IA genera un plan semana a semana (4 h/día) con objetivos, tareas y recursos reales verificados, exportable a Markdown para continuarlo desde cualquier otro agente (Claude Code, OpenCode…).
-5. **Mentor senior author-first** — un chat de mentoría que guía y pregunta pero **nunca hace el trabajo por ti**, inspirado en `doc/AI_POLICY.md` de Bitcoin Core. Fundamenta sus respuestas en fuentes primarias: [bitcoinknowledge.dev](https://bitcoinknowledge.dev) y [nostrbook.dev](https://nostrbook.dev).
+1. **Quiz de perfil**: experiencia, intereses y tiempo disponible.
+2. **Catálogo de 17 proyectos**: Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs, VLS, Nutshell (Cashu) y Mostro.
+3. **Good-first-issues en vivo**: issues reales traídas de GitHub y GitLab, ordenadas por encaje con tu perfil (con filtro de issues ya reclamadas o con PRs en curso).
+4. **Plan de 21 semanas**: una IA genera un plan semana a semana (4 h/día) con objetivos, tareas y recursos reales verificados, exportable a Markdown para continuarlo desde cualquier otro agente (Claude Code, OpenCode…).
+5. **Mentor senior author-first**: un chat de mentoría que guía y pregunta pero **nunca hace el trabajo por ti**, inspirado en `doc/AI_POLICY.md` de Bitcoin Core. Fundamenta sus respuestas en fuentes primarias: [bitcoinknowledge.dev](https://bitcoinknowledge.dev) y [nostrbook.dev](https://nostrbook.dev).
 
 ## Stack
 
@@ -49,14 +49,17 @@ cp .env.example .env
 | `VITE_APP_ID` | ID de aplicación OAuth (expuesto al navegador) |
 | `OWNER_UNION_ID` | Union ID del creador; ese usuario recibe rol admin en su primer login |
 
-Además, el backend de IA necesita estas dos variables **en el entorno del servidor** (no van en el frontend):
+Además, el backend de IA necesita estas variables **en el entorno del servidor** (no van en el frontend):
 
 | Variable | Para qué |
 |---|---|
-| `KIMI_AGENTGW_BASE_URL` | URL base del gateway de modelos (compatible con API OpenAI) |
-| `KIMI_AGENTGW_API_KEY` | API key de ese gateway |
+| `AI_BASE_URL` | URL base de un proveedor compatible con la API de OpenAI |
+| `AI_API_KEY` | API key de ese proveedor |
+| `AI_MODEL_ID` | ID del modelo; obligatorio fuera de la plataforma Kimi |
 
-Sin el gateway configurado, la app carga pero el mentor, la recomendación de issues y la generación de planes no funcionarán.
+Dentro de la plataforma Kimi, `KIMI_AGENTGW_BASE_URL` y `KIMI_AGENTGW_API_KEY` pueden usarse como alternativa a `AI_BASE_URL` y `AI_API_KEY`.
+
+Sin un proveedor de IA configurado, la app carga pero el mentor, la recomendación de issues y la generación de planes no funcionarán.
 
 ### 3. Base de datos
 
@@ -89,9 +92,9 @@ public/     Logos oficiales de los 17 proyectos
 
 ## Licencia y contribuciones
 
-Licencia [MIT](./LICENSE). Las contribuciones se rigen por el DCO 1.1 y la política de atribución de IA — lee [`CONTRIBUTING.md`](./CONTRIBUTING.md) antes de hacer tu primer commit (`git commit -s` obligatorio).
+Licencia [MIT](./LICENSE). Las contribuciones se rigen por el DCO 1.1 y la política de atribución de IA; lee [`CONTRIBUTING.md`](./CONTRIBUTING.md) antes de hacer tu primer commit (`git commit -s` obligatorio).
 
-Proyecto open source nacido de [Librería de Satoshi](https://libreriadesatoshi.com) / HackNodes Lab. Issues y PRs bienvenidos — precisamente de eso va esto. ₿
+Proyecto open source nacido de [Librería de Satoshi](https://libreriadesatoshi.com) / HackNodes Lab. Issues y PRs bienvenidos; precisamente de eso va esto. ₿
 
 ## Agradecimientos
 
