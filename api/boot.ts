@@ -19,9 +19,9 @@ const app = new Hono<{ Bindings: HttpBindings }>();
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 // Login "Sign in with Kimi": solo disponible dentro de la plataforma Kimi.
 // Fuera de ella (servidor propio) la app corre en modo anónimo.
-app.get(Paths.oauthCallback, async (c, next) => {
+app.get(Paths.oauthCallback, async (c) => {
   if (!kimiAuthEnabled) return c.json({ error: "auth disabled (anonymous mode)" }, 501);
-  return createOAuthCallbackHandler()(c, next);
+  return createOAuthCallbackHandler()(c);
 });
 
 // Chat streaming del mentor (texto plano por chunk; el frontend lo acumula)
