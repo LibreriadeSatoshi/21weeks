@@ -112,16 +112,11 @@ function AuthLayoutContent({
   const navigate = useNavigate();
   const { state, toggleSidebar } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const [isResizing, setIsResizing] = useState(false);
+  const [resizeRequested, setIsResizing] = useState(false);
+  const isResizing = resizeRequested && !isCollapsed;
   const sidebarRef = useRef<HTMLDivElement>(null);
   const activeMenuItem = menuItems.find(item => item.path === location.pathname);
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    if (isCollapsed) {
-      setIsResizing(false);
-    }
-  }, [isCollapsed]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -164,7 +159,10 @@ function AuthLayoutContent({
           <SidebarHeader className="h-16 justify-center">
             <div className="flex items-center gap-3 px-2 transition-all w-full">
               <button
-                onClick={toggleSidebar}
+                onClick={() => {
+                  setIsResizing(false);
+                  toggleSidebar();
+                }}
                 className="h-8 w-8 flex items-center justify-center hover:bg-accent rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
                 aria-label="Toggle navigation"
               >
