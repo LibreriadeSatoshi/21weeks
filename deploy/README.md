@@ -47,6 +47,17 @@ La API se llama directamente al servidor porque el proxy de Netlify corta las pe
    curl https://app.ismos.xyz/21weeks/api/health   # {"ok":true}
    ```
 
+## Acceso privado hasta el lanzamiento
+
+Con `SITE_PASSWORD` en el `.env`, toda la app (páginas, JS y API) queda detrás de una página de contraseña con estilo ISMOS, y cada respuesta lleva `X-Robots-Tag: noindex, nofollow`. Solo quedan abiertos `/api/health` (para el despliegue), el CSS y las fuentes de esa página.
+
+```bash
+SITE_PASSWORD=<contraseña>
+COOKIE_DOMAIN=ismos.xyz   # la misma cookie vale en ismos.xyz/21weeks y en app.ismos.xyz
+```
+
+Aplica con `docker compose -f docker-compose.prod.yml up -d`. La cookie dura 30 días; cambiar la contraseña cierra todas las sesiones. Para el lanzamiento, deja `SITE_PASSWORD` vacía y vuelve a aplicar.
+
 ## 2. Netlify (repo de la web Astro)
 
 En `public/_redirects` de la web de ismos.xyz:

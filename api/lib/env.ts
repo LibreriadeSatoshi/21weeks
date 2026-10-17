@@ -32,6 +32,10 @@ export const env = {
   // — Despliegue —
   basePath: basePath(process.env.BASE_PATH),
   // Orígenes que pueden llamar a la API desde otro dominio (p. ej. https://ismos.xyz)
+  // Contraseña de acceso hasta el lanzamiento (vacía = sitio abierto)
+  sitePassword: optional("SITE_PASSWORD"),
+  // Dominio de la cookie de acceso, p. ej. ismos.xyz para ismos.xyz y app.ismos.xyz
+  cookieDomain: optional("COOKIE_DOMAIN"),
   corsOrigins: optional("CORS_ORIGINS")
     .split(",")
     .map((origin) => origin.trim())

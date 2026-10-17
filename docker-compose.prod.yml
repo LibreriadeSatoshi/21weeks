@@ -13,6 +13,9 @@ services:
       PORT: "3000"
       BASE_PATH: ${BASE_PATH:-/21weeks/}
       CORS_ORIGINS: ${CORS_ORIGINS:-https://ismos.xyz}
+      # Acceso privado hasta el lanzamiento (vacío = abierto)
+      SITE_PASSWORD: ${SITE_PASSWORD:-}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
       DATABASE_URL: mysql://21weeks:${MYSQL_PASSWORD:?define MYSQL_PASSWORD en .env}@db:3306/21weeks
       AI_BASE_URL: ${AI_BASE_URL:?define AI_BASE_URL en .env}
       AI_API_KEY: ${AI_API_KEY:?define AI_API_KEY en .env}

@@ -46,6 +46,7 @@ export default function Mentor() {
     try {
       const res = await fetch(`${API_URL}/mentor/chat`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           locale,

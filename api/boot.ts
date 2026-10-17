@@ -7,6 +7,7 @@ import { streamText, stepCountIs } from "ai";
 import { appRouter } from "./router";
 import { createContext } from "./context";
 import { env, kimiAuthEnabled } from "./lib/env";
+import { siteGate } from "./lib/site-gate";
 import { createOAuthCallbackHandler } from "./kimi/auth";
 import { Paths } from "@contracts/constants";
 import { PROJECTS, type Locale, type Profile } from "@contracts/types";
@@ -22,6 +23,20 @@ app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 // La web en ismos.xyz llama a la API directamente (sin el proxy de Netlify).
 if (env.corsOrigins.length > 0) {
   app.use("/api/*", cors({ origin: env.corsOrigins, credentials: true }));
+}
+
+// Acceso privado hasta el lanzamiento: sin SITE_PASSWORD, el sitio queda abierto.
+if (env.sitePassword) {
+  app.use(
+    "*",
+    siteGate({
+      password: env.sitePassword,
+      basePath: env.basePath,
+      cookieDomain: env.cookieDomain || undefined,
+      secure: env.isProduction,
+      publicDir: "dist/public",
+    }),
+  );
 }
 
 app.get("/api/health", (c) => c.json({ ok: true }));
