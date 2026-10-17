@@ -1,6 +1,6 @@
 // Piezas de página de ISMOS que no están en el bundle del kit (components.css).
 // Siguen design/ismos/docs/10-accepted-decisions.md §2.
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import {
   Check,
   InfoCircle,
@@ -194,21 +194,19 @@ export function AiLabel({ children }: { children: ReactNode }) {
 }
 
 /**
- * Campo de motivo (01.1): el mark oficial en Paper, repetido con espaciado
- * regular sobre un bloque Ink, Mauveine o Indigo. El fichero se coloca tal cual
- * (no se redibuja); la opacidad sale de --opacity-motif (25 %). Va detrás de un
- * título como mucho, nunca de texto corrido.
+ * Cabecera con bloque de color de un cuarto de la superficie (01.1, dispositivo 4):
+ * el texto a la izquierda sobre Paper y, a sangre hasta el borde derecho, un bloque
+ * Indigo plano con el mark en Paper. En móvil el bloque pasa a ser una banda superior.
  */
-export function MotifField() {
-  const id = `motif-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+export function QuarterHeader(props: Parameters<typeof PageHeader>[0]) {
   return (
-    <svg className="app-motif" aria-hidden="true" focusable="false">
-      <defs>
-        <pattern id={id} width="96" height="96" patternUnits="userSpaceOnUse">
-          <image href={ismosMarkPaper} x="24" y="24" width="48" height="48" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill={`url(#${id})`} />
-    </svg>
+    <section className="app-quarter">
+      <div className="app-quarter__text">
+        <PageHeader {...props} />
+      </div>
+      <div className="app-quarter__block" aria-hidden="true">
+        <img src={ismosMarkPaper} alt="" width={48} height={48} />
+      </div>
+    </section>
   );
 }

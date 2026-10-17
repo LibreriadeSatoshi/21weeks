@@ -4,8 +4,12 @@ import { PROJECTS } from "@contracts/types";
 import { ArrowRight, Refresh } from "iconoir-react";
 import { useI18n, type TKey } from "@/i18n";
 import { useAppState } from "@/state";
-import { AiLabel, ExternalLink, Notice, PageHeader } from "@/components/ismos";
-import ismosMarkPaper from "../../design/ismos/logos/ismos-mark-paper.svg";
+import {
+  AiLabel,
+  ExternalLink,
+  Notice,
+  QuarterHeader,
+} from "@/components/ismos";
 import { API_URL } from "@/lib/paths";
 
 export default function Mentor() {
@@ -86,31 +90,23 @@ export default function Mentor() {
 
   return (
     <>
-      {/* Cabecera con un bloque Indigo de un cuarto de la superficie, a sangre */}
-      <section className="app-quarter">
-        <div className="app-quarter__text">
-          <PageHeader
-            label={t("mentor.eyebrow")}
-            title={t("mentor.title")}
-            lead={t("mentor.sub")}
-          >
-            {context.length > 0 && (
-              <p className="ism-t-caption m-0">
-                <span className="ism-label me-8">{t("mentor.context")}</span>
-                {context.join(" · ")}
-              </p>
-            )}
-            <p className="ism-t-body-small m-0">
-              <ExternalLink href="https://bitcoinknowledge.dev/">
-                {t("mentor.sources")}
-              </ExternalLink>
-            </p>
-          </PageHeader>
-        </div>
-        <div className="app-quarter__block" aria-hidden="true">
-          <img src={ismosMarkPaper} alt="" width={48} height={48} />
-        </div>
-      </section>
+      <QuarterHeader
+        label={t("mentor.eyebrow")}
+        title={t("mentor.title")}
+        lead={t("mentor.sub")}
+      >
+        {context.length > 0 && (
+          <p className="ism-t-caption m-0">
+            <span className="ism-label me-8">{t("mentor.context")}</span>
+            {context.join(" · ")}
+          </p>
+        )}
+        <p className="ism-t-body-small m-0">
+          <ExternalLink href="https://bitcoinknowledge.dev/">
+            {t("mentor.sources")}
+          </ExternalLink>
+        </p>
+      </QuarterHeader>
 
       <div className="app-container pb-64">
         <div className="max-w-reading">

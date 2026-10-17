@@ -2,7 +2,7 @@ import { LEARNING_RESOURCES } from "@contracts/types";
 import { useI18n } from "@/i18n";
 import { useAppState } from "@/state";
 import { OpenNewWindow } from "iconoir-react";
-import { ExternalLink, PageHeader, SectionHead } from "@/components/ismos";
+import { ExternalLink, QuarterHeader, SectionHead } from "@/components/ismos";
 
 const PROVIDER_META = {
   lds: {
@@ -46,8 +46,8 @@ export default function Resources() {
     profile ? tracks.filter(tr => profile.tracks.includes(tr)).length : 0;
 
   return (
-    <div className="app-container py-64">
-      <PageHeader
+    <>
+      <QuarterHeader
         label={t("resources.eyebrow")}
         title={t("resources.title")}
         lead={t("resources.sub")}
@@ -57,73 +57,75 @@ export default function Resources() {
             {t("resources.personalized")}
           </p>
         )}
-      </PageHeader>
-
-      {(["lds", "bdev", "nostrbook"] as const).map(prov => {
-        const meta = PROVIDER_META[prov];
-        const items = LEARNING_RESOURCES.filter(r => r.provider === prov).sort(
-          (a, b) => relevant(b.tracks) - relevant(a.tracks)
-        );
-        const links =
-          "links" in meta
-            ? meta.links.map(l => ({
-                url: l.url,
-                label: typeof l.label === "string" ? l.label : l.label[locale],
-              }))
-            : [
-                {
-                  url: meta.url,
-                  label: meta.url.replace("https://", "").replace(/\/$/, ""),
-                },
-              ];
-        return (
-          <section key={prov} className="mb-64">
-            <SectionHead title={meta.name} />
-            <p className="ism-t-body-small m-0">{meta.tag[locale]}</p>
-            <ul className="ism-t-body-small mt-8 mb-24 p-0 list-none flex flex-wrap gap-8 gap-x-24">
-              {links.map(l => (
-                <li key={l.url}>
-                  <ExternalLink href={l.url}>{l.label}</ExternalLink>
-                </li>
-              ))}
-            </ul>
-            <div className="grid md:grid-cols-2 gap-24">
-              {items.map(r => {
-                const hits = relevant(r.tracks);
-                return (
-                  <a
-                    key={r.url}
-                    href={r.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="ism-card"
-                  >
-                    <span className="ism-bar" />
-                    <span className="ism-label">
-                      {t(`resources.kind.${r.kind}` as const)} ·{" "}
-                      {r.lang.toUpperCase()}
-                    </span>
-                    <h3 className="ism-card__title">{r.title[locale]}</h3>
-                    <p className="ism-card__text">{r.note[locale]}</p>
-                    <div className="ism-card__facts mt-auto justify-between">
-                      <span>
-                        {hits > 0
-                          ? `${hits} ${t("resources.matchTracks")}`
-                          : meta.name}
+      </QuarterHeader>
+      <div className="app-container pb-64">
+        {(["lds", "bdev", "nostrbook"] as const).map(prov => {
+          const meta = PROVIDER_META[prov];
+          const items = LEARNING_RESOURCES.filter(
+            r => r.provider === prov
+          ).sort((a, b) => relevant(b.tracks) - relevant(a.tracks));
+          const links =
+            "links" in meta
+              ? meta.links.map(l => ({
+                  url: l.url,
+                  label:
+                    typeof l.label === "string" ? l.label : l.label[locale],
+                }))
+              : [
+                  {
+                    url: meta.url,
+                    label: meta.url.replace("https://", "").replace(/\/$/, ""),
+                  },
+                ];
+          return (
+            <section key={prov} className="mb-64">
+              <SectionHead title={meta.name} />
+              <p className="ism-t-body-small m-0">{meta.tag[locale]}</p>
+              <ul className="ism-t-body-small mt-8 mb-24 p-0 list-none flex flex-wrap gap-8 gap-x-24">
+                {links.map(l => (
+                  <li key={l.url}>
+                    <ExternalLink href={l.url}>{l.label}</ExternalLink>
+                  </li>
+                ))}
+              </ul>
+              <div className="grid md:grid-cols-2 gap-24">
+                {items.map(r => {
+                  const hits = relevant(r.tracks);
+                  return (
+                    <a
+                      key={r.url}
+                      href={r.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="ism-card"
+                    >
+                      <span className="ism-bar" />
+                      <span className="ism-label">
+                        {t(`resources.kind.${r.kind}` as const)} ·{" "}
+                        {r.lang.toUpperCase()}
                       </span>
-                      <OpenNewWindow
-                        width={16}
-                        height={16}
-                        aria-hidden="true"
-                      />
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          </section>
-        );
-      })}
-    </div>
+                      <h3 className="ism-card__title">{r.title[locale]}</h3>
+                      <p className="ism-card__text">{r.note[locale]}</p>
+                      <div className="ism-card__facts mt-auto justify-between">
+                        <span>
+                          {hits > 0
+                            ? `${hits} ${t("resources.matchTracks")}`
+                            : meta.name}
+                        </span>
+                        <OpenNewWindow
+                          width={16}
+                          height={16}
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </>
   );
 }
