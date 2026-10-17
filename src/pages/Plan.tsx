@@ -13,13 +13,12 @@ import {
   Upload,
   WarningTriangle,
 } from "iconoir-react";
-import { ProjectLogo } from "@/components/ProjectLogo";
 import {
   AiLabel,
   Choice,
   ExternalLink,
   Notice,
-  PageHeader,
+  MotifField,
   Progress,
   SectionHead,
 } from "@/components/ismos";
@@ -37,6 +36,22 @@ const FUNDING = [
   { label: "bitcoindevs.xyz", url: "https://bitcoindevs.xyz/get-funded" },
   { label: "OpenSats", url: "https://opensats.org/apply" },
 ];
+
+/** Cabecera del plan: bloque Ink a todo el ancho con el campo de motivo detrás
+ *  de la etiqueta y el título (nunca texto corrido sobre el motivo). */
+function PlanHero({ label, title }: { label: string; title: string }) {
+  return (
+    <section className="app-ink app-motif-block py-64 md:py-96">
+      <MotifField />
+      <div className="app-container flex flex-col gap-16">
+        <p className="ism-label ism-label--on-color m-0">{label}</p>
+        <h1 className="ism-t-display text-text-heading m-0 max-w-reading">
+          {title}
+        </h1>
+      </div>
+    </section>
+  );
+}
 
 export default function PlanPage() {
   const { t, locale } = useI18n();
@@ -239,21 +254,21 @@ export default function PlanPage() {
 
   if (!project || !profile) {
     return (
-      <div className="app-container py-96">
-        <PageHeader
-          label={t("plan.eyebrow")}
-          title={t("plan.title")}
-          lead={t("plan.empty")}
-        >
-          <div className="flex flex-wrap items-center gap-16">
-            <Link to="/projects" className="ism-btn">
-              {t("plan.empty.cta")}
-              <ArrowRight width={20} height={20} aria-hidden="true" />
-            </Link>
-            {importControls}
+      <>
+        <PlanHero label={t("plan.eyebrow")} title={t("plan.title")} />
+        <div className="app-container py-64">
+          <div className="max-w-reading flex flex-col gap-24">
+            <p className="ism-t-lead m-0">{t("plan.empty")}</p>
+            <div className="flex flex-wrap items-center gap-16">
+              <Link to="/projects" className="ism-btn">
+                {t("plan.empty.cta")}
+                <ArrowRight width={20} height={20} aria-hidden="true" />
+              </Link>
+              {importControls}
+            </div>
           </div>
-        </PageHeader>
-      </div>
+        </div>
+      </>
     );
   }
 
@@ -307,144 +322,146 @@ export default function PlanPage() {
   const phases = [...new Set(plan.weeks.map(w => w.phase))];
 
   return (
-    <div className="app-container py-64">
-      <PageHeader
-        label={
-          <span className="inline-flex items-center gap-8">
-            <ProjectLogo id={plan.projectId} size={24} />
-            {t("plan.eyebrow")} · {plan.projectName}
-          </span>
-        }
+    <>
+      <PlanHero
+        label={`${t("plan.eyebrow")} · ${plan.projectName}`}
         title={t("plan.title")}
-        lead={plan.intro}
-      >
-        <AiLabel>{t("common.builtWithAi")}</AiLabel>
-        {pickedIssue && (
-          <p className="ism-t-body-small m-0">
-            <ExternalLink href={pickedIssue.url}>
-              #{pickedIssue.number} {pickedIssue.title}
-            </ExternalLink>
-          </p>
-        )}
-        <Progress
-          label={t("plan.progress.label")}
-          done={done}
-          total={total}
-          countLabel={t("plan.progress.count")
-            .replace("{n}", String(done))
-            .replace("{total}", String(total))}
-          note={phases.join(" · ")}
-        />
-        <div className="flex flex-wrap items-center gap-16">
-          <button type="button" className="ism-btn" onClick={exportPlan}>
-            <Download width={20} height={20} aria-hidden="true" />
-            {t("plan.export")}
-          </button>
-          {importControls}
-          <button
-            type="button"
-            className="app-btn-tertiary"
-            onClick={generate}
-            disabled={jobRunning || startMutation.isPending}
-          >
-            <Refresh width={20} height={20} aria-hidden="true" />
-            {t("plan.regenerate")}
-          </button>
-        </div>
-        <p className="ism-t-caption text-text-muted m-0">
-          {t("plan.export.hint")}
-        </p>
-      </PageHeader>
-
-      <ol className="m-0 p-0 list-none border-t-2 border-rule-strong">
-        {plan.weeks.map(w => {
-          const isDone = doneWeeks.includes(w.week);
-          return (
-            <li
-              key={w.week}
-              className="py-32 border-b-1 border-hairline flex flex-col gap-16"
+      />
+      <div className="app-container py-64">
+        <div className="flex flex-col gap-16 mb-48 max-w-reading">
+          <p className="ism-t-lead m-0">{plan.intro}</p>
+          <AiLabel>{t("common.builtWithAi")}</AiLabel>
+          {pickedIssue && (
+            <p className="ism-t-body-small m-0">
+              <ExternalLink href={pickedIssue.url}>
+                #{pickedIssue.number} {pickedIssue.title}
+              </ExternalLink>
+            </p>
+          )}
+          <Progress
+            label={t("plan.progress.label")}
+            done={done}
+            total={total}
+            countLabel={t("plan.progress.count")
+              .replace("{n}", String(done))
+              .replace("{total}", String(total))}
+            note={phases.join(" · ")}
+          />
+          <div className="flex flex-wrap items-center gap-16">
+            <button type="button" className="ism-btn" onClick={exportPlan}>
+              <Download width={20} height={20} aria-hidden="true" />
+              {t("plan.export")}
+            </button>
+            {importControls}
+            <button
+              type="button"
+              className="app-btn-tertiary"
+              onClick={generate}
+              disabled={jobRunning || startMutation.isPending}
             >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-16">
-                <div className="flex flex-col gap-8">
-                  <p className="ism-label m-0">
-                    {t("plan.week")} {w.week} · {w.phase}
+              <Refresh width={20} height={20} aria-hidden="true" />
+              {t("plan.regenerate")}
+            </button>
+          </div>
+          <p className="ism-t-caption text-text-muted m-0">
+            {t("plan.export.hint")}
+          </p>
+        </div>
+
+        <ol className="m-0 p-0 list-none border-t-2 border-rule-strong">
+          {plan.weeks.map(w => {
+            const isDone = doneWeeks.includes(w.week);
+            return (
+              <li
+                key={w.week}
+                className="py-32 border-b-1 border-hairline flex flex-col gap-16"
+              >
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-16">
+                  <div className="flex flex-col gap-8">
+                    <p className="ism-label m-0">
+                      {t("plan.week")} {w.week} · {w.phase}
+                    </p>
+                    <h2 className="ism-t-h3 text-text-heading m-0">
+                      {w.title}
+                    </h2>
+                  </div>
+                  <div className="shrink-0">
+                    <Choice
+                      type="checkbox"
+                      name={`week-${w.week}`}
+                      checked={isDone}
+                      onChange={() => toggleWeek(w.week)}
+                      title={isDone ? t("plan.weekDone") : t("plan.markDone")}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-24">
+                  <div>
+                    <p className="ism-label mt-0 mb-8">
+                      {t("plan.objectives")}
+                    </p>
+                    <ul className="ism-t-body-small m-0 ps-24 list-disc flex flex-col gap-4">
+                      {w.objectives.map((o, j) => (
+                        <li key={j}>{o}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="ism-label mt-0 mb-8">{t("plan.tasks")}</p>
+                    <ul className="ism-t-body-small m-0 ps-24 list-disc flex flex-col gap-4">
+                      {w.tasks.map((task, j) => (
+                        <li key={j}>{task}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {w.resources.length > 0 && (
+                  <div>
+                    <p className="ism-label mt-0 mb-8">{t("plan.resources")}</p>
+                    <ul className="ism-t-body-small m-0 p-0 list-none flex flex-wrap gap-8 gap-x-24">
+                      {w.resources.map((r, j) => (
+                        <li key={j}>
+                          <ExternalLink href={r.url}>{r.label}</ExternalLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="pt-16 border-t-1 border-hairline flex flex-col md:flex-row md:items-center md:justify-between gap-12">
+                  <p className="ism-t-body-small m-0">
+                    <span className="ism-label me-8">{t("plan.outcome")}</span>
+                    {w.outcome}
                   </p>
-                  <h2 className="ism-t-h3 text-text-heading m-0">{w.title}</h2>
+                  <button
+                    type="button"
+                    onClick={() => askMentor(w.title, w.week)}
+                    className="app-btn-tertiary shrink-0"
+                  >
+                    <ChatLines width={20} height={20} aria-hidden="true" />
+                    {t("plan.askMentor")}
+                  </button>
                 </div>
-                <div className="shrink-0">
-                  <Choice
-                    type="checkbox"
-                    name={`week-${w.week}`}
-                    checked={isDone}
-                    onChange={() => toggleWeek(w.week)}
-                    title={isDone ? t("plan.weekDone") : t("plan.markDone")}
-                  />
-                </div>
-              </div>
+              </li>
+            );
+          })}
+        </ol>
 
-              <div className="grid md:grid-cols-2 gap-24">
-                <div>
-                  <p className="ism-label mt-0 mb-8">{t("plan.objectives")}</p>
-                  <ul className="ism-t-body-small m-0 ps-24 list-disc flex flex-col gap-4">
-                    {w.objectives.map((o, j) => (
-                      <li key={j}>{o}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="ism-label mt-0 mb-8">{t("plan.tasks")}</p>
-                  <ul className="ism-t-body-small m-0 ps-24 list-disc flex flex-col gap-4">
-                    {w.tasks.map((task, j) => (
-                      <li key={j}>{task}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {w.resources.length > 0 && (
-                <div>
-                  <p className="ism-label mt-0 mb-8">{t("plan.resources")}</p>
-                  <ul className="ism-t-body-small m-0 p-0 list-none flex flex-wrap gap-8 gap-x-24">
-                    {w.resources.map((r, j) => (
-                      <li key={j}>
-                        <ExternalLink href={r.url}>{r.label}</ExternalLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="pt-16 border-t-1 border-hairline flex flex-col md:flex-row md:items-center md:justify-between gap-12">
-                <p className="ism-t-body-small m-0">
-                  <span className="ism-label me-8">{t("plan.outcome")}</span>
-                  {w.outcome}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => askMentor(w.title, w.week)}
-                  className="app-btn-tertiary shrink-0"
-                >
-                  <ChatLines width={20} height={20} aria-hidden="true" />
-                  {t("plan.askMentor")}
-                </button>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
-
-      <section className="mt-64 max-w-reading">
-        <SectionHead title={t("plan.graduation")} />
-        <p className="ism-t-body m-0">{plan.graduation}</p>
-        <p className="ism-label mt-32 mb-12">{t("plan.funding")}</p>
-        <ul className="ism-t-body-small m-0 p-0 list-none flex flex-wrap gap-8 gap-x-24">
-          {FUNDING.map(f => (
-            <li key={f.url}>
-              <ExternalLink href={f.url}>{f.label}</ExternalLink>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+        <section className="mt-64 max-w-reading">
+          <SectionHead title={t("plan.graduation")} />
+          <p className="ism-t-body m-0">{plan.graduation}</p>
+          <p className="ism-label mt-32 mb-12">{t("plan.funding")}</p>
+          <ul className="ism-t-body-small m-0 p-0 list-none flex flex-wrap gap-8 gap-x-24">
+            {FUNDING.map(f => (
+              <li key={f.url}>
+                <ExternalLink href={f.url}>{f.label}</ExternalLink>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </>
   );
 }

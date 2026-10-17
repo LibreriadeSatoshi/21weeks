@@ -1,12 +1,13 @@
 // Piezas de página de ISMOS que no están en el bundle del kit (components.css).
 // Siguen design/ismos/docs/10-accepted-decisions.md §2.
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import {
   Check,
   InfoCircle,
   OpenNewWindow,
   WarningTriangle,
 } from "iconoir-react";
+import ismosMarkPaper from "../../design/ismos/logos/ismos-mark-paper.svg";
 
 /** Cabecera de página: barra de 6 px, etiqueta, título y entradilla. */
 export function PageHeader({
@@ -190,4 +191,24 @@ export function ExternalLink({
 /** Material generado por IA: siempre etiquetado (05 Voice and tone). */
 export function AiLabel({ children }: { children: ReactNode }) {
   return <span className="ism-label ism-label--ai">{children}</span>;
+}
+
+/**
+ * Campo de motivo (01.1): el mark oficial en Paper, repetido con espaciado
+ * regular sobre un bloque Ink, Mauveine o Indigo. El fichero se coloca tal cual
+ * (no se redibuja); la opacidad sale de --opacity-motif (25 %). Va detrás de un
+ * título como mucho, nunca de texto corrido.
+ */
+export function MotifField() {
+  const id = `motif-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  return (
+    <svg className="app-motif" aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id={id} width="96" height="96" patternUnits="userSpaceOnUse">
+          <image href={ismosMarkPaper} x="24" y="24" width="48" height="48" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
 }

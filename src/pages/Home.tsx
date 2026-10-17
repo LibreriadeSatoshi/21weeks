@@ -10,52 +10,53 @@ export default function Home() {
 
   return (
     <div>
-      {/* Portada */}
-      <section className="app-container py-64 md:py-96">
-        <Reveal>
-          <div className="flex flex-col gap-24 max-w-reading">
-            <span className="ism-bar" />
-            <p className="ism-label m-0">{t("hero.eyebrow")}</p>
-            <h1 className="ism-t-display text-text-heading m-0">
-              {t("hero.title.a")} {t("hero.title.b")} {t("hero.title.c")}
-            </h1>
-            <p className="ism-t-lead m-0">{t("hero.sub")}</p>
-            <div className="flex flex-wrap gap-16">
-              <Link to="/quiz" className="ism-btn">
-                {t("hero.cta")}
-                <ArrowRight width={20} height={20} aria-hidden="true" />
-              </Link>
-              <Link to="/projects" className="ism-btn ism-btn--secondary">
-                {t("hero.cta2")}
-              </Link>
+      {/* Portada: bloque Mauveine a todo el ancho */}
+      <section className="app-mauveine py-64 md:py-96">
+        <div className="app-container">
+          <Reveal>
+            <div className="flex flex-col gap-24 max-w-reading">
+              <p className="ism-label m-0">{t("hero.eyebrow")}</p>
+              <h1 className="ism-t-display text-text-heading m-0">
+                {t("hero.title.a")} {t("hero.title.b")} {t("hero.title.c")}
+              </h1>
+              <p className="ism-t-lead m-0">{t("hero.sub")}</p>
+              <div className="flex flex-wrap gap-16">
+                <Link to="/quiz" className="ism-btn">
+                  {t("hero.cta")}
+                  <ArrowRight width={20} height={20} aria-hidden="true" />
+                </Link>
+                <Link to="/projects" className="ism-btn ism-btn--secondary">
+                  {t("hero.cta2")}
+                </Link>
+              </div>
+              <dl className="app-facts">
+                <div>
+                  <dt>21</dt>
+                  <dd>{t("home.facts.weeks")}</dd>
+                </div>
+                <div>
+                  <dt>4 h</dt>
+                  <dd>{t("home.facts.hours")}</dd>
+                </div>
+                <div>
+                  <dt>{PROJECTS.length}</dt>
+                  <dd>{t("home.facts.projects")}</dd>
+                </div>
+                <div>
+                  <dt>2</dt>
+                  <dd>{t("home.facts.forges")}</dd>
+                </div>
+              </dl>
+              <p className="ism-t-caption text-text-muted m-0">
+                {t("hero.noShitcoins")}
+              </p>
             </div>
-            <dl className="app-facts">
-              <div>
-                <dt>21</dt>
-                <dd>{t("home.facts.weeks")}</dd>
-              </div>
-              <div>
-                <dt>4 h</dt>
-                <dd>{t("home.facts.hours")}</dd>
-              </div>
-              <div>
-                <dt>{PROJECTS.length}</dt>
-                <dd>{t("home.facts.projects")}</dd>
-              </div>
-              <div>
-                <dt>2</dt>
-                <dd>{t("home.facts.forges")}</dd>
-              </div>
-            </dl>
-            <p className="ism-t-caption text-text-muted m-0">
-              {t("hero.noShitcoins")}
-            </p>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
       {/* Cómo funciona */}
-      <section className="app-container pb-64 md:pb-96">
+      <section className="app-container py-64 md:py-96">
         <Reveal>
           <SectionHead num="01" title={t("how.title")} />
         </Reveal>

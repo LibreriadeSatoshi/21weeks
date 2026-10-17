@@ -418,3 +418,91 @@
 .app-btn-tertiary:disabled {
   background: transparent;
 }
+
+/* Bloque Mauveine a todo el ancho (hero de la portada). Tipografía en Paper:
+   Ink sobre Mauveine no llega a 4.5:1, así que el botón principal pasa a Paper
+   con texto Ink y el secundario a contorno Paper. */
+.app-mauveine {
+  --surface: var(--mauveine);
+  --text: var(--paper);
+  --text-heading: var(--paper);
+  --text-muted: var(--paper);
+  --hairline: var(--mauveine-300);
+  --rule-strong: var(--paper);
+  --link: var(--paper);
+  --link-hover: var(--paper);
+  --action: var(--paper);
+  --on-action: var(--ink);
+  --focus: var(--weld);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Campo de motivo (01.1): el mark repetido, un color sobre un color, espaciado
+   regular, sin rotar, opacidad máxima 25 %, recortado por la superficie. */
+.app-motif-block {
+  position: relative;
+  overflow: hidden;
+}
+.app-motif {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: var(--opacity-motif);
+  pointer-events: none;
+}
+.app-motif-block > :not(.app-motif) {
+  position: relative;
+}
+
+/* Bloque de color de un cuarto de la superficie (01.1, dispositivo 4): plano,
+   a sangre hasta el borde. Móvil: banda superior; escritorio: columna derecha. */
+.app-quarter {
+  display: grid;
+  grid-template-rows: var(--space-96) auto;
+}
+.app-quarter__block {
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  padding-inline: var(--page-margin-mobile);
+  background: var(--indigo);
+}
+.app-quarter__text {
+  grid-row: 2;
+  padding: var(--space-48) var(--page-margin-mobile);
+}
+.app-quarter__text > header {
+  margin-bottom: 0;
+}
+@media (min-width: 640px) {
+  .app-quarter__block {
+    padding-inline: var(--page-margin);
+  }
+  .app-quarter__text {
+    padding-inline: var(--page-margin);
+  }
+}
+@media (min-width: 1024px) {
+  .app-quarter {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: auto;
+  }
+  .app-quarter__block {
+    grid-column: 2;
+    grid-row: 1;
+    align-items: flex-start;
+    padding: var(--space-64) var(--space-32);
+  }
+  .app-quarter__text {
+    grid-column: 1;
+    grid-row: 1;
+    padding-block: var(--space-64);
+    padding-inline-start: max(
+      var(--page-margin),
+      calc((100vw - var(--content-max)) / 2 + var(--page-margin))
+    );
+    padding-inline-end: var(--space-48);
+  }
+}
