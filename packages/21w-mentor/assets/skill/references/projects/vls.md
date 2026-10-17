@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-security-critical Rust; signing policies must be correct against the BOLTs. Culture: small team, security review focus. Note the GitLab workflow (merge requests, not PRs). AI tolerance: security-critical code demands full author understanding.
+PROJECT-SPECIFIC MENTOR RULES: Validating Lightning Signer (GitLab): security-critical Rust; signing policies must be correct against the BOLTs. Culture: small team, security review focus. Note the GitLab workflow (merge requests, not PRs). AI tolerance: security-critical code demands full author understanding.
 
 ## Cultura de contribución
 

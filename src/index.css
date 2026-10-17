@@ -303,3 +303,118 @@
   margin: 0;
   color: var(--text-muted);
 }
+
+/* Radio y casilla (10 §2): casilla 20 px cuadrada, radio 20 px circular (excepción
+   nombrada), borde 2 px; seleccionado = relleno/punto + peso 600, nunca un color de fondo. */
+.app-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-12);
+  min-height: var(--tap-target);
+  padding: var(--space-12) var(--space-16);
+  border: var(--rule-1) solid var(--hairline);
+  border-radius: var(--radius-4);
+  cursor: pointer;
+}
+.app-choice:hover {
+  border-color: var(--text);
+}
+.app-choice:has(input:checked) {
+  border-color: var(--text);
+}
+.app-choice:has(input:checked) .app-choice__title {
+  font-weight: 600;
+}
+.app-choice:has(input:focus-visible) {
+  outline: var(--rule-2) solid var(--focus);
+  outline-offset: var(--space-2);
+}
+.app-choice__title {
+  font-weight: 500;
+  color: var(--text-heading);
+}
+.app-choice__box {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--space-24);
+  height: var(--space-24);
+  margin-top: var(--space-2);
+  border: var(--rule-2) solid var(--text);
+  color: var(--surface);
+}
+.app-choice__box--radio {
+  border-radius: var(--radius-circle);
+}
+.app-choice__box svg {
+  visibility: hidden;
+}
+.app-choice:has(input:checked) .app-choice__box--checkbox {
+  background: var(--text);
+}
+.app-choice:has(input:checked) .app-choice__box svg {
+  visibility: visible;
+}
+.app-choice:has(input:checked) .app-choice__box--radio::after {
+  content: "";
+  width: var(--space-12);
+  height: var(--space-12);
+  border-radius: var(--radius-circle);
+  background: var(--text);
+}
+
+/* Slider (10 §2): pista de 6 px, pulgar cuadrado, valor siempre escrito al lado */
+.app-slider {
+  flex: 1;
+  appearance: none;
+  height: var(--rule-6);
+  background: var(--track);
+  cursor: pointer;
+}
+.app-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--space-24);
+  height: var(--space-24);
+  background: var(--text);
+  border: 0;
+}
+.app-slider::-moz-range-thumb {
+  width: var(--space-24);
+  height: var(--space-24);
+  background: var(--text);
+  border: 0;
+  border-radius: 0;
+}
+
+/* Botón terciario (10 §2): sin borde, peso 600, subrayado solo al pasar */
+.ism-root .app-btn-tertiary,
+.app-btn-tertiary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: var(--tap-target);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.ism-root .app-btn-tertiary:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ism-btn:disabled,
+.app-btn-tertiary:disabled {
+  cursor: not-allowed;
+  background: var(--track);
+  border-color: var(--track);
+  color: var(--text-muted);
+}
+.app-btn-tertiary:disabled {
+  background: transparent;
+}

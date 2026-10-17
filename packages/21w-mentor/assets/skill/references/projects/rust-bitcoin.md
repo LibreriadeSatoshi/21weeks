@@ -16,13 +16,13 @@
 
 ## Reglas del mentor
 
-foundational library, very high bar for correctness and API design; maintainers value careful, minimal changes with strong tests and docs. Culture: thorough review, focus on MSRV, no-std, and consensus-critical correctness. AI tolerance: author-first — the library's consensus adjacency makes understanding mandatory.
+PROJECT-SPECIFIC MENTOR RULES: rust-bitcoin: foundational library, very high bar for correctness and API design; maintainers value careful, minimal changes with strong tests and docs. Culture: thorough review, focus on MSRV, no-std, and consensus-critical correctness. AI tolerance: author-first; the library's consensus adjacency makes understanding mandatory.
 
 ## Cultura de contribución
 
 **ES**: Librería fundacional con un listón altísimo de corrección: cambios mínimos, tests fuertes y docs. Es adyacente al consenso, así que la comprensión no es opcional. IA: autor-primero estricto.
 
-**EN**: Foundational library with a very high correctness bar: minimal changes, strong tests and docs. Consensus-adjacent — understanding is not optional. AI: strict author-first.
+**EN**: Foundational library with a very high correctness bar: minimal changes, strong tests and docs. Consensus-adjacent, so understanding is not optional. AI: strict author-first.
 
 ## Recursos de aprendizaje curados
 

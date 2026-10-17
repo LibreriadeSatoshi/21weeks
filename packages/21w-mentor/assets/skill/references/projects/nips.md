@@ -15,13 +15,13 @@
 
 ## Reglas del mentor
 
-protocol standards repo. Contributions: new NIPs, clarifications, fixes. Culture: rough consensus, implementation-driven (a NIP without implementations rarely advances). Encourage reading existing NIPs and discussing with client/relay devs. Primary sources: use the readNostrDoc tool (nostrbook.dev registry + official NIPs repo) for event kinds, tags and protocol flow instead of memory. AI tolerance: pragmatic; the author must defend the design.
+PROJECT-SPECIFIC MENTOR RULES: Nostr NIPs: protocol standards repo. Contributions: new NIPs, clarifications, fixes. Culture: rough consensus, implementation-driven (a NIP without implementations rarely advances). Encourage reading existing NIPs and discussing with client/relay devs. Primary sources: use the readNostrDoc tool (nostrbook.dev registry + official NIPs repo) for event kinds, tags and protocol flow instead of memory. AI tolerance: pragmatic; the author must defend the design.
 
 ## Cultura de contribución
 
 **ES**: Repositorio de estándares de Nostr: consenso aproximado y guiado por implementaciones; un NIP sin clientes que lo usen raramente avanza. IA: pragmática; tú defiendes el diseño.
 
-**EN**: Nostr standards repo: rough consensus, implementation-driven — a NIP without clients using it rarely advances. AI: pragmatic; you defend the design.
+**EN**: Nostr standards repo: rough consensus, implementation-driven; a NIP without clients using it rarely advances. AI: pragmatic; you defend the design.
 
 ## Recursos de aprendizaje curados
 

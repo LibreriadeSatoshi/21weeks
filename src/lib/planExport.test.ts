@@ -43,7 +43,7 @@ describe("plan export", () => {
     const markdown = buildPlanMarkdown(state, "es");
 
     expect(markdown).toContain("### [x] Semana 1");
-    expect(markdown).not.toContain("—");
+    expect(markdown).not.toContain("\u2014");
     expect(parseImportedPlan(markdown)).toEqual(state);
   });
 

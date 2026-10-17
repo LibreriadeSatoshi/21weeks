@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { PROJECTS } from "@contracts/types";
-import { useI18n } from "@/i18n";
+import { ArrowRight, Refresh } from "iconoir-react";
+import { useI18n, type TKey } from "@/i18n";
 import { useAppState } from "@/state";
-import { Reveal } from "@/components/Layout";
-import { ProjectLogo } from "@/components/ProjectLogo";
+import { AiLabel, ExternalLink, Notice, PageHeader } from "@/components/ismos";
 import { API_URL } from "@/lib/paths";
 
 export default function Mentor() {
@@ -14,7 +14,7 @@ export default function Mentor() {
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const project = PROJECTS.find((p) => p.id === projectId) ?? null;
+  const project = PROJECTS.find(p => p.id === projectId) ?? null;
 
   // prefill desde "preguntar al mentor" en el plan
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function Mentor() {
       }
       if (!acc.trim()) throw new Error("empty stream");
     } catch {
-      setInput((current) => current || content);
+      setInput(current => current || content);
       setChat(chat);
       setError(true);
     } finally {
@@ -72,78 +72,130 @@ export default function Mentor() {
     }
   };
 
+  const context = [
+    profile &&
+      t(
+        `quiz.role.${profile.role === "developer" ? "dev" : "research"}` as TKey
+      ),
+    profile && t(`quiz.level.${profile.level}` as TKey),
+    profile && `${profile.hoursPerWeek} ${t("quiz.hours.unit")}`,
+    project?.name,
+    plan && t("mentor.context.plan").replace("{n}", String(plan.weeks.length)),
+  ].filter(Boolean);
+
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 md:py-24 flex flex-col" style={{ minHeight: "calc(100vh - 57px)" }}>
-      <Reveal>
-        <p className="eyebrow mb-3" style={{ color: "var(--ember)" }}>{t("mentor.eyebrow")}</p>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-[-0.03em]">{t("mentor.title")}</h1>
-        <p className="mt-3 opacity-70">{t("mentor.sub")}</p>
-
-        <div className="mt-4 flex flex-wrap gap-2 items-center">
-          <span className="font-mono2 text-[10px] uppercase tracking-[0.15em] opacity-50">{t("mentor.context")}:</span>
-          {profile && <span className="pill">{profile.role} · {profile.level} · {profile.hoursPerWeek}h/w</span>}
-          {project && (
-            <span className="pill inline-flex items-center gap-2" style={{ borderColor: "var(--ember)", color: "var(--ember)" }}>
-              <ProjectLogo id={project.id} size={16} /> {project.name}
-            </span>
+    <div className="app-container py-64">
+      <div className="max-w-reading mx-auto">
+        <PageHeader
+          label={t("mentor.eyebrow")}
+          title={t("mentor.title")}
+          lead={t("mentor.sub")}
+        >
+          {context.length > 0 && (
+            <p className="ism-t-caption m-0">
+              <span className="ism-label me-8">{t("mentor.context")}</span>
+              {context.join(" · ")}
+            </p>
           )}
-          {plan && <span className="pill">{plan.weeks.length}w plan</span>}
-          <a href="https://bitcoinknowledge.dev/" target="_blank" rel="noreferrer" className="pill no-underline" style={{ borderColor: "var(--gold)", color: "var(--gold)" }}>
-            ↗ {t("mentor.sources")}
-          </a>
+          <p className="ism-t-body-small m-0">
+            <ExternalLink href="https://bitcoinknowledge.dev/">
+              {t("mentor.sources")}
+            </ExternalLink>
+          </p>
+        </PageHeader>
+
+        <div
+          className="flex flex-col border-t-2 border-rule-strong"
+          aria-live="polite"
+        >
+          {chat.length === 0 && (
+            <p className="ism-t-body text-text-muted py-32 m-0">
+              {t("mentor.empty")}
+            </p>
+          )}
+          {chat.map((m, i) => (
+            <article
+              key={i}
+              className="py-24 border-b-1 border-hairline flex flex-col gap-8"
+            >
+              <p className="m-0 flex flex-wrap items-center gap-12">
+                <span className="ism-label">
+                  {m.role === "user" ? t("mentor.you") : t("mentor.eyebrow")}
+                </span>
+                {m.role === "assistant" && (
+                  <AiLabel>{t("common.builtWithAi")}</AiLabel>
+                )}
+              </p>
+              {m.role === "assistant" ? (
+                <div className="ism-t-body md-chat">
+                  <ReactMarkdown>{m.content}</ReactMarkdown>
+                  {streaming && i === chat.length - 1 && (
+                    <span className="chat-caret" />
+                  )}
+                </div>
+              ) : (
+                <p className="ism-t-body m-0 whitespace-pre-wrap">
+                  {m.content}
+                </p>
+              )}
+            </article>
+          ))}
+          {streaming && chat[chat.length - 1]?.role === "user" && (
+            <p
+              className="ism-t-body-small text-text-muted py-16 m-0"
+              role="status"
+            >
+              {t("mentor.thinking")}
+            </p>
+          )}
+          {error && (
+            <div className="py-16 flex flex-col gap-12">
+              <Notice tone="alert" word={t("common.alert")}>
+                {t("mentor.error.quota")}
+              </Notice>
+              <div>
+                <button
+                  type="button"
+                  onClick={send}
+                  className="ism-btn ism-btn--secondary"
+                >
+                  <Refresh width={20} height={20} aria-hidden="true" />
+                  {t("common.retry")}
+                </button>
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
         </div>
-      </Reveal>
 
-      {/* mensajes */}
-      <div className="flex-1 mt-8 flex flex-col gap-4">
-        {chat.length === 0 && (
-          <p className="opacity-50 text-sm py-16 text-center font-mono2">{t("mentor.empty")}</p>
-        )}
-        {chat.map((m, i) => (
-          <div
-            key={i}
-            className={`max-w-[88%] p-4 text-sm leading-relaxed ${
-              m.role === "user" ? "self-end whitespace-pre-wrap" : "self-start md-chat"
-            }`}
-            style={
-              m.role === "user"
-                ? { background: "var(--ember)", color: "#ffffff", borderRadius: "14px 14px 2px 14px" }
-                : { background: "var(--card-bg)", border: "1px solid var(--hairline)", borderRadius: "14px 14px 14px 2px" }
-            }
-          >
-            {m.role === "assistant" ? <ReactMarkdown>{m.content}</ReactMarkdown> : m.content}
-            {m.role === "assistant" && streaming && i === chat.length - 1 && (
-              <span className="chat-caret" />
-            )}
+        <form
+          className="sticky bottom-0 bg-surface py-16 border-t-1 border-hairline flex flex-col gap-8"
+          onSubmit={e => {
+            e.preventDefault();
+            send();
+          }}
+        >
+          <div className="ism-field">
+            <label htmlFor="mentor-input">{t("mentor.inputLabel")}</label>
+            <div className="flex gap-12">
+              <input
+                id="mentor-input"
+                className="ism-field__input"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder={t("mentor.placeholder")}
+              />
+              <button
+                type="submit"
+                disabled={streaming || !input.trim()}
+                className="ism-btn shrink-0"
+              >
+                {t("mentor.send")}
+                <ArrowRight width={20} height={20} aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        ))}
-        {streaming && chat[chat.length - 1]?.role === "user" && (
-          <p className="font-mono2 text-xs opacity-50 self-start">{t("mentor.thinking")}</p>
-        )}
-        {error && (
-          <div className="self-start p-4 text-sm" style={{ border: "1px solid var(--ember)", background: "var(--ember-soft)" }}>
-            {t("mentor.error.quota")}{" "}
-            <button onClick={send} className="underline cursor-pointer" style={{ color: "var(--ember)", background: "none", border: "none" }}>
-              {t("common.retry")}
-            </button>
-          </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      {/* input */}
-      <div className="sticky bottom-16 md:bottom-4 mt-6 flex gap-2 p-2" style={{ background: "var(--card-bg)", border: "1px solid var(--hairline)", borderRadius: "999px" }}>
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder={t("mentor.placeholder")}
-          className="flex-1 bg-transparent outline-none px-4 text-sm"
-          style={{ color: "var(--paper)" }}
-        />
-        <button onClick={send} disabled={streaming || !input.trim()} className="btn-ember !py-2.5">
-          {t("mentor.send")} →
-        </button>
+        </form>
       </div>
     </div>
   );

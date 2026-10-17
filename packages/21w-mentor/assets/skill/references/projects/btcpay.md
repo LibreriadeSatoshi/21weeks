@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-product-oriented, web-developer friendly (C#/ASP.NET + Vue). Welcoming community, active chat on chat.btcpayserver.org. Good path: UI fixes, docs, then deeper invoice/payment logic. AI tolerance: pragmatic, author owns the code.
+PROJECT-SPECIFIC MENTOR RULES: BTCPay Server: product-oriented, web-developer friendly (C#/ASP.NET + Vue). Welcoming community, active chat on chat.btcpayserver.org. Good path: UI fixes, docs, then deeper invoice/payment logic. AI tolerance: pragmatic, author owns the code.
 
 ## Cultura de contribución
 

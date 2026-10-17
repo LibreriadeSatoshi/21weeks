@@ -1,5 +1,5 @@
 /**
- * contracts/catalog.ts — Datos compartidos frontend ↔ backend.
+ * contracts/catalog.ts: datos compartidos entre frontend y backend.
  * Catálogo curado del ecosistema Bitcoin / Lightning (sin shitcoins),
  * tipos de perfil de usuario y tipos de issues / plan.
  *
@@ -73,7 +73,7 @@ export const PROJECTS: Project[] = [
     tagline: { es: "La implementación de referencia", en: "The reference implementation" },
     summary: {
       es: "El cliente Bitcoin original y más usado. C++ con tests funcionales en Python. Revisión rigurosa, cultura de 'review antes que código'.",
-      en: "The original and most widely used Bitcoin client. C++ with Python functional tests. Rigorous review culture — review before code.",
+      en: "The original and most widely used Bitcoin client. C++ with Python functional tests. Rigorous review culture: review before code.",
     },
     host: "github",
     repo: "bitcoin/bitcoin",
@@ -484,7 +484,7 @@ export interface LearningResource {
 }
 
 export const LEARNING_RESOURCES: LearningResource[] = [
-  // — Librería de Satoshi (cursos, español/portugués) —
+  // Librería de Satoshi (cursos, español/portugués)
   {
     title: { es: "Aprende GitHub para Open Source", en: "Learn GitHub for Open Source" },
     url: "https://moodle.libreriadesatoshi.com/course/view.php?id=27",
@@ -615,7 +615,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       en: "Monitoring the P2P network: researcher profile applied to network data.",
     },
   },
-  // — The Bitcoin Dev Project —
+  // The Bitcoin Dev Project
   {
     title: { es: "Biblioteca de aprendizaje (The Bitcoin Dev Project)", en: "Learn library (The Bitcoin Dev Project)" },
     url: "https://bitcoindevs.xyz/learn",
@@ -655,7 +655,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       en: "OpenSats, Spiral, HRF, Brink…: for when your PRs already speak for you (week 21+).",
     },
   },
-  // — Nostrbook —
+  // Nostrbook
   {
     title: { es: "Nostrbook: registro de documentación Nostr", en: "Nostrbook: Nostr documentation registry" },
     url: "https://nostrbook.dev/",
@@ -676,7 +676,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
 export const CULTURE: Record<string, { es: string; en: string }> = {
   "bitcoin-core": {
     es: "Cultura autor-primero regulada por doc/AI_POLICY.md: tú escribes cada línea, cada test y cada mensaje de commit, y debes poder defenderlas en review. PRs pequeños, merge por ACKs de reviewers; la review es el cuello de botella, así que revisar PRs ajenos da más reputación que abrir los tuyos. Puerta de entrada concreta: los hallazgos LOW-2/LOW-3 de la auditoría Quarkslab 2025. La IA te explica y te hace preguntas; jamás te da un diff listo para pegar.",
-    en: "Author-first culture regulated by doc/AI_POLICY.md: you write every line, test and commit message, and you must defend them in review. Small PRs, merged by reviewer ACKs — review is the bottleneck, so reviewing others' PRs earns more reputation than opening your own. Concrete entry point: the LOW-2/LOW-3 findings of the 2025 Quarkslab audit. AI explains and questions you; it never hands you a ready-to-paste diff.",
+    en: "Author-first culture regulated by doc/AI_POLICY.md: you write every line, test and commit message, and you must defend them in review. Small PRs, merged by reviewer ACKs; review is the bottleneck, so reviewing others' PRs earns more reputation than opening your own. Concrete entry point: the LOW-2/LOW-3 findings of the 2025 Quarkslab audit. AI explains and questions you; it never hands you a ready-to-paste diff.",
   },
   "core-lightning": {
     es: "Proyecto guiado por la especificación (BOLTs), con arquitectura de plugins en Python sobre el núcleo en C. Se discute antes de cambios grandes en los canales de la comunidad. IA: bienvenida para aprender, pero cada línea debe ser entendida y testada por ti.",
@@ -688,7 +688,7 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
   },
   ldk: {
     es: "Librería ante todo: hay que pensar en superficie de API, compatibilidad no-std y MSRV. Buena cultura de review en GitHub y documentación de arquitectura propia. IA: principio autor-primero, código entendido y defendido.",
-    en: "Library first: think about API surface, no-std compatibility and MSRV. Good GitHub review culture and its own architecture docs. AI: author-first principle — understood and defended code.",
+    en: "Library first: think about API surface, no-std compatibility and MSRV. Good GitHub review culture and its own architecture docs. AI: author-first principle: understood and defended code.",
   },
   bdk: {
     es: "Una de las comunidades más acogedoras para primeras contribuciones: Discord activo, etiquetas good first issue bien cuidadas y review amable. Workspace de crates (bdk_wallet, bdk_chain…). IA: pragmática, pero entiende y respalda cada línea.",
@@ -696,7 +696,7 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
   },
   "rust-bitcoin": {
     es: "Librería fundacional con un listón altísimo de corrección: cambios mínimos, tests fuertes y docs. Es adyacente al consenso, así que la comprensión no es opcional. IA: autor-primero estricto.",
-    en: "Foundational library with a very high correctness bar: minimal changes, strong tests and docs. Consensus-adjacent — understanding is not optional. AI: strict author-first.",
+    en: "Foundational library with a very high correctness bar: minimal changes, strong tests and docs. Consensus-adjacent, so understanding is not optional. AI: strict author-first.",
   },
   electrum: {
     es: "Equipo mantenedor pequeño con review concisa: contribuciones enfocadas y bien testadas. Su implementación propia de Lightning en Python es una gran escuela. IA: no regulada explícitamente; se espera comprensión.",
@@ -720,11 +720,11 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
   },
   fedimint: {
     es: "Adyacente a investigación (ecash chaumiano, federaciones). Rust + entorno Nix; el setup es el primer obstáculo real. Llamadas de comunidad activas. IA: pragmática, pero el autor responde del código.",
-    en: "Research-adjacent (Chaumian ecash, federations). Rust + Nix environment — the setup is the first real hurdle. Active community calls. AI: pragmatic, but the author owns the code.",
+    en: "Research-adjacent (Chaumian ecash, federations). Rust + Nix environment; the setup is the first real hurdle. Active community calls. AI: pragmatic, but the author owns the code.",
   },
   nutshell: {
     es: "Comunidad rápida y amable con recién llegados, con 'good first issue' de verdad. La especificación son los NUTs (github.com/cashubtc/nuts): lee el NUT relevante antes de tocar código y entiende el modelo de confianza (los mints son custodios; el ecash es al portador). La comunidad general está en Telegram (t.me/CashuBTC) y el desarrollo se discute en Matrix (#dev:matrix.cashu.space); preséntate allí antes de tu primer PR. El repo tiene AGENTS.md propio: sigue las convenciones del proyecto; el código asistido por IA debe ser entendido y testado por ti (pytest).",
-    en: "Fast-moving community, friendly to newcomers, with real 'good first issue' labels. The spec is the NUTs (github.com/cashubtc/nuts): read the relevant NUT before touching code and understand the trust model (mints are custodians; ecash is bearer). The general community lives on Telegram (t.me/CashuBTC) and dev discussion happens on Matrix (#dev:matrix.cashu.space) — introduce yourself there before your first PR. The repo has its own AGENTS.md: follow project conventions; AI-assisted code must be fully understood and tested by you (pytest).",
+    en: "Fast-moving community, friendly to newcomers, with real 'good first issue' labels. The spec is the NUTs (github.com/cashubtc/nuts): read the relevant NUT before touching code and understand the trust model (mints are custodians; ecash is bearer). The general community lives on Telegram (t.me/CashuBTC) and dev discussion happens on Matrix (#dev:matrix.cashu.space); introduce yourself there before your first PR. The repo has its own AGENTS.md: follow project conventions; AI-assisted code must be fully understood and tested by you (pytest).",
   },
   bolts: {
     es: "Esto es la ESPECIFICACIÓN de Lightning, no código: contribuir es escribir texto de spec, racional y coordinar entre implementaciones. Sin implementaciones que lo adopten, un cambio no avanza. IA: el lenguaje de spec debe ser preciso y totalmente entendido por ti.",
@@ -732,7 +732,7 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
   },
   nips: {
     es: "Repositorio de estándares de Nostr: consenso aproximado y guiado por implementaciones; un NIP sin clientes que lo usen raramente avanza. IA: pragmática; tú defiendes el diseño.",
-    en: "Nostr standards repo: rough consensus, implementation-driven — a NIP without clients using it rarely advances. AI: pragmatic; you defend the design.",
+    en: "Nostr standards repo: rough consensus, implementation-driven; a NIP without clients using it rarely advances. AI: pragmatic; you defend the design.",
   },
   vls: {
     es: "Rust crítico para seguridad: las políticas de firma deben ser correctas contra los BOLTs. Equipo pequeño, foco en review de seguridad, y flujo GitLab (merge requests, no PRs). IA: el código crítico de seguridad exige comprensión total del autor.",
@@ -766,66 +766,66 @@ export function matchScore(profile: Profile, project: Project): number {
 
 export const MENTOR_ADDENDA: Record<string, string> = {
   "bitcoin-core": `
-PROJECT-SPECIFIC MENTOR RULES — Bitcoin Core (based on the project owner's mentor skill "bitcoin-core-audit-mentor"):
+PROJECT-SPECIFIC MENTOR RULES: Bitcoin Core (based on the project owner's mentor skill "bitcoin-core-audit-mentor"):
 
 AUTHOR-FIRST, NON-NEGOTIABLE: the user writes every line of code, every test, every commit message and every review reply. Bitcoin Core's doc/AI_POLICY.md makes ghostwritten LLM work unacceptable, and in review the author must defend every decision with their own understanding.
 - DO: explain C++ constructs and codebase internals; review drafts with maintainer-level severity (deadlocks, edge cases, root cause); find precedents and verify facts against master; simulate the uncomfortable review questions; ask Socratic questions.
 - NEVER: write diffs, tests, commit messages or PR descriptions ready to paste; draft replies to review comments; make design decisions for the user.
 - If the user asks "write me the diff", offer instead the conceptual explanation and the right questions.
 
-CULTURE: small, self-contained PRs; commit format "area: description" (check git log of the touched file); merges happen by reviewer ACKs; REVIEW is the project's bottleneck — a contributor who reviews others' PRs earns trust faster than one who only opens PRs. Direct newcomers to bitcoincore.reviews (PR Review Club), the #bitcoin-core-dev IRC channel, and doc/developer-notes.md.
+CULTURE: small, self-contained PRs; commit format "area: description" (check git log of the touched file); merges happen by reviewer ACKs; REVIEW is the project's bottleneck; a contributor who reviews others' PRs earns trust faster than one who only opens PRs. Direct newcomers to bitcoincore.reviews (PR Review Club), the #bitcoin-core-dev IRC channel, and doc/developer-notes.md.
 
-CONCRETE ENTRY POINT — Quarkslab 2025 audit (Ref. 25-05-2133-REP v1.3, first public third-party audit of Bitcoin Core, 2 LOW + 13 INFO, no higher severities). When the user looks for a first meaningful contribution, these two findings are verified-open entry points (always tell them to re-verify against current master before claiming them):
-- LOW-2: thread-safety annotations in src/policy/fees/block_policy_estimator.{h,cpp} — feeStats/shortStats/longStats use PT_GUARDED_BY instead of GUARDED_BY; in estimateRawFee() the pointer is selected and asserted BEFORE LOCK(m_cs_fee_estimator); Read() reassigns pointers under the lock (the race). Report recommends GUARDED_BY + moving the lock to the top of estimateRawFee(). Precedent: PR #13128 (2018).
-- LOW-3: Assume(d > 0) in src/util/feefrac.h (FeeFrac::DivFallback/Div) — Assume vanishes in RELEASE, so a future caller passing d = 0 would hit UB; the report recommends Assert() instead. Precedent: Lőrinc's CeilDiv() commit (feb-2026) with non-zero-divisor assertion. Context: CVE-2024-35202 and CVE-2024-52919 were assertion-related (report section 5.8).
-- Plan B: INFO-1 (members without GUARDED_BY in AddrMan/CConnman/BlockManager/Chainstate, report p. 37) — more contributions of the same kind.
-Teach the user to approach these as their own investigation: thread diagram, race window analysis, caller mapping, and their own pseudocode proposal — never hand them the fix.`,
+CONCRETE ENTRY POINT; Quarkslab 2025 audit (Ref. 25-05-2133-REP v1.3, first public third-party audit of Bitcoin Core, 2 LOW + 13 INFO, no higher severities). When the user looks for a first meaningful contribution, these two findings are verified-open entry points (always tell them to re-verify against current master before claiming them):
+- LOW-2: thread-safety annotations in src/policy/fees/block_policy_estimator.{h,cpp}; feeStats/shortStats/longStats use PT_GUARDED_BY instead of GUARDED_BY; in estimateRawFee() the pointer is selected and asserted BEFORE LOCK(m_cs_fee_estimator); Read() reassigns pointers under the lock (the race). Report recommends GUARDED_BY + moving the lock to the top of estimateRawFee(). Precedent: PR #13128 (2018).
+- LOW-3: Assume(d > 0) in src/util/feefrac.h (FeeFrac::DivFallback/Div); Assume vanishes in RELEASE, so a future caller passing d = 0 would hit UB; the report recommends Assert() instead. Precedent: Lőrinc's CeilDiv() commit (feb-2026) with non-zero-divisor assertion. Context: CVE-2024-35202 and CVE-2024-52919 were assertion-related (report section 5.8).
+- Plan B: INFO-1 (members without GUARDED_BY in AddrMan/CConnman/BlockManager/Chainstate, report p. 37); more contributions of the same kind.
+Teach the user to approach these as their own investigation: thread diagram, race window analysis, caller mapping, and their own pseudocode proposal; never hand them the fix.`,
 
   "core-lightning": `
-PROJECT-SPECIFIC MENTOR RULES — Core Lightning: spec-driven (BOLTs), plugin architecture in Python on a C core. Point newcomers to the plugins/ directory and docs.corelightning.org. Culture: discuss on the CLN community channels before big changes; commits follow conventional style; tests live in tests/ (pytest with pyln). AI tolerance: use AI to learn, but every line must be understood and tested by the author.`,
+PROJECT-SPECIFIC MENTOR RULES: Core Lightning: spec-driven (BOLTs), plugin architecture in Python on a C core. Point newcomers to the plugins/ directory and docs.corelightning.org. Culture: discuss on the CLN community channels before big changes; commits follow conventional style; tests live in tests/ (pytest with pyln). AI tolerance: use AI to learn, but every line must be understood and tested by the author.`,
 
   lnd: `
-PROJECT-SPECIFIC MENTOR RULES — LND: Lightning Labs has strict code contribution guidelines (docs/code_contribution_guidelines.md): small commits, ideal commit structure, extensive test coverage (itest harness), and review etiquette. Emphasize their "code contribution checklist". AI tolerance: guidelines require understanding and owning all submitted code. Point to lnd/issues labeled "good first issue" and the Lightning Labs dev community.`,
+PROJECT-SPECIFIC MENTOR RULES: LND: Lightning Labs has strict code contribution guidelines (docs/code_contribution_guidelines.md): small commits, ideal commit structure, extensive test coverage (itest harness), and review etiquette. Emphasize their "code contribution checklist". AI tolerance: guidelines require understanding and owning all submitted code. Point to lnd/issues labeled "good first issue" and the Lightning Labs dev community.`,
 
   ldk: `
-PROJECT-SPECIFIC MENTOR RULES — LDK (rust-lightning): library-first design; contributors must think about API surface, no-std compatibility and MSRV. Good review culture on GitHub; sample node in lightning-dev-kit book. Encourage reading the LDK architecture docs before coding. AI tolerance: same author-first principle — understood and owned code only.`,
+PROJECT-SPECIFIC MENTOR RULES: LDK (rust-lightning): library-first design; contributors must think about API surface, no-std compatibility and MSRV. Good review culture on GitHub; sample node in lightning-dev-kit book. Encourage reading the LDK architecture docs before coding. AI tolerance: same author-first principle; understood and owned code only.`,
 
   bdk: `
-PROJECT-SPECIFIC MENTOR RULES — BDK: one of the most welcoming communities for first-time contributors. Culture: friendly Discord, "good first issue" labels actively curated, async review. Workspace of crates (bdk_wallet, bdk_chain, bdk_esplora...). Encourage starting with docs/tests and joining the Discord. AI tolerance: pragmatic, but the author must understand and own every line.`,
+PROJECT-SPECIFIC MENTOR RULES: BDK: one of the most welcoming communities for first-time contributors. Culture: friendly Discord, "good first issue" labels actively curated, async review. Workspace of crates (bdk_wallet, bdk_chain, bdk_esplora...). Encourage starting with docs/tests and joining the Discord. AI tolerance: pragmatic, but the author must understand and own every line.`,
 
   "rust-bitcoin": `
-PROJECT-SPECIFIC MENTOR RULES — rust-bitcoin: foundational library, very high bar for correctness and API design; maintainers value careful, minimal changes with strong tests and docs. Culture: thorough review, focus on MSRV, no-std, and consensus-critical correctness. AI tolerance: author-first — the library's consensus adjacency makes understanding mandatory.`,
+PROJECT-SPECIFIC MENTOR RULES: rust-bitcoin: foundational library, very high bar for correctness and API design; maintainers value careful, minimal changes with strong tests and docs. Culture: thorough review, focus on MSRV, no-std, and consensus-critical correctness. AI tolerance: author-first; the library's consensus adjacency makes understanding mandatory.`,
 
   electrum: `
-PROJECT-SPECIFIC MENTOR RULES — Electrum: small maintainer team, terse review style; contributions should be focused and well-tested. Python codebase with its own Lightning implementation — great for learning LN internals in a high-level language. AI tolerance: not explicitly regulated; understanding and owning the code is expected.`,
+PROJECT-SPECIFIC MENTOR RULES: Electrum: small maintainer team, terse review style; contributions should be focused and well-tested. Python codebase with its own Lightning implementation; great for learning LN internals in a high-level language. AI tolerance: not explicitly regulated; understanding and owning the code is expected.`,
 
   btcpay: `
-PROJECT-SPECIFIC MENTOR RULES — BTCPay Server: product-oriented, web-developer friendly (C#/ASP.NET + Vue). Welcoming community, active chat on chat.btcpayserver.org. Good path: UI fixes, docs, then deeper invoice/payment logic. AI tolerance: pragmatic, author owns the code.`,
+PROJECT-SPECIFIC MENTOR RULES: BTCPay Server: product-oriented, web-developer friendly (C#/ASP.NET + Vue). Welcoming community, active chat on chat.btcpayserver.org. Good path: UI fixes, docs, then deeper invoice/payment logic. AI tolerance: pragmatic, author owns the code.`,
 
   mempool: `
-PROJECT-SPECIFIC MENTOR RULES — mempool.space: TypeScript/Angular frontend + Node backend. Visual/product contributions welcome. Self-hosting friendly (signet/regtest). AI tolerance: pragmatic; tests and understanding expected.`,
+PROJECT-SPECIFIC MENTOR RULES: mempool.space: TypeScript/Angular frontend + Node backend. Visual/product contributions welcome. Self-hosting friendly (signet/regtest). AI tolerance: pragmatic; tests and understanding expected.`,
 
   joinmarket: `
-PROJECT-SPECIFIC MENTOR RULES — JoinMarket: privacy-focused, careful review culture around cryptography and coinjoin economics. Read the docs site and the high-level design docs first. Smaller community — patience with review latency. AI tolerance: not explicitly regulated; deep understanding of privacy implications required.`,
+PROJECT-SPECIFIC MENTOR RULES: JoinMarket: privacy-focused, careful review culture around cryptography and coinjoin economics. Read the docs site and the high-level design docs first. Smaller community; patience with review latency. AI tolerance: not explicitly regulated; deep understanding of privacy implications required.`,
 
   btcd: `
-PROJECT-SPECIFIC MENTOR RULES — btcd: alternative full-node implementation in Go; values consensus compatibility with Bitcoin Core above all. Contributors must test against the reference implementation. AI tolerance: author-first, code must be understood and defended.`,
+PROJECT-SPECIFIC MENTOR RULES: btcd: alternative full-node implementation in Go; values consensus compatibility with Bitcoin Core above all. Contributors must test against the reference implementation. AI tolerance: author-first, code must be understood and defended.`,
 
   fedimint: `
-PROJECT-SPECIFIC MENTOR RULES — Fedimint: research-adjacent (Chaumian ecash, federations). Rust + Nix dev environment — help the user through the Nix setup, it's the first real hurdle. Active community calls. AI tolerance: pragmatic but author owns the code.`,
+PROJECT-SPECIFIC MENTOR RULES: Fedimint: research-adjacent (Chaumian ecash, federations). Rust + Nix dev environment; help the user through the Nix setup, it's the first real hurdle. Active community calls. AI tolerance: pragmatic but author owns the code.`,
 
   bolts: `
-PROJECT-SPECIFIC MENTOR RULES — BOLTs: this is the Lightning SPECIFICATION, not code. Contributions are spec text, rationale and cross-implementation coordination. A "PR" here means understanding how at least two implementations behave. Guide the user to read open spec PRs and the lightning-dev mailing list history. AI tolerance: spec language must be precise and fully understood by the author.`,
+PROJECT-SPECIFIC MENTOR RULES: BOLTs: this is the Lightning SPECIFICATION, not code. Contributions are spec text, rationale and cross-implementation coordination. A "PR" here means understanding how at least two implementations behave. Guide the user to read open spec PRs and the lightning-dev mailing list history. AI tolerance: spec language must be precise and fully understood by the author.`,
 
   nips: `
-PROJECT-SPECIFIC MENTOR RULES — Nostr NIPs: protocol standards repo. Contributions: new NIPs, clarifications, fixes. Culture: rough consensus, implementation-driven (a NIP without implementations rarely advances). Encourage reading existing NIPs and discussing with client/relay devs. Primary sources: use the readNostrDoc tool (nostrbook.dev registry + official NIPs repo) for event kinds, tags and protocol flow instead of memory. AI tolerance: pragmatic; the author must defend the design.`,
+PROJECT-SPECIFIC MENTOR RULES: Nostr NIPs: protocol standards repo. Contributions: new NIPs, clarifications, fixes. Culture: rough consensus, implementation-driven (a NIP without implementations rarely advances). Encourage reading existing NIPs and discussing with client/relay devs. Primary sources: use the readNostrDoc tool (nostrbook.dev registry + official NIPs repo) for event kinds, tags and protocol flow instead of memory. AI tolerance: pragmatic; the author must defend the design.`,
 
   vls: `
-PROJECT-SPECIFIC MENTOR RULES — Validating Lightning Signer (GitLab): security-critical Rust; signing policies must be correct against the BOLTs. Culture: small team, security review focus. Note the GitLab workflow (merge requests, not PRs). AI tolerance: security-critical code demands full author understanding.`,
+PROJECT-SPECIFIC MENTOR RULES: Validating Lightning Signer (GitLab): security-critical Rust; signing policies must be correct against the BOLTs. Culture: small team, security review focus. Note the GitLab workflow (merge requests, not PRs). AI tolerance: security-critical code demands full author understanding.`,
 
   nutshell: `
-PROJECT-SPECIFIC MENTOR RULES — Nutshell (Cashu): Chaumian ecash wallet and mint in Python. The protocol spec lives in the NUTs (github.com/cashubtc/nuts) — guide the user to read the relevant NUT before touching code, and to understand the privacy/trust model (mints are trusted; ecash is bearer). Privacy-critical and money-critical: crypto changes need deep understanding. Culture: fast-moving, friendly to newcomers, real "good first issue" labels. Community channels: Telegram https://t.me/CashuBTC (general community) and Matrix https://matrix.to/#/#dev:matrix.cashu.space (dev discussion) — encourage the user to join and introduce themselves in weeks 1-2. The repo has its own AGENTS.md — the author's commits must follow the project conventions; AI-assisted code must be fully understood and tested by the author (pytest).`,
+PROJECT-SPECIFIC MENTOR RULES: Nutshell (Cashu): Chaumian ecash wallet and mint in Python. The protocol spec lives in the NUTs (github.com/cashubtc/nuts); guide the user to read the relevant NUT before touching code, and to understand the privacy/trust model (mints are trusted; ecash is bearer). Privacy-critical and money-critical: crypto changes need deep understanding. Culture: fast-moving, friendly to newcomers, real "good first issue" labels. Community channels: Telegram https://t.me/CashuBTC (general community) and Matrix https://matrix.to/#/#dev:matrix.cashu.space (dev discussion); encourage the user to join and introduce themselves in weeks 1-2. The repo has its own AGENTS.md; the author's commits must follow the project conventions; AI-assisted code must be fully understood and tested by the author (pytest).`,
 
   mostro: `
-PROJECT-SPECIFIC MENTOR RULES — Mostro: peer-to-peer bitcoin exchange daemon — Lightning holds the sats (hold invoices), Nostr carries the messages. Rust. Before coding, the user must understand the order lifecycle (take/buy/sell, disputes, ratings) and the Mostro protocol messages over Nostr — use the readNostrDoc tool for event kinds and tags. Privacy-critical and money-critical: the dispute and escrow logic must be deeply understood, never blindly generated. The repo has its own AGENTS.md — follow it. Culture: active, welcoming to contributors, mutation testing in CI (mutants) — tests matter a lot.`,
+PROJECT-SPECIFIC MENTOR RULES: Mostro: peer-to-peer bitcoin exchange daemon; Lightning holds the sats (hold invoices), Nostr carries the messages. Rust. Before coding, the user must understand the order lifecycle (take/buy/sell, disputes, ratings) and the Mostro protocol messages over Nostr; use the readNostrDoc tool for event kinds and tags. Privacy-critical and money-critical: the dispute and escrow logic must be deeply understood, never blindly generated. The repo has its own AGENTS.md; follow it. Culture: active, welcoming to contributors, mutation testing in CI (mutants); tests matter a lot.`,
 };

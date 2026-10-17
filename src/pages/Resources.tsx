@@ -1,29 +1,40 @@
 import { LEARNING_RESOURCES } from "@contracts/types";
 import { useI18n } from "@/i18n";
 import { useAppState } from "@/state";
-import { Reveal } from "@/components/Layout";
-import { asset } from "@/lib/paths";
+import { OpenNewWindow } from "iconoir-react";
+import { ExternalLink, PageHeader, SectionHead } from "@/components/ismos";
 
 const PROVIDER_META = {
   lds: {
     name: "Librería de Satoshi",
     url: "https://libreriadesatoshi.com/",
-    logo: asset("logos/libreria-satoshi-mark.png"),
     links: [
       { url: "https://libreriadesatoshi.com/", label: "libreriadesatoshi.com" },
-      { url: "https://moodle.libreriadesatoshi.com/", label: { es: "Campus (Moodle)", en: "Campus (Moodle)" } },
+      {
+        url: "https://moodle.libreriadesatoshi.com/",
+        label: { es: "Campus (Moodle)", en: "Campus (Moodle)" },
+      },
     ],
-    tag: { es: "Cursos en español de la academia bitcoiner de habla hispana", en: "Courses in Spanish — the Spanish-speaking bitcoiner academy" },
+    tag: {
+      es: "Cursos en español de la academia bitcoiner de habla hispana",
+      en: "Courses in Spanish from the Spanish-speaking bitcoiner academy",
+    },
   },
   bdev: {
     name: "The Bitcoin Dev Project",
     url: "https://bitcoindevs.xyz/",
-    tag: { es: "Biblioteca curada, proyectos BOSS y guía de financiación", en: "Curated library, BOSS projects and funding guide" },
+    tag: {
+      es: "Biblioteca curada, proyectos BOSS y guía de financiación",
+      en: "Curated library, BOSS projects and funding guide",
+    },
   },
   nostrbook: {
     name: "Nostrbook",
     url: "https://nostrbook.dev/",
-    tag: { es: "Registro estructurado de documentación Nostr: kinds, tags y protocolo", en: "Structured registry of Nostr docs — kinds, tags and protocol" },
+    tag: {
+      es: "Registro estructurado de documentación Nostr: kinds, tags y protocolo",
+      en: "Structured registry of Nostr docs: kinds, tags and protocol",
+    },
   },
 } as const;
 
@@ -32,77 +43,81 @@ export default function Resources() {
   const { profile } = useAppState();
 
   const relevant = (tracks: string[]) =>
-    profile ? tracks.filter((tr) => profile.tracks.includes(tr)).length : 0;
+    profile ? tracks.filter(tr => profile.tracks.includes(tr)).length : 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-16 md:py-24">
-      <Reveal>
-        <p className="eyebrow mb-3" style={{ color: "var(--ember)" }}>{t("resources.eyebrow")}</p>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-[-0.03em] mb-3">{t("resources.title")}</h1>
-        <p className="opacity-70 max-w-2xl mb-4">{t("resources.sub")}</p>
+    <div className="app-container py-64">
+      <PageHeader
+        label={t("resources.eyebrow")}
+        title={t("resources.title")}
+        lead={t("resources.sub")}
+      >
         {profile && (
-          <p className="font-mono2 text-[11px] uppercase tracking-[0.12em] mb-12" style={{ color: "var(--moss)" }}>
-            ● {t("resources.personalized")}
+          <p className="ism-t-caption text-text-muted m-0">
+            {t("resources.personalized")}
           </p>
         )}
-      </Reveal>
+      </PageHeader>
 
-      {(["lds", "bdev", "nostrbook"] as const).map((prov) => {
+      {(["lds", "bdev", "nostrbook"] as const).map(prov => {
         const meta = PROVIDER_META[prov];
-        const items = LEARNING_RESOURCES.filter((r) => r.provider === prov).sort(
-          (a, b) => relevant(b.tracks) - relevant(a.tracks),
+        const items = LEARNING_RESOURCES.filter(r => r.provider === prov).sort(
+          (a, b) => relevant(b.tracks) - relevant(a.tracks)
         );
+        const links =
+          "links" in meta
+            ? meta.links.map(l => ({
+                url: l.url,
+                label: typeof l.label === "string" ? l.label : l.label[locale],
+              }))
+            : [
+                {
+                  url: meta.url,
+                  label: meta.url.replace("https://", "").replace(/\/$/, ""),
+                },
+              ];
         return (
-          <section key={prov} className="mb-14">
-            <Reveal>
-              <div className="flex flex-wrap items-center gap-4 mb-2">
-                {"logo" in meta && (
-                  <img
-                    src={meta.logo}
-                    alt={meta.name}
-                    style={{ height: "34px", width: "auto" }}
-                  />
-                )}
-                <h2 className="text-xl md:text-2xl font-bold tracking-tight">{meta.name}</h2>
-                {"links" in meta
-                  ? meta.links.map((l) => (
-                      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
-                        {typeof l.label === "string" ? l.label : l.label[locale]} ↗
-                      </a>
-                    ))
-                  : (
-                    <a href={meta.url} target="_blank" rel="noreferrer" className="font-mono2 text-[11px] no-underline opacity-60 hover:opacity-100">
-                      {meta.url.replace("https://", "")} ↗
-                    </a>
-                  )}
-              </div>
-              <p className="text-sm opacity-60 mb-6">{meta.tag[locale]}</p>
-            </Reveal>
-            <div className="grid md:grid-cols-2 gap-px" style={{ background: "var(--hairline)" }}>
-              {items.map((r, i) => {
+          <section key={prov} className="mb-64">
+            <SectionHead title={meta.name} />
+            <p className="ism-t-body-small m-0">{meta.tag[locale]}</p>
+            <ul className="ism-t-body-small mt-8 mb-24 p-0 list-none flex flex-wrap gap-8 gap-x-24">
+              {links.map(l => (
+                <li key={l.url}>
+                  <ExternalLink href={l.url}>{l.label}</ExternalLink>
+                </li>
+              ))}
+            </ul>
+            <div className="grid md:grid-cols-2 gap-24">
+              {items.map(r => {
                 const hits = relevant(r.tracks);
                 return (
-                  <Reveal key={r.url} delay={Math.min(i, 6) * 50}>
-                    <a href={r.url} target="_blank" rel="noreferrer" className="block p-5 no-underline group h-full" style={{ background: "var(--ink)" }}>
-                      <div className="flex items-start justify-between gap-3">
-                        <h3 className="font-bold tracking-tight group-hover:text-[--ember] transition-colors" style={{ color: "var(--paper)" }}>
-                          {r.title[locale]}
-                        </h3>
-                        <div className="flex gap-1.5 shrink-0">
-                          <span className="pill">{r.lang.toUpperCase()}</span>
-                          <span className="pill" style={r.kind === "funding" ? { borderColor: "var(--gold)", color: "var(--gold)" } : undefined}>
-                            {t(`resources.kind.${r.kind}` as const)}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="mt-2 text-sm opacity-70 leading-relaxed">{r.note[locale]}</p>
-                      {hits > 0 && (
-                        <p className="mt-3 font-mono2 text-[10px] uppercase tracking-[0.12em]" style={{ color: "var(--moss)" }}>
-                          ● {hits} {t("resources.matchTracks")}
-                        </p>
-                      )}
-                    </a>
-                  </Reveal>
+                  <a
+                    key={r.url}
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="ism-card"
+                  >
+                    <span className="ism-bar" />
+                    <span className="ism-label">
+                      {t(`resources.kind.${r.kind}` as const)} ·{" "}
+                      {r.lang.toUpperCase()}
+                    </span>
+                    <h3 className="ism-card__title">{r.title[locale]}</h3>
+                    <p className="ism-card__text">{r.note[locale]}</p>
+                    <div className="ism-card__facts mt-auto justify-between">
+                      <span>
+                        {hits > 0
+                          ? `${hits} ${t("resources.matchTracks")}`
+                          : meta.name}
+                      </span>
+                      <OpenNewWindow
+                        width={16}
+                        height={16}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </a>
                 );
               })}
             </div>

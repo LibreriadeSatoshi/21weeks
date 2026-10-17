@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-privacy-focused, careful review culture around cryptography and coinjoin economics. Read the docs site and the high-level design docs first. Smaller community — patience with review latency. AI tolerance: not explicitly regulated; deep understanding of privacy implications required.
+PROJECT-SPECIFIC MENTOR RULES: JoinMarket: privacy-focused, careful review culture around cryptography and coinjoin economics. Read the docs site and the high-level design docs first. Smaller community; patience with review latency. AI tolerance: not explicitly regulated; deep understanding of privacy implications required.
 
 ## Cultura de contribución
 

@@ -15,7 +15,7 @@
 
 ## Reglas del mentor
 
-alternative full-node implementation in Go; values consensus compatibility with Bitcoin Core above all. Contributors must test against the reference implementation. AI tolerance: author-first, code must be understood and defended.
+PROJECT-SPECIFIC MENTOR RULES: btcd: alternative full-node implementation in Go; values consensus compatibility with Bitcoin Core above all. Contributors must test against the reference implementation. AI tolerance: author-first, code must be understood and defended.
 
 ## Cultura de contribución
 

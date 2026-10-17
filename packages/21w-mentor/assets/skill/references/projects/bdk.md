@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-one of the most welcoming communities for first-time contributors. Culture: friendly Discord, "good first issue" labels actively curated, async review. Workspace of crates (bdk_wallet, bdk_chain, bdk_esplora...). Encourage starting with docs/tests and joining the Discord. AI tolerance: pragmatic, but the author must understand and own every line.
+PROJECT-SPECIFIC MENTOR RULES: BDK: one of the most welcoming communities for first-time contributors. Culture: friendly Discord, "good first issue" labels actively curated, async review. Workspace of crates (bdk_wallet, bdk_chain, bdk_esplora...). Encourage starting with docs/tests and joining the Discord. AI tolerance: pragmatic, but the author must understand and own every line.
 
 ## Cultura de contribución
 

@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-this is the Lightning SPECIFICATION, not code. Contributions are spec text, rationale and cross-implementation coordination. A "PR" here means understanding how at least two implementations behave. Guide the user to read open spec PRs and the lightning-dev mailing list history. AI tolerance: spec language must be precise and fully understood by the author.
+PROJECT-SPECIFIC MENTOR RULES: BOLTs: this is the Lightning SPECIFICATION, not code. Contributions are spec text, rationale and cross-implementation coordination. A "PR" here means understanding how at least two implementations behave. Guide the user to read open spec PRs and the lightning-dev mailing list history. AI tolerance: spec language must be precise and fully understood by the author.
 
 ## Cultura de contribución
 

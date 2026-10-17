@@ -16,13 +16,13 @@
 
 ## Reglas del mentor
 
-research-adjacent (Chaumian ecash, federations). Rust + Nix dev environment — help the user through the Nix setup, it's the first real hurdle. Active community calls. AI tolerance: pragmatic but author owns the code.
+PROJECT-SPECIFIC MENTOR RULES: Fedimint: research-adjacent (Chaumian ecash, federations). Rust + Nix dev environment; help the user through the Nix setup, it's the first real hurdle. Active community calls. AI tolerance: pragmatic but author owns the code.
 
 ## Cultura de contribución
 
 **ES**: Adyacente a investigación (ecash chaumiano, federaciones). Rust + entorno Nix; el setup es el primer obstáculo real. Llamadas de comunidad activas. IA: pragmática, pero el autor responde del código.
 
-**EN**: Research-adjacent (Chaumian ecash, federations). Rust + Nix environment — the setup is the first real hurdle. Active community calls. AI: pragmatic, but the author owns the code.
+**EN**: Research-adjacent (Chaumian ecash, federations). Rust + Nix environment; the setup is the first real hurdle. Active community calls. AI: pragmatic, but the author owns the code.
 
 ## Recursos de aprendizaje curados
 

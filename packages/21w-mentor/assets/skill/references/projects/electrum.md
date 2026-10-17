@@ -15,7 +15,7 @@
 
 ## Reglas del mentor
 
-small maintainer team, terse review style; contributions should be focused and well-tested. Python codebase with its own Lightning implementation — great for learning LN internals in a high-level language. AI tolerance: not explicitly regulated; understanding and owning the code is expected.
+PROJECT-SPECIFIC MENTOR RULES: Electrum: small maintainer team, terse review style; contributions should be focused and well-tested. Python codebase with its own Lightning implementation; great for learning LN internals in a high-level language. AI tolerance: not explicitly regulated; understanding and owning the code is expected.
 
 ## Cultura de contribución
 

@@ -1,61 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { LANGUAGES, TRACKS, type Level, type Profile, type Role } from "@contracts/types";
+import { ArrowLeft, ArrowRight, Minus, Plus } from "iconoir-react";
+import {
+  LANGUAGES,
+  TRACKS,
+  type Level,
+  type Profile,
+  type Role,
+} from "@contracts/types";
 import { useI18n, type TKey } from "@/i18n";
 import { useAppState } from "@/state";
-import { Reveal } from "@/components/Layout";
+import { Choice, PageHeader, Progress } from "@/components/ismos";
 
-function OptionCard({
-  selected,
-  onClick,
-  title,
-  desc,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  title: string;
-  desc?: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="text-left p-5 transition-all cursor-pointer w-full"
-      style={{
-        border: `1px solid ${selected ? "var(--ember)" : "var(--hairline)"}`,
-        background: selected ? "var(--ember-soft)" : "transparent",
-      }}
-    >
-      <p className="font-bold tracking-tight" style={{ color: selected ? "var(--ember)" : "var(--paper)" }}>
-        {title}
-      </p>
-      {desc && <p className="text-sm mt-1 opacity-70">{desc}</p>}
-    </button>
-  );
-}
-
-function Chip({
-  selected,
-  onClick,
-  label,
-}: {
-  selected: boolean;
-  onClick: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="pill cursor-pointer transition-all !text-[13px] !px-4 !py-2"
-      style={
-        selected
-          ? { borderColor: "var(--ember)", color: "var(--ember)", background: "var(--ember-soft)" }
-          : undefined
-      }
-    >
-      {label}
-    </button>
-  );
-}
+const MIN_HOURS = 2;
+const MAX_HOURS = 42;
+const TOTAL_STEPS = 5;
 
 export default function Quiz() {
   const { t } = useI18n();
@@ -70,101 +29,183 @@ export default function Quiz() {
   const [hours, setHours] = useState<number>(profile?.hoursPerWeek ?? 28);
 
   const toggle = (arr: string[], v: string, set: (a: string[]) => void) =>
-    set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
+    set(arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]);
+  const clampHours = (h: number) => Math.min(MAX_HOURS, Math.max(MIN_HOURS, h));
 
   const canNext =
-    step === 0 ? role !== null : step === 1 ? level !== null : step === 2 ? langs.length > 0 : step === 3 ? tracks.length > 0 : true;
+    step === 0
+      ? role !== null
+      : step === 1
+        ? level !== null
+        : step === 2
+          ? langs.length > 0
+          : step === 3
+            ? tracks.length > 0
+            : true;
 
   const finish = () => {
     if (!role || !level) return;
-    const p: Profile = { role, level, languages: langs, tracks, hoursPerWeek: hours };
+    const p: Profile = {
+      role,
+      level,
+      languages: langs,
+      tracks,
+      hoursPerWeek: hours,
+    };
     setProfile(p);
     navigate("/projects");
   };
 
   const steps: React.ReactNode[] = [
-    <div className="grid sm:grid-cols-2 gap-3">
-      <OptionCard selected={role === "developer"} onClick={() => setRole("developer")} title={t("quiz.role.dev")} desc={t("quiz.role.dev.d")} />
-      <OptionCard selected={role === "researcher"} onClick={() => setRole("researcher")} title={t("quiz.role.research")} desc={t("quiz.role.research.d")} />
+    <div className="grid md:grid-cols-2 gap-12">
+      <Choice
+        type="radio"
+        name="role"
+        checked={role === "developer"}
+        onChange={() => setRole("developer")}
+        title={t("quiz.role.dev")}
+        desc={t("quiz.role.dev.d")}
+      />
+      <Choice
+        type="radio"
+        name="role"
+        checked={role === "researcher"}
+        onChange={() => setRole("researcher")}
+        title={t("quiz.role.research")}
+        desc={t("quiz.role.research.d")}
+      />
     </div>,
-    <div className="grid sm:grid-cols-3 gap-3">
-      {(["beginner", "intermediate", "advanced"] as Level[]).map((l) => (
-        <OptionCard
+    <div className="grid lg:grid-cols-3 gap-12">
+      {(["beginner", "intermediate", "advanced"] as Level[]).map(l => (
+        <Choice
           key={l}
-          selected={level === l}
-          onClick={() => setLevel(l)}
+          type="radio"
+          name="level"
+          checked={level === l}
+          onChange={() => setLevel(l)}
           title={t(`quiz.level.${l}` as TKey)}
           desc={t(`quiz.level.${l}.d` as TKey)}
         />
       ))}
     </div>,
-    <div className="flex flex-wrap gap-2.5">
-      {LANGUAGES.map((l) => (
-        <Chip key={l} label={l} selected={langs.includes(l)} onClick={() => toggle(langs, l, setLangs)} />
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+      {LANGUAGES.map(l => (
+        <Choice
+          key={l}
+          type="checkbox"
+          name="languages"
+          checked={langs.includes(l)}
+          onChange={() => toggle(langs, l, setLangs)}
+          title={l}
+        />
       ))}
     </div>,
-    <div className="flex flex-wrap gap-2.5">
-      {TRACKS.map((tr) => (
-        <Chip key={tr} label={t(`track.${tr}` as TKey)} selected={tracks.includes(tr)} onClick={() => toggle(tracks, tr, setTracks)} />
+    <div className="grid md:grid-cols-2 gap-12">
+      {TRACKS.map(tr => (
+        <Choice
+          key={tr}
+          type="checkbox"
+          name="tracks"
+          checked={tracks.includes(tr)}
+          onChange={() => toggle(tracks, tr, setTracks)}
+          title={t(`track.${tr}` as TKey)}
+        />
       ))}
     </div>,
-    <div>
-      <div className="flex items-center gap-6">
+    <div className="flex flex-col gap-16">
+      <div className="flex items-center gap-16">
+        <button
+          type="button"
+          className="ism-btn ism-btn--secondary"
+          onClick={() => setHours(h => clampHours(h - 1))}
+          aria-label={t("quiz.hours.less")}
+        >
+          <Minus width={20} height={20} aria-hidden="true" />
+        </button>
         <input
           type="range"
-          min={2}
-          max={42}
+          min={MIN_HOURS}
+          max={MAX_HOURS}
           value={hours}
-          onChange={(e) => setHours(Number(e.target.value))}
-          className="w-full accent-[#de5126]"
+          onChange={e => setHours(Number(e.target.value))}
+          className="app-slider"
+          aria-label={t("quiz.hours")}
         />
-        <span className="font-mono2 text-2xl font-bold whitespace-nowrap" style={{ color: "var(--ember)" }}>
-          {hours} {t("quiz.hours.unit")}
-        </span>
+        <button
+          type="button"
+          className="ism-btn ism-btn--secondary"
+          onClick={() => setHours(h => clampHours(h + 1))}
+          aria-label={t("quiz.hours.more")}
+        >
+          <Plus width={20} height={20} aria-hidden="true" />
+        </button>
       </div>
-      <p className="mt-4 text-sm opacity-60">{t("quiz.hours.hint")}</p>
+      <p className="ism-t-figure text-text-heading m-0" aria-live="polite">
+        {hours} {t("quiz.hours.unit")}
+      </p>
+      <p className="ism-t-body-small text-text-muted m-0">
+        {t("quiz.hours.hint")}
+      </p>
     </div>,
   ];
 
-  const stepTitles: TKey[] = ["quiz.role", "quiz.level", "quiz.langs", "quiz.tracks", "quiz.hours"];
+  const stepTitles: TKey[] = [
+    "quiz.role",
+    "quiz.level",
+    "quiz.langs",
+    "quiz.tracks",
+    "quiz.hours",
+  ];
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 md:py-24">
-      <Reveal>
-        <p className="eyebrow mb-3" style={{ color: "var(--ember)" }}>
-          {t("quiz.eyebrow")} · {t("quiz.step")} {step + 1}/5
-        </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-[-0.03em] mb-2">{t("quiz.title")}</h1>
-        <h2 className="text-lg opacity-70 mb-10">{t(stepTitles[step])}</h2>
+    <div className="app-container py-64">
+      <div className="max-w-reading">
+        <PageHeader label={t("quiz.eyebrow")} title={t("quiz.title")}>
+          <Progress
+            label={t("quiz.step")}
+            done={step + 1}
+            total={TOTAL_STEPS}
+            countLabel={t("quiz.stepOf")
+              .replace("{n}", String(step + 1))
+              .replace("{total}", String(TOTAL_STEPS))}
+          />
+        </PageHeader>
+      </div>
 
-        {/* progreso */}
-        <div className="flex gap-1.5 mb-10">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="h-[3px] flex-1 transition-colors"
-              style={{ background: i <= step ? "var(--ember)" : "var(--hairline)" }}
-            />
-          ))}
-        </div>
+      <fieldset className="border-0 m-0 p-0">
+        <legend className="ism-t-h3 text-text-heading mb-24">
+          {t(stepTitles[step])}
+        </legend>
+        {steps[step]}
+      </fieldset>
 
-        <div key={step} className="reveal is-visible">{steps[step]}</div>
-
-        <div className="mt-12 flex justify-between">
-          <button onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} className="btn-ghost-ember">
-            ← {t("quiz.back")}
+      <div className="mt-48 flex flex-wrap justify-between gap-16">
+        <button
+          type="button"
+          onClick={() => setStep(s => Math.max(0, s - 1))}
+          disabled={step === 0}
+          className="app-btn-tertiary"
+        >
+          <ArrowLeft width={20} height={20} aria-hidden="true" />
+          {t("quiz.back")}
+        </button>
+        {step < TOTAL_STEPS - 1 ? (
+          <button
+            type="button"
+            onClick={() => canNext && setStep(s => s + 1)}
+            disabled={!canNext}
+            className="ism-btn"
+          >
+            {t("quiz.next")}
+            <ArrowRight width={20} height={20} aria-hidden="true" />
           </button>
-          {step < 4 ? (
-            <button onClick={() => canNext && setStep((s) => s + 1)} disabled={!canNext} className="btn-ember">
-              {t("quiz.next")} →
-            </button>
-          ) : (
-            <button onClick={finish} className="btn-ember">
-              {t("quiz.finish")} →
-            </button>
-          )}
-        </div>
-      </Reveal>
+        ) : (
+          <button type="button" onClick={finish} className="ism-btn">
+            {t("quiz.finish")}
+            <ArrowRight width={20} height={20} aria-hidden="true" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

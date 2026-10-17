@@ -15,7 +15,7 @@
 
 ## Reglas del mentor
 
-TypeScript/Angular frontend + Node backend. Visual/product contributions welcome. Self-hosting friendly (signet/regtest). AI tolerance: pragmatic; tests and understanding expected.
+PROJECT-SPECIFIC MENTOR RULES: mempool.space: TypeScript/Angular frontend + Node backend. Visual/product contributions welcome. Self-hosting friendly (signet/regtest). AI tolerance: pragmatic; tests and understanding expected.
 
 ## Cultura de contribución
 

@@ -16,7 +16,7 @@
 
 ## Reglas del mentor
 
-Lightning Labs has strict code contribution guidelines (docs/code_contribution_guidelines.md): small commits, ideal commit structure, extensive test coverage (itest harness), and review etiquette. Emphasize their "code contribution checklist". AI tolerance: guidelines require understanding and owning all submitted code. Point to lnd/issues labeled "good first issue" and the Lightning Labs dev community.
+PROJECT-SPECIFIC MENTOR RULES: LND: Lightning Labs has strict code contribution guidelines (docs/code_contribution_guidelines.md): small commits, ideal commit structure, extensive test coverage (itest harness), and review etiquette. Emphasize their "code contribution checklist". AI tolerance: guidelines require understanding and owning all submitted code. Point to lnd/issues labeled "good first issue" and the Lightning Labs dev community.
 
 ## Cultura de contribución
 

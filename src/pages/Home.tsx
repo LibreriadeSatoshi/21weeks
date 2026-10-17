@@ -3,17 +3,7 @@ import { ArrowRight } from "iconoir-react";
 import { PROJECTS } from "@contracts/types";
 import { useI18n, type TKey } from "@/i18n";
 import { Reveal } from "@/components/Layout";
-
-function SectionHead({ num, title }: { num: string; title: string }) {
-  return (
-    <div className="ism-sectionhead mb-32">
-      <h2 className="m-0">
-        <span className="ism-sectionhead__num">{num}</span>
-        <span className="ism-sectionhead__title">{title}</span>
-      </h2>
-    </div>
-  );
-}
+import { SectionHead } from "@/components/ismos";
 
 export default function Home() {
   const { t, locale } = useI18n();

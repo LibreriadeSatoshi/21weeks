@@ -16,13 +16,13 @@
 
 ## Reglas del mentor
 
-library-first design; contributors must think about API surface, no-std compatibility and MSRV. Good review culture on GitHub; sample node in lightning-dev-kit book. Encourage reading the LDK architecture docs before coding. AI tolerance: same author-first principle — understood and owned code only.
+PROJECT-SPECIFIC MENTOR RULES: LDK (rust-lightning): library-first design; contributors must think about API surface, no-std compatibility and MSRV. Good review culture on GitHub; sample node in lightning-dev-kit book. Encourage reading the LDK architecture docs before coding. AI tolerance: same author-first principle; understood and owned code only.
 
 ## Cultura de contribución
 
 **ES**: Librería ante todo: hay que pensar en superficie de API, compatibilidad no-std y MSRV. Buena cultura de review en GitHub y documentación de arquitectura propia. IA: principio autor-primero, código entendido y defendido.
 
-**EN**: Library first: think about API surface, no-std compatibility and MSRV. Good GitHub review culture and its own architecture docs. AI: author-first principle — understood and defended code.
+**EN**: Library first: think about API surface, no-std compatibility and MSRV. Good GitHub review culture and its own architecture docs. AI: author-first principle: understood and defended code.
 
 ## Recursos de aprendizaje curados
 
