@@ -21,8 +21,6 @@ ENV PORT=3000
 
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-# El mark oficial para la página de acceso privado (api/lib/site-gate.ts)
-COPY --from=build /app/design/ismos/logos ./design/ismos/logos
 COPY package.json ./
 
 EXPOSE 3000

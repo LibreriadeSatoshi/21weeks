@@ -1,12 +1,10 @@
 import crypto from "node:crypto";
-import fs from "node:fs";
-import path from "node:path";
 import type { MiddlewareHandler } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
 // Acceso privado hasta el lanzamiento: si SITE_PASSWORD está definida, todo
 // (páginas, JS, API) queda detrás de una contraseña. Solo pasan la página de
-// acceso, su CSS y fuentes, y /api/health (para el despliegue). La cookie va
+// acceso y /api/health (para el despliegue). La cookie va
 // con Domain=COOKIE_DOMAIN para valer en ismos.xyz/21weeks y en app.ismos.xyz.
 
 export const ACCESS_COOKIE = "w21_access";
@@ -18,8 +16,6 @@ export type SiteGateOptions = {
   basePath: string;
   cookieDomain?: string;
   secure: boolean;
-  /** Carpeta del build del frontend, para enlazar su CSS en la página de acceso. */
-  publicDir?: string;
 };
 
 /** El valor de la cookie depende de la contraseña: cambiarla invalida los accesos. */
@@ -34,30 +30,6 @@ function safeEqual(a: string, b: string): boolean {
   const ab = Buffer.from(a);
   const bb = Buffer.from(b);
   return ab.length === bb.length && crypto.timingSafeEqual(ab, bb);
-}
-
-/** El mark oficial, leído tal cual del kit (el Dockerfile copia design/ismos/logos). */
-function readMark(): string | null {
-  try {
-    const svg = fs.readFileSync(
-      path.resolve("design/ismos/logos/ismos-mark-paper.svg")
-    );
-    return `data:image/svg+xml;base64,${svg.toString("base64")}`;
-  } catch {
-    return null;
-  }
-}
-
-function findStylesheet(publicDir?: string): string | null {
-  if (!publicDir) return null;
-  try {
-    const css = fs
-      .readdirSync(path.join(publicDir, "assets"))
-      .find(f => /^index-.*\.css$/.test(f));
-    return css ? `assets/${css}` : null;
-  } catch {
-    return null;
-  }
 }
 
 /** Solo rutas internas bajo el prefijo; cualquier otra cosa vuelve a la portada. */
@@ -77,71 +49,57 @@ function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
 }
 
-const WARNING_ICON =
-  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" aria-hidden="true"><path d="M20.04 21H3.96c-1.54 0-2.5-1.66-1.74-3l8.05-13.98c.77-1.34 2.7-1.34 3.47 0L21.78 18c.76 1.34-.2 3-1.74 3Z" stroke="currentColor" stroke-linecap="round"/><path d="M12 9v4M12 17.01l.01-.01" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// Página genérica a propósito: no dice qué sitio protege (ni nombre, ni logo,
+// ni estilos de la app), igual que la protección por contraseña de Netlify.
+const GATE_STYLE = `
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:48px 16px;background:#131d24;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#131d24}
+form{width:100%;max-width:440px;background:#fff;border-radius:12px;padding:40px 48px}
+h1{margin:0 0 16px;font-size:28px;line-height:1.2}
+p{margin:0 0 24px;font-size:18px;line-height:1.5}
+label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+input[type=password]{width:100%;height:56px;padding:0 16px;font:inherit;font-size:18px;border:2px solid #c9d1d6;border-radius:6px}
+input[type=password]:focus{outline:none;border-color:#f0c040}
+.error input[type=password]{border-color:#c0392b}
+.msg{margin:8px 0 0;font-size:15px;color:#c0392b}
+button{width:100%;height:56px;margin-top:24px;border:0;border-radius:6px;background:#2f6f68;color:#fff;font:inherit;font-size:18px;font-weight:600;cursor:pointer}
+button:focus-visible{outline:3px solid #f0c040;outline-offset:2px}
+@media (max-width:480px){form{padding:32px 24px}}
+`;
 
-function gatePage(opts: {
-  basePath: string;
-  next: string;
-  error: boolean;
-  stylesheet: string | null;
-  mark: string | null;
-}) {
-  const { basePath, next, error, stylesheet, mark } = opts;
-  const css = stylesheet
-    ? `<link rel="stylesheet" href="${basePath}/${stylesheet}">`
-    : "";
-  const markImg = mark
-    ? `<img src="${mark}" alt="ISMOS" width="20" height="20">`
-    : "";
-  const errorBlock = error
-    ? `<p id="pw-error" class="ism-field__msg">${WARNING_ICON} Esa contraseña no es correcta. Revísala y vuelve a intentarlo.</p>`
-    : "";
+function gatePage(opts: { basePath: string; next: string; error: boolean }) {
+  const { basePath, next, error } = opts;
   return `<!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Acceso privado · 21 Weeks</title>
-${css}
+<title>Password protected site</title>
+<style>${GATE_STYLE}</style>
 </head>
-<body class="ism-root">
-<header class="app-nav"><div class="app-nav__inner"><span class="app-nav__brand">${markImg}<span>21 Weeks</span></span></div></header>
-<main class="app-container py-96">
-<form method="post" action="${basePath}${ACCESS_PATH}" class="flex flex-col gap-24 max-w-reading">
-<span class="ism-bar"></span>
-<p class="ism-label m-0">Acceso privado</p>
-<h1 class="ism-t-h1 text-text-heading m-0">21 Weeks todavía no está abierto</h1>
-<p class="ism-t-lead m-0">Estamos preparando el lanzamiento. Si tienes la contraseña, escríbela para entrar.</p>
-<p class="ism-t-body-small text-text-muted m-0" lang="en">Private preview. Enter the password to continue.</p>
+<body>
+<form method="post" action="${basePath}${ACCESS_PATH}"${error ? ' class="error"' : ""}>
+<h1>Password protected site</h1>
+<p>Please enter your password to get access.</p>
 <input type="hidden" name="next" value="${escapeHtml(next)}">
-<div class="ism-field${error ? " ism-field--error" : ""}">
-<label for="pw">Contraseña</label>
-<input id="pw" name="password" type="password" class="ism-field__input" autocomplete="current-password" required autofocus${error ? ' aria-invalid="true" aria-describedby="pw-error"' : ""}>
-${errorBlock}
-</div>
-<div><button type="submit" class="ism-btn">Entrar</button></div>
+<label for="pw">Password</label>
+<input id="pw" name="password" type="password" placeholder="Password" autocomplete="current-password" required autofocus${error ? ' aria-invalid="true" aria-describedby="pw-error"' : ""}>
+${error ? '<p id="pw-error" class="msg" role="alert">Incorrect password. Please try again.</p>' : ""}
+<button type="submit">Submit</button>
 </form>
-</main>
 </body>
 </html>`;
 }
 
 export function siteGate(opts: SiteGateOptions): MiddlewareHandler {
   const token = accessToken(opts.password);
-  const stylesheet = findStylesheet(opts.publicDir);
-  const mark = readMark();
 
   return async (c, next) => {
     c.header("X-Robots-Tag", "noindex, nofollow");
 
     const rel = c.req.path.slice(opts.basePath.length) || "/";
-    if (
-      c.req.method === "OPTIONS" ||
-      rel === "/api/health" ||
-      /^\/assets\/[^/]+\.(css|woff2)$/.test(rel)
-    ) {
+    if (c.req.method === "OPTIONS" || rel === "/api/health") {
       return next();
     }
 
@@ -158,8 +116,6 @@ export function siteGate(opts: SiteGateOptions): MiddlewareHandler {
             basePath: opts.basePath,
             next: target,
             error: true,
-            stylesheet,
-            mark,
           }),
           401
         );
@@ -187,8 +143,6 @@ export function siteGate(opts: SiteGateOptions): MiddlewareHandler {
         basePath: opts.basePath,
         next: nextUrl,
         error: false,
-        stylesheet,
-        mark,
       }),
       401
     );

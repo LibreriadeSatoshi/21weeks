@@ -49,7 +49,7 @@ La API se llama directamente al servidor porque el proxy de Netlify corta las pe
 
 ## Acceso privado hasta el lanzamiento
 
-Con `SITE_PASSWORD` en el `.env`, toda la app (páginas, JS y API) queda detrás de una página de contraseña con estilo ISMOS, y cada respuesta lleva `X-Robots-Tag: noindex, nofollow`. Solo quedan abiertos `/api/health` (para el despliegue), el CSS y las fuentes de esa página.
+Con `SITE_PASSWORD` en el `.env`, toda la app (páginas, JS y API) queda detrás de una página de contraseña genérica (no dice qué sitio protege), y cada respuesta lleva `X-Robots-Tag: noindex, nofollow`. Solo queda abierto `/api/health` (para el despliegue).
 
 ```bash
 SITE_PASSWORD=<contraseña>

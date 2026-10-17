@@ -34,7 +34,6 @@ if (env.sitePassword) {
       basePath: env.basePath,
       cookieDomain: env.cookieDomain || undefined,
       secure: env.isProduction,
-      publicDir: "dist/public",
     }),
   );
 }

@@ -39,7 +39,9 @@ describe("site gate", () => {
     expect(res.status).toBe(401);
     expect(res.headers.get("x-robots-tag")).toBe("noindex, nofollow");
     const html = await res.text();
-    expect(html).toContain("Contraseña");
+    expect(html).toContain("Password protected site");
+    expect(html).not.toContain("21 Weeks");
+    expect(html).not.toContain("ISMOS");
     expect(html).toContain('value="/21weeks/projects"');
   });
 
@@ -68,7 +70,7 @@ describe("site gate", () => {
 
     expect(res.status).toBe(401);
     expect(res.headers.get("set-cookie")).toBeNull();
-    expect(await res.text()).toContain("no es correcta");
+    expect(await res.text()).toContain("Incorrect password");
   });
 
   it("sets a shared cookie on the right password and then lets requests through", async () => {
