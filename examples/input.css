@@ -1,0 +1,5 @@
+@import "tailwindcss" source(".");
+@import "../design/ismos/css/tokens.css";
+@import "../design/ismos/css/typography.css";
+@import "../design/ismos/css/components.css";
+@import "../design/ismos/tailwind/theme.css";

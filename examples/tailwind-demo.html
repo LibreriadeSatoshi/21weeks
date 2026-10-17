@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><!-- Reference page: built with Tailwind v4 + design/ismos. Shows Button, Label, Bar, CourseCard, Avatar, Progress, StatusTag, TextField, Terminal. --><link rel="stylesheet" href="../design/ismos/css/fonts.css"><link rel="stylesheet" href="out.css"></head>
+<body class="ism-root bg-surface text-text">
+<main class="mx-auto max-w-content px-16 md:px-32 py-48 flex flex-col gap-32">
+  <span class="ism-bar"></span>
+  <p class="ism-label">Freedom tech · Course 02</p>
+  <h1 class="ism-t-h1 text-text-heading">Run your own node</h1>
+  <p class="text-lead max-w-reading">Eight lessons on setting up, syncing and looking after a node you control.</p>
+  <div class="flex gap-16"><a class="ism-btn" href="#">Start the course</a><a class="ism-btn ism-btn--secondary" href="#">Save for later</a></div>
+  <div class="grid md:grid-cols-2 gap-24">
+    <a class="ism-card" href="#"><span class="ism-bar"></span><span class="ism-label">AI · Privacy · Freedom tech</span><h3 class="ism-card__title">Keep your own keys</h3><p class="ism-card__text">You will set up a wallet, back it up and recover it once on purpose.</p><div class="ism-card__teacher"><span class="ism-avatar ism-avatar--initials">KS</span>Kley Santos</div><div class="ism-card__facts"><span>5 lessons</span><span>3 h</span><span>ES · EN</span></div></a>
+    <div class="flex flex-col gap-16 p-24 bg-surface-raised border-1 border-hairline rounded-4">
+      <div class="ism-progress__head"><span>Keep your own keys</span><span class="ism-progress__count">5 of 8</span></div>
+      <div class="ism-progress__track"><div class="ism-progress__fill" style="width:62.5%"></div></div>
+      <p class="ism-progress__note">Three lessons left. Next: keys and backups.</p>
+      <span class="ism-tag ism-tag--alert"><svg width="20" height="20" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.0429 21H3.95705C2.41902 21 1.45658 19.3364 2.22324 18.0031L10.2662 4.01533C11.0352 2.67792 12.9648 2.67791 13.7338 4.01532L21.7768 18.0031C22.5434 19.3364 21.581 21 20.0429 21Z" stroke="currentColor" stroke-linecap="round"/>
+<path d="M12 9V13" stroke="currentColor" stroke-linecap="round"/>
+<path d="M12 17.01L12.01 16.9989" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> ALERT</span>
+      <div class="ism-field ism-field--error"><label for="e">Email</label><input id="e" class="ism-field__input" value="ana@ismos" aria-describedby="m"><p id="m" class="ism-field__msg"><svg width="20" height="20" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.0429 21H3.95705C2.41902 21 1.45658 19.3364 2.22324 18.0031L10.2662 4.01533C11.0352 2.67792 12.9648 2.67791 13.7338 4.01532L21.7768 18.0031C22.5434 19.3364 21.581 21 20.0429 21Z" stroke="currentColor" stroke-linecap="round"/>
+<path d="M12 9V13" stroke="currentColor" stroke-linecap="round"/>
+<path d="M12 17.01L12.01 16.9989" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> Add a domain ending, e.g. ana@ismos.org</p></div>
+    </div>
+  </div>
+  <div class="ism-term"><div><span class="pr">ismos@node:~$</span> bitcoind -daemon</div><div class="cm"># peer handshake over TCP 8333</div><div><span class="pr">ismos@node:~$</span> <span class="cur">&nbsp;</span></div></div>
+</main></body></html>
