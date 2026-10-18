@@ -2,9 +2,9 @@ import type { Locale, Profile, Project } from "@contracts/types";
 import { MENTOR_ADDENDA } from "./mentors";
 
 /**
- * Mentor system prompt: base autor-primero + addendum por proyecto.
- * El mentor de Bitcoin Core integra el skill del usuario
- * (bitcoin-core-audit-mentor, ver ./mentors.ts).
+ * Mentor system prompt: author-first base + per-project addendum.
+ * The Bitcoin Core mentor integrates the user's skill
+ * (bitcoin-core-audit-mentor, see ./mentors.ts).
  */
 
 export function mentorSystemPrompt(

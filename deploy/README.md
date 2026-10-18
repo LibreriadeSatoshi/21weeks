@@ -1,73 +1,73 @@
-# Despliegue en AWS Lightsail
+# Deploying on AWS Lightsail
 
-La app se publica en `ismos.xyz/21weeks`. La web Astro de Netlify hace de proxy de esa ruta hacia un servidor Lightsail (`app.ismos.xyz`), donde corren la app, MySQL y Caddy con Docker Compose.
+The app is published at `ismos.xyz/21weeks`. The Astro site on Netlify proxies that path to a Lightsail server (`app.ismos.xyz`), where the app, MySQL and Caddy run with Docker Compose.
 
 ```
-navegador ──► ismos.xyz/21weeks/*  (Netlify, proxy) ──► app.ismos.xyz/21weeks/*  (páginas y assets)
-navegador ──────────────────────────────────────────► app.ismos.xyz/21weeks/api/* (API, con CORS)
+browser ──► ismos.xyz/21weeks/*  (Netlify, proxy) ──► app.ismos.xyz/21weeks/*  (pages and assets)
+browser ──────────────────────────────────────────► app.ismos.xyz/21weeks/api/* (API, with CORS)
 ```
 
-La API se llama directamente al servidor porque el proxy de Netlify corta las peticiones a los 26 s, y el chat del mentor (streaming) o el ranking de issues con IA pueden pasar de ahí.
+The browser calls the API directly on the server because the Netlify proxy cuts requests off at 26 s, and the mentor chat (streaming) or the AI issue ranking can take longer than that.
 
-## 1. Servidor
+## 1. Server
 
-1. En Lightsail, crea una instancia **Linux, Debian 13**, plan de **2 GB de RAM** (el build de la imagen no cabe con menos) en una región de la UE (p. ej. Fráncfort o París).
-2. **Networking**: crea una IP estática y asígnala. En el firewall deja abiertos solo 22 (SSH), 80 y 443.
-3. **DNS**: registro `A` de `app.ismos.xyz` apuntando a esa IP. Caddy pide el certificado HTTPS solo, en cuanto el DNS resuelve.
-4. Entra por SSH (usuario `admin` en Debian) y prepara la máquina:
+1. In Lightsail, create a **Linux, Debian 13** instance on the **2 GB RAM** plan (the image build does not fit in less) in an EU region (e.g. Frankfurt or Paris).
+2. **Networking**: create a static IP and attach it. In the firewall, leave only 22 (SSH), 80 and 443 open.
+3. **DNS**: an `A` record for `app.ismos.xyz` pointing to that IP. Caddy requests the HTTPS certificate on its own as soon as DNS resolves.
+4. Log in over SSH (user `admin` on Debian) and prepare the machine:
 
    ```bash
    sudo apt-get update && sudo apt-get install -y curl git
    curl -fsSL https://get.docker.com | sudo sh
-   sudo usermod -aG docker $USER   # sal y vuelve a entrar
+   sudo usermod -aG docker $USER   # log out and back in
    sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
    git clone https://github.com/LibreriadeSatoshi/21weeks.git ~/21weeks
    ```
 
-5. Crea `~/21weeks/.env`:
+5. Create `~/21weeks/.env`:
 
    ```bash
    DOMAIN=app.ismos.xyz
    BASE_PATH=/21weeks/
    CORS_ORIGINS=https://ismos.xyz
    MYSQL_PASSWORD=<openssl rand -hex 24>
-   AI_BASE_URL=<proveedor compatible con OpenAI>
-   AI_API_KEY=<clave>
-   AI_MODEL_ID=<modelo>
+   AI_BASE_URL=<OpenAI-compatible provider>
+   AI_API_KEY=<key>
+   AI_MODEL_ID=<model>
    # BACKUP_S3_URI=s3://<bucket>/21weeks
    ```
 
-   `chmod 600 ~/21weeks/.env`. No lo subas al repo.
+   `chmod 600 ~/21weeks/.env`. Do not commit it to the repo.
 
-6. Arranca:
+6. Start it:
 
    ```bash
    cd ~/21weeks && docker compose -f docker-compose.prod.yml up -d --build
    curl https://app.ismos.xyz/21weeks/api/health   # {"ok":true}
    ```
 
-## Acceso privado hasta el lanzamiento
+## Private access until launch
 
-Con `SITE_PASSWORD` en el `.env`, toda la app (páginas, JS y API) queda detrás de una página de contraseña genérica (no dice qué sitio protege), y cada respuesta lleva `X-Robots-Tag: noindex, nofollow`. Solo queda abierto `/api/health` (para el despliegue).
+With `SITE_PASSWORD` in the `.env`, the whole app (pages, JS and API) sits behind a generic password page (it does not say which site it protects), and every response carries `X-Robots-Tag: noindex, nofollow`. Only `/api/health` stays open (for deployment).
 
 ```bash
-SITE_PASSWORD=<contraseña>
-COOKIE_DOMAIN=ismos.xyz   # la misma cookie vale en ismos.xyz/21weeks y en app.ismos.xyz
+SITE_PASSWORD=<password>
+COOKIE_DOMAIN=ismos.xyz   # the same cookie works on ismos.xyz/21weeks and on app.ismos.xyz
 ```
 
-Aplica con `docker compose -f docker-compose.prod.yml up -d`. La cookie dura 30 días; cambiar la contraseña cierra todas las sesiones. Para el lanzamiento, deja `SITE_PASSWORD` vacía y vuelve a aplicar.
+Apply it with `docker compose -f docker-compose.prod.yml up -d`. The cookie lasts 30 days; changing the password ends all sessions. For launch, leave `SITE_PASSWORD` empty and apply again.
 
-## 2. Netlify (repo de la web Astro)
+## 2. Netlify (Astro site repo)
 
-En `public/_redirects` de la web de ismos.xyz:
+In `public/_redirects` of the ismos.xyz site:
 
 ```
 /21weeks    https://app.ismos.xyz/21weeks/        200
 /21weeks/*  https://app.ismos.xyz/21weeks/:splat  200
 ```
 
-O en `netlify.toml`:
+Or in `netlify.toml`:
 
 ```toml
 [[redirects]]
@@ -76,37 +76,37 @@ O en `netlify.toml`:
   status = 200
 ```
 
-Después del deploy de Netlify, `https://ismos.xyz/21weeks/` debe mostrar la app.
+After the Netlify deploy, `https://ismos.xyz/21weeks/` should show the app.
 
-## 3. Copias de seguridad
+## 3. Backups
 
-Dos capas, recomendadas las dos:
+Two layers, both recommended:
 
-- **Snapshots automáticos de Lightsail** (pestaña _Snapshots_ de la instancia): copia diaria de todo el disco, sin configurar nada más.
-- **Volcado diario de MySQL** con `deploy/backup.sh`, que guarda 14 días en `~/backups` y, si defines `BACKUP_S3_URI`, sube cada copia a S3 (necesita `aws` CLI y un usuario IAM con `s3:PutObject` sobre ese bucket):
+- **Automatic Lightsail snapshots** (the instance's _Snapshots_ tab): a daily copy of the whole disk, with nothing else to configure.
+- **Daily MySQL dump** with `deploy/backup.sh`, which keeps 14 days in `~/backups` and, if you set `BACKUP_S3_URI`, uploads each copy to S3 (it needs the `aws` CLI and an IAM user with `s3:PutObject` on that bucket):
 
   ```bash
   crontab -e
   0 3 * * * $HOME/21weeks/deploy/backup.sh >> $HOME/backups/backup.log 2>&1
   ```
 
-Restaurar: `gunzip -c <copia>.sql.gz | docker compose -f docker-compose.prod.yml exec -T -e MYSQL_PWD=<password> db mysql -u21weeks 21weeks`.
+Restore: `gunzip -c <backup>.sql.gz | docker compose -f docker-compose.prod.yml exec -T -e MYSQL_PWD=<password> db mysql -u21weeks 21weeks`.
 
-## 4. Despliegue automático desde GitHub
+## 4. Automatic deployment from GitHub
 
-El job `deploy` de `.github/workflows/ci.yml` se ejecuta en cada push a `main` cuando la verificación pasa. Hasta que configures `DEPLOY_HOST` no hace nada.
+The `deploy` job in `.github/workflows/ci.yml` runs on every push to `main` once the checks pass. It does nothing until you configure `DEPLOY_HOST`.
 
-1. Genera una clave solo para desplegar y autorízala en el servidor:
+1. Generate a key used only for deploying and authorize it on the server:
 
    ```bash
    ssh-keygen -t ed25519 -f deploy_key -N "" -C "github-deploy-21weeks"
-   cat deploy_key.pub | ssh -i <clave-de-lightsail>.pem admin@app.ismos.xyz 'cat >> ~/.ssh/authorized_keys'
+   cat deploy_key.pub | ssh -i <lightsail-key>.pem admin@app.ismos.xyz 'cat >> ~/.ssh/authorized_keys'
    ssh-keyscan app.ismos.xyz > known_hosts
    ```
 
-2. En GitHub, _Settings → Secrets and variables → Actions_:
-   - **Secrets**: `DEPLOY_SSH_KEY` (contenido de `deploy_key`) y `DEPLOY_KNOWN_HOSTS` (contenido de `known_hosts`).
-   - **Variables** (de repositorio, no de entorno, porque el `if` del job las lee antes de entrar al entorno): `DEPLOY_HOST=app.ismos.xyz`, `DEPLOY_USER=admin`, `DEPLOY_HEALTH_URL=https://app.ismos.xyz/21weeks/api/health`.
-3. Borra `deploy_key` de tu máquina.
+2. In GitHub, _Settings → Secrets and variables → Actions_:
+   - **Secrets**: `DEPLOY_SSH_KEY` (contents of `deploy_key`) and `DEPLOY_KNOWN_HOSTS` (contents of `known_hosts`).
+   - **Variables** (repository variables, not environment variables, because the job's `if` reads them before entering the environment): `DEPLOY_HOST=app.ismos.xyz`, `DEPLOY_USER=admin`, `DEPLOY_HEALTH_URL=https://app.ismos.xyz/21weeks/api/health`.
+3. Delete `deploy_key` from your machine.
 
-Cada despliegue hace `git reset --hard origin/main` en el servidor y reconstruye la imagen; los cambios hechos a mano en `~/21weeks` (salvo `.env`, que no está versionado) se pierden.
+Each deployment runs `git reset --hard origin/main` on the server and rebuilds the image; manual changes made in `~/21weeks` (except `.env`, which is not versioned) are lost.

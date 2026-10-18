@@ -6,7 +6,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-# Prefijo y URL de la API se fijan al compilar el frontend (ver docker-compose.prod.yml)
+# API prefix and URL are set when building the frontend (see docker-compose.prod.yml)
 ARG BASE_PATH=/
 ARG VITE_API_URL=
 ENV BASE_PATH=$BASE_PATH VITE_API_URL=$VITE_API_URL

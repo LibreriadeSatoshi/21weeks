@@ -21,7 +21,7 @@ export default function Mentor() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const project = PROJECTS.find(p => p.id === projectId) ?? null;
 
-  // prefill desde "preguntar al mentor" en el plan
+  // prefill from "ask the mentor" in the plan
   useEffect(() => {
     const draft = localStorage.getItem("oss21.mentorDraft");
     if (draft) {

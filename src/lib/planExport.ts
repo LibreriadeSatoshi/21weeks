@@ -1,9 +1,9 @@
 import type { Issue, Plan, Profile } from "@contracts/types";
 
 /**
- * Exportación del plan en Markdown "LLM-friendly":
- * texto estructurado para humanos y agentes (Claude Code, OpenCode…)
- * + bloque ```json con el estado completo para reimportarlo en otro navegador.
+ * Plan export as "LLM-friendly" Markdown:
+ * structured text for humans and agents (Claude Code, OpenCode…)
+ * + a ```json block with the full state to reimport it in another browser.
  */
 
 export interface ExportState {
@@ -87,7 +87,7 @@ export function buildPlanMarkdown(state: ExportState, locale: "es" | "en"): stri
   return lines.join("\n");
 }
 
-/** Extrae el estado del bloque ```json21weeks de un .md exportado. */
+/** Extracts the state from the ```json21weeks block of an exported .md. */
 export function parseImportedPlan(markdown: string): ExportState | null {
   const m = markdown.match(/```json21weeks\s*([\s\S]*?)```/);
   if (!m) return null;

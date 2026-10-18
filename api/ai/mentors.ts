@@ -1,8 +1,8 @@
 /**
- * Mentores por proyecto.
+ * Per-project mentors.
  *
- * MOVIDO: la fuente única de las reglas por proyecto es ahora
- * contracts/catalog.ts (MENTOR_ADDENDA), junto a PROJECTS y CULTURE.
- * Este módulo solo re-exporta para no romper imports existentes.
+ * MOVED: the single source of the per-project rules is now
+ * contracts/catalog.ts (MENTOR_ADDENDA), next to PROJECTS and CULTURE.
+ * This module only re-exports so existing imports do not break.
  */
 export { MENTOR_ADDENDA } from "@contracts/types";

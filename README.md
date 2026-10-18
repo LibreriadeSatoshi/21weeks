@@ -1,30 +1,30 @@
 # 21 Weeks
 
-**Del interés a la primera contribución open source en Bitcoin, en 21 semanas.**
+**From interest to your first open source contribution to Bitcoin, in 21 weeks.**
 
-21 Weeks es una app web bilingüe (ES/EN) que ayuda a developers y researchers a empezar a contribuir a proyectos open source de Bitcoin y Lightning. Sin shitcoins: solo Bitcoin, Lightning, Nostr y su ecosistema de software libre.
+21 Weeks is a bilingual (ES/EN) web app that helps developers and researchers start contributing to open source Bitcoin and Lightning projects. No shitcoins: only Bitcoin, Lightning, Nostr and their free software ecosystem.
 
-## Qué hace
+## What it does
 
-1. **Quiz de perfil**: experiencia, intereses y tiempo disponible.
-2. **Catálogo de 17 proyectos**: Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs, VLS, Nutshell (Cashu) y Mostro.
-3. **Good-first-issues en vivo**: issues reales traídas de GitHub y GitLab, ordenadas por encaje con tu perfil (con filtro de issues ya reclamadas o con PRs en curso).
-4. **Plan de 21 semanas**: una IA genera un plan semana a semana (4 h/día) con objetivos, tareas y recursos reales verificados, exportable a Markdown para continuarlo desde cualquier otro agente (Claude Code, OpenCode…).
-5. **Mentor senior author-first**: un chat de mentoría que guía y pregunta pero **nunca hace el trabajo por ti**, inspirado en `doc/AI_POLICY.md` de Bitcoin Core. Fundamenta sus respuestas en fuentes primarias: [bitcoinknowledge.dev](https://bitcoinknowledge.dev) y [nostrbook.dev](https://nostrbook.dev).
+1. **Profile quiz**: experience, interests and available time.
+2. **Catalog of 17 projects**: Bitcoin Core, Core Lightning, LND, LDK, BDK, rust-bitcoin, Electrum, BTCPay Server, mempool.space, JoinMarket, btcd, Fedimint, BOLTs, NIPs, VLS, Nutshell (Cashu) and Mostro.
+3. **Live good-first-issues**: real issues pulled from GitHub and GitLab, sorted by fit with your profile (with a filter for issues already claimed or with PRs in progress).
+4. **21-week plan**: an AI generates a week-by-week plan (4 h/day) with goals, tasks and real, verified resources. You can export it to Markdown and continue it from any other agent (Claude Code, OpenCode…).
+5. **Author-first senior mentor**: a mentoring chat that guides and asks questions but **never does the work for you**, inspired by Bitcoin Core's `doc/AI_POLICY.md`. It grounds its answers in primary sources: [bitcoinknowledge.dev](https://bitcoinknowledge.dev) and [nostrbook.dev](https://nostrbook.dev).
 
 ## Stack
 
-React 19 + TypeScript + Vite · Tailwind CSS 3 + shadcn/ui · Hono + tRPC 11 + superjson · Drizzle ORM (MySQL) · Vercel AI SDK (`ai` + `@ai-sdk/openai-compatible`, versiones fijadas a propósito)
+React 19 + TypeScript + Vite · Tailwind CSS 4 + ISMOS design system (`design/ismos/`) · Hono + tRPC 11 + superjson · Drizzle ORM (MySQL) · Vercel AI SDK (`ai` + `@ai-sdk/openai-compatible`, versions pinned on purpose)
 
-## Despliegue
+## Deployment
 
-### Requisitos
+### Requirements
 
 - Node.js 20+
-- Una base de datos MySQL accesible
-- Acceso a un gateway compatible con la API de OpenAI para el mentor y los planes
+- A reachable MySQL database
+- Access to an OpenAI API-compatible gateway for the mentor and the plans
 
-### 1. Clona e instala
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/ifuensan/21weeks.git
@@ -32,72 +32,72 @@ cd 21weeks
 npm install
 ```
 
-### 2. Crea tu `.env`
+### 2. Create your `.env`
 
-El repo no incluye secretos. Copia la plantilla y rellénala:
+The repo includes no secrets. Copy the template and fill it in:
 
 ```bash
 cp .env.example .env
 ```
 
-| Variable | Para qué |
-|---|---|
-| `APP_ID` / `APP_SECRET` | ID de la app y secreto para firmar JWT (genera uno aleatorio: `openssl rand -hex 32`) |
-| `DATABASE_URL` | Cadena de conexión MySQL: `mysql://user:pass@host:3306/21weeks` |
-| `KIMI_AUTH_URL` / `VITE_KIMI_AUTH_URL` | URL del servidor OAuth de Kimi (si usas login con Kimi) |
-| `KIMI_OPEN_URL` | URL de la plataforma abierta de Kimi |
-| `VITE_APP_ID` | ID de aplicación OAuth (expuesto al navegador) |
-| `OWNER_UNION_ID` | Union ID del creador; ese usuario recibe rol admin en su primer login |
+| Variable                               | Purpose                                                                             |
+| -------------------------------------- | ----------------------------------------------------------------------------------- |
+| `APP_ID` / `APP_SECRET`                | App ID and secret used to sign JWTs (generate a random one: `openssl rand -hex 32`) |
+| `DATABASE_URL`                         | MySQL connection string: `mysql://user:pass@host:3306/21weeks`                      |
+| `KIMI_AUTH_URL` / `VITE_KIMI_AUTH_URL` | URL of the Kimi OAuth server (if you use Kimi login)                                |
+| `KIMI_OPEN_URL`                        | URL of the Kimi open platform                                                       |
+| `VITE_APP_ID`                          | OAuth application ID (exposed to the browser)                                       |
+| `OWNER_UNION_ID`                       | Union ID of the creator; that user gets the admin role on first login               |
 
-Además, el backend de IA necesita estas variables **en el entorno del servidor** (no van en el frontend):
+The AI backend also needs these variables **in the server environment** (they do not go in the frontend):
 
-| Variable | Para qué |
-|---|---|
-| `AI_BASE_URL` | URL base de un proveedor compatible con la API de OpenAI |
-| `AI_API_KEY` | API key de ese proveedor |
-| `AI_MODEL_ID` | ID del modelo; obligatorio fuera de la plataforma Kimi |
+| Variable      | Purpose                                       |
+| ------------- | --------------------------------------------- |
+| `AI_BASE_URL` | Base URL of an OpenAI API-compatible provider |
+| `AI_API_KEY`  | API key for that provider                     |
+| `AI_MODEL_ID` | Model ID; required outside the Kimi platform  |
 
-Dentro de la plataforma Kimi, `KIMI_AGENTGW_BASE_URL` y `KIMI_AGENTGW_API_KEY` pueden usarse como alternativa a `AI_BASE_URL` y `AI_API_KEY`.
+Inside the Kimi platform, `KIMI_AGENTGW_BASE_URL` and `KIMI_AGENTGW_API_KEY` can be used instead of `AI_BASE_URL` and `AI_API_KEY`.
 
-Sin un proveedor de IA configurado, la app carga pero el mentor, la recomendación de issues y la generación de planes no funcionarán.
+Without an AI provider configured, the app loads, but the mentor, issue recommendations and plan generation will not work.
 
-### 3. Base de datos
-
-```bash
-npm run db:push      # crea las tablas con Drizzle
-```
-
-### 4. Desarrollo
+### 3. Database
 
 ```bash
-npm run dev          # Vite + API con hot-reload
+npm run db:push      # creates the tables with Drizzle
 ```
 
-### 5. Producción
+### 4. Development
 
 ```bash
-npm run build        # build del frontend + bundle del backend (dist/boot.js)
-npm start            # sirve todo en NODE_ENV=production (puerto PORT, por defecto 3000)
+npm run dev          # Vite + API with hot-reload
 ```
 
-## Estructura
+### 5. Production
 
-```
-api/          Backend Hono + tRPC (mentor IA, issues, auth)
-contracts/  Catálogo de proyectos y tipos compartidos front/back
-db/         Esquema Drizzle y migraciones
-src/        Frontend React (pages, components, i18n ES/EN)
-public/     Logos oficiales de los 17 proyectos
+```bash
+npm run build        # frontend build + backend bundle (dist/boot.js)
+npm start            # serves everything with NODE_ENV=production (port PORT, 3000 by default)
 ```
 
-## Licencia y contribuciones
+## Structure
 
-Licencia [MIT](./LICENSE). Las contribuciones se rigen por el DCO 1.1 y la política de atribución de IA; lee [`CONTRIBUTING.md`](./CONTRIBUTING.md) antes de hacer tu primer commit (`git commit -s` obligatorio).
+```
+api/          Hono + tRPC backend (AI mentor, issues, auth)
+contracts/  Project catalog and types shared by front and back
+db/         Drizzle schema and migrations
+src/        React frontend (pages, components, i18n ES/EN)
+public/     Official logos of the 17 projects
+```
 
-Proyecto open source nacido de [Librería de Satoshi](https://libreriadesatoshi.com) / HackNodes Lab. Issues y PRs bienvenidos; precisamente de eso va esto. ₿
+## License and contributions
 
-## Agradecimientos
+[MIT](./LICENSE) license. Contributions are governed by the DCO 1.1 and the AI attribution policy; read [`CONTRIBUTING.md`](./CONTRIBUTING.md) before your first commit (`git commit -s` is required).
+
+Open source project born at [Librería de Satoshi](https://libreriadesatoshi.com) / HackNodes Lab. Issues and PRs welcome; that is exactly what this is about. ₿
+
+## Acknowledgements
 
 <a href="https://libreriadesatoshi.com"><img src="public/logos/libreria-satoshi.png" alt="Librería de Satoshi" height="64"></a>
 
-**This project is only possible thanks to [Librería de Satoshi](https://libreriadesatoshi.com)** — *Este proyecto solo es posible gracias al soporte de Librería de Satoshi.*
+**This project is only possible thanks to the support of [Librería de Satoshi](https://libreriadesatoshi.com).**

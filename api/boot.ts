@@ -16,16 +16,16 @@ import { classifyAiError } from "./ai/ai-client";
 import { mentorSystemPrompt } from "./ai/mentor";
 import { knowledgeTools } from "./ai/knowledge";
 
-// Todo cuelga de BASE_PATH (p. ej. /21weeks) para servirse en ismos.xyz/21weeks.
+// Everything hangs off BASE_PATH (e.g. /21weeks) to be served at ismos.xyz/21weeks.
 const app = new Hono<{ Bindings: HttpBindings }>().basePath(env.basePath || "/");
 
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
-// La web en ismos.xyz llama a la API directamente (sin el proxy de Netlify).
+// The site at ismos.xyz calls the API directly (without the Netlify proxy).
 if (env.corsOrigins.length > 0) {
   app.use("/api/*", cors({ origin: env.corsOrigins, credentials: true }));
 }
 
-// Acceso privado hasta el lanzamiento: sin SITE_PASSWORD, el sitio queda abierto.
+// Private access until launch: without SITE_PASSWORD, the site stays open.
 if (env.sitePassword) {
   app.use(
     "*",
@@ -40,14 +40,14 @@ if (env.sitePassword) {
 
 app.get("/api/health", (c) => c.json({ ok: true }));
 
-// Login "Sign in with Kimi": solo disponible dentro de la plataforma Kimi.
-// Fuera de ella (servidor propio) la app corre en modo anónimo.
+// "Sign in with Kimi" login: only available inside the Kimi platform.
+// Outside it (self-hosted server) the app runs in anonymous mode.
 app.get(Paths.oauthCallback, async (c) => {
   if (!kimiAuthEnabled) return c.json({ error: "auth disabled (anonymous mode)" }, 501);
   return createOAuthCallbackHandler()(c);
 });
 
-// Chat streaming del mentor (texto plano por chunk; el frontend lo acumula)
+// Mentor streaming chat (plain text per chunk; the frontend accumulates it)
 app.post("/api/mentor/chat", async (c) => {
   try {
     const body = (await c.req.json()) as {

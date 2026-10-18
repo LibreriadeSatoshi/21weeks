@@ -126,10 +126,10 @@ export default function PlanPage() {
     </span>
   );
 
-  // Generación asíncrona: startPlanJob responde al instante con un jobId y
-  // el plan se construye en segundo plano en el servidor; sondeamos planJob
-  // cada 4 s. Las peticiones largas las corta el proxy de producción; las
-  // de sondeo duran milisegundos, así que esto aguanta cualquier límite.
+  // Asynchronous generation: startPlanJob responds instantly with a jobId and
+  // the plan is built in the background on the server; we poll planJob
+  // every 4 s. Long requests get cut by the production proxy; polling
+  // ones last milliseconds, so this survives any limit.
   const trpcUtils = trpc.useUtils();
   const [jobRunning, setJobRunning] = useState(false);
   const [jobStage, setJobStage] = useState<string | null>(null);
@@ -150,12 +150,12 @@ export default function PlanPage() {
       );
       setElapsedSec(Math.round(elapsed / 1000));
       if (res.status === "running") {
-        // la fase viene del servidor: starting | researching | writing
+        // the stage comes from the server: starting | researching | writing
         setJobStage(res.stage ?? "starting");
       }
       if (res.status === "done" && res.plan) {
         console.log(
-          `[21w] plan recibido: ${res.plan.weeks?.length ?? "?"} semanas`
+          `[21w] plan received: ${res.plan.weeks?.length ?? "?"} weeks`
         );
         stopPolling();
         setJobRunning(false);
@@ -164,18 +164,18 @@ export default function PlanPage() {
         return;
       }
       if (res.status === "error") {
-        console.error(`[21w] job falló en el servidor:`, res.error);
+        console.error(`[21w] job failed on the server:`, res.error);
         stopPolling();
         setJobRunning(false);
         setAiError(true);
         return;
       }
     } catch (e) {
-      // un sondeo fallido no mata el trabajo: reintentamos
-      console.warn(`[21w] sondeo falló (reintentamos):`, e);
+      // a failed poll does not kill the job: we retry
+      console.warn(`[21w] poll failed (retrying):`, e);
     }
     if (elapsed >= 300_000) {
-      // ~5 min: algo va muy mal en el servidor
+      // ~5 min: something is very wrong on the server
       stopPolling();
       setJobRunning(false);
       setAiError(true);
@@ -186,11 +186,11 @@ export default function PlanPage() {
 
   const startMutation = trpc.mentor.startPlanJob.useMutation({
     onSuccess: data => {
-      console.log(`[21w] trabajo de plan iniciado: ${data.jobId}`);
+      console.log(`[21w] plan job started: ${data.jobId}`);
       pollJob(data.jobId);
     },
     onError: err => {
-      console.error("[21w] startPlanJob rechazado:", err);
+      console.error("[21w] startPlanJob rejected:", err);
       setJobRunning(false);
       setAiError(true);
     },
@@ -219,7 +219,7 @@ export default function PlanPage() {
     });
   };
 
-  // autogenerar al llegar desde Issues con proyecto elegido y sin plan
+  // autogenerate when arriving from Issues with a project chosen and no plan
   useEffect(() => {
     if (!plan && profile && project && !jobRunning && !aiError) {
       generate();

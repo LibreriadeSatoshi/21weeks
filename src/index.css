@@ -2,7 +2,7 @@
 @import "../design/ismos/css/ismos.css";
 @import "../design/ismos/tailwind/theme.css";
 
-/* Estilos propios de 21 Weeks. Solo tokens de ISMOS: nada de hex, px sueltos ni sombras. */
+/* 21 Weeks' own styles. ISMOS tokens only: no hex, loose px or shadows. */
 
 @layer base {
   html {
@@ -24,7 +24,7 @@
   }
 }
 
-/* Aparición al hacer scroll: solo opacidad y desplazamiento, 280 ms */
+/* Reveal on scroll: opacity and offset only, 280 ms */
 .reveal {
   opacity: 0;
   transform: translateY(var(--space-16));
@@ -44,7 +44,7 @@
   }
 }
 
-/* Logo de proyecto: cuadrado, borde hairline, sin sombra */
+/* Project logo: square, hairline border, flat */
 .logo-tile {
   display: block;
   flex-shrink: 0;
@@ -54,7 +54,7 @@
   border-radius: var(--radius-4);
 }
 
-/* Cursor del chat mientras el mentor escribe */
+/* Chat cursor while the mentor is typing */
 .chat-caret::after {
   content: "";
   display: inline-block;
@@ -65,7 +65,7 @@
   background: var(--bar);
 }
 
-/* Markdown de las respuestas del mentor */
+/* Markdown in the mentor's replies */
 .md-chat p {
   margin: 0 0 var(--space-12);
 }
@@ -117,8 +117,8 @@
   font-weight: 600;
 }
 
-/* Barra de navegación (10 §2): Ink a todo el ancho, mark a 20 px, cuatro enlaces,
-   idioma siempre visible. En móvil los enlaces pasan a una segunda fila con scroll. */
+/* Navigation bar (10 §2): full-width Ink, mark at 20 px, four links,
+   language always visible. On mobile the links move to a second scrolling row. */
 .app-nav {
   position: sticky;
   top: 0;
@@ -206,7 +206,7 @@
   }
 }
 
-/* Pie: bloque Ink a todo el ancho con el mark en Paper */
+/* Footer: full-width Ink block with the mark in Paper */
 .app-footer {
   background: var(--ink);
   color: var(--paper);
@@ -242,9 +242,9 @@
   }
 }
 
-/* Bloque Ink a todo el ancho: dentro, los roles semánticos pasan a los de Hacker
-   mode (mismos valores que tokens.css), así los componentes ism-* funcionan sin
-   colores sueltos. */
+/* Full-width Ink block: inside it, the semantic roles switch to the Hacker
+   mode ones (same values as tokens.css), so ism-* components work without
+   loose colours. */
 .app-ink {
   --surface: var(--ink);
   --surface-raised: var(--logwood);
@@ -266,7 +266,7 @@
   color: var(--text);
 }
 
-/* Contenedor de página: 12 columnas, máx. 1200, márgenes 16 / 32 */
+/* Page container: 12 columns, max 1200, margins 16 / 32 */
 .app-container {
   max-width: var(--content-max);
   margin-inline: auto;
@@ -278,7 +278,7 @@
   }
 }
 
-/* Cifras de la portada: figura en Plex Mono + palabra */
+/* Home page figures: number in Plex Mono + word */
 .app-facts {
   display: flex;
   flex-wrap: wrap;
@@ -304,8 +304,8 @@
   color: var(--text-muted);
 }
 
-/* Radio y casilla (10 §2): casilla 20 px cuadrada, radio 20 px circular (excepción
-   nombrada), borde 2 px; seleccionado = relleno/punto + peso 600, nunca un color de fondo. */
+/* Radio and checkbox (10 §2): 20 px square checkbox, 20 px circular radio (named
+   exception), 2 px border; selected = fill/dot + weight 600, never a background colour. */
 .app-choice {
   display: flex;
   align-items: flex-start;
@@ -363,7 +363,7 @@
   background: var(--text);
 }
 
-/* Slider (10 §2): pista de 6 px, pulgar cuadrado, valor siempre escrito al lado */
+/* Slider (10 §2): 6 px track, square thumb, value always written beside it */
 .app-slider {
   flex: 1;
   appearance: none;
@@ -386,7 +386,7 @@
   border-radius: 0;
 }
 
-/* Botón terciario (10 §2): sin borde, peso 600, subrayado solo al pasar */
+/* Tertiary button (10 §2): no border, weight 600, underline on hover only */
 .ism-root .app-btn-tertiary,
 .app-btn-tertiary {
   display: inline-flex;
@@ -419,9 +419,9 @@
   background: transparent;
 }
 
-/* Bloque Mauveine a todo el ancho (hero de la portada). Tipografía en Paper:
-   Ink sobre Mauveine no llega a 4.5:1, así que el botón principal pasa a Paper
-   con texto Ink y el secundario a contorno Paper. */
+/* Full-width Mauveine block (home page hero). Type in Paper:
+   Ink on Mauveine does not reach 4.5:1, so the primary button switches to Paper
+   with Ink text and the secondary one to a Paper outline. */
 .app-mauveine {
   --surface: var(--mauveine);
   --text: var(--paper);
@@ -438,8 +438,8 @@
   color: var(--text);
 }
 
-/* Bloque de color de un cuarto de la superficie (01.1, dispositivo 4): plano,
-   a sangre hasta el borde. Móvil: banda superior; escritorio: columna derecha. */
+/* Colour block covering a quarter of the surface (01.1, device 4): flat,
+   bleeding to the edge. Mobile: top band; desktop: right column. */
 .app-quarter {
   display: grid;
   grid-template-rows: var(--space-96) auto;

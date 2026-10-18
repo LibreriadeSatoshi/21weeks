@@ -11,8 +11,8 @@
  *
  * 生图/生视频/生语音**不在本技能范围**（本批只有 LLM 接入）。
  *
- * 环境变量：优先 AI_BASE_URL / AI_API_KEY / AI_MODEL_ID（ servidor propio,
- * cualquier endpoint OpenAI-compatible），fallback a las de la plataforma:
+ * 环境变量：优先 AI_BASE_URL / AI_API_KEY / AI_MODEL_ID（ self-hosted server,
+ * any OpenAI-compatible endpoint），fallback to the platform ones:
  *   KIMI_AGENTGW_API_KEY  — 平台网关鉴权 key（**仅服务端可用**，禁止下发浏览器）
  *   KIMI_AGENTGW_BASE_URL — 网关入口（含 /coding/v1 后缀）
  *
@@ -127,8 +127,8 @@ interface GatewayConfig {
 }
 
 function config(): GatewayConfig {
-  // Prioridad: variables genéricas (servidor propio) → variables de la
-  // plataforma Kimi. Cualquier endpoint OpenAI-compatible sirve.
+  // Priority: generic variables (self-hosted server) → Kimi platform
+  // variables. Any OpenAI-compatible endpoint works.
   const baseUrl = readEnv("AI_BASE_URL") || readEnv("KIMI_AGENTGW_BASE_URL");
   const apiKey = readEnv("AI_API_KEY") || readEnv("KIMI_AGENTGW_API_KEY");
   if (!baseUrl || !apiKey) {
@@ -255,7 +255,7 @@ export function isRetryableAiError(err: unknown): boolean {
 /**
  * 可用模型清单。**站点不要硬编码模型 id**：可用集合由该站点的 scope/权益决定，
  * 会不告而变。显式传一个过期 id 不会被网关拒绝（原样回显），因此硬编码是静默降级。
- * En servidor propio, fija AI_MODEL_ID y no hace falta llamar a esto.
+ * On a self-hosted server, set AI_MODEL_ID and there is no need to call this.
  */
 export async function listModels(): Promise<ModelList> {
   const { baseUrl, apiKey } = config();

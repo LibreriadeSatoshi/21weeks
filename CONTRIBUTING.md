@@ -1,94 +1,94 @@
-# Contribuir a 21 Weeks
+# Contributing to 21 Weeks
 
-Gracias por contribuir. Este proyecto adopta el **Developer Certificate of Origin 1.1**
-(ver el fichero [`DCO`](./DCO)) y una política explícita sobre uso de IA.
+Thanks for contributing. This project adopts the **Developer Certificate of Origin 1.1**
+(see the [`DCO`](./DCO) file) and an explicit policy on AI use.
 
-## DCO: todo commit lleva `Signed-off-by`
+## DCO: every commit carries `Signed-off-by`
 
-Cada commit debe incluir el sign-off de **una persona humana**:
+Every commit must include the sign-off of **a human person**:
 
 ```
-Signed-off-by: Nombre Apellido <tu@email>
+Signed-off-by: First Last <you@email>
 ```
 
-Se añade automáticamente con `git commit -s`. Con él certificas que:
+`git commit -s` adds it automatically. With it you certify that:
 
-- tienes derecho a aportar ese código bajo la licencia del proyecto, y
-- **has revisado y entendido lo que aportas**, lo haya escrito quien lo haya escrito
-  (tú, un compañero o un agente de IA).
+- you have the right to contribute that code under the project's license, and
+- **you have reviewed and understood what you contribute**, whoever wrote it
+  (you, a teammate or an AI agent).
 
-El `Signed-off-by` es la pieza con peso real de este sistema. Un commit sin
-sign-off humano válido no se fusiona (lo verifica CI).
+The `Signed-off-by` is the piece that carries real weight in this system. A commit
+without a valid human sign-off is not merged (CI checks it).
 
-## Política de IA
+## AI policy
 
-Usar agentes de IA está permitido y es habitual en este proyecto (de hecho,
-gran parte nació así). Las reglas:
+Using AI agents is allowed and common in this project (in fact, much of it
+was born that way). The rules:
 
-1. **La IA nunca pone `Signed-off-by`.** Solo lo pone el humano que responde
-   del commit. Si un agente generó el código, quien lo commitea lo revisa,
-   lo entiende y firma.
-2. **El uso de IA se declara con un trailer `Assisted-by`:**
+1. **AI never adds `Signed-off-by`.** Only the human who answers for the
+   commit adds it. If an agent generated the code, whoever commits it reviews it,
+   understands it and signs it.
+2. **AI use is declared with an `Assisted-by` trailer:**
 
    ```
-   Assisted-by: AGENTE:MODELO [herramientas]
+   Assisted-by: AGENT:MODEL [tools]
    ```
 
-   Ejemplos: `Assisted-by: Kimi:K3`, `Assisted-by: Claude:claude-opus-4-5 [claude-code]`.
+   Examples: `Assisted-by: Kimi:K3`, `Assisted-by: Claude:claude-opus-4-5 [claude-code]`.
 
-3. **Nada de `Co-authored-by` para una IA.** Una IA no es autora: no puede
-   certificar el DCO ni responder legalmente de la contribución. El authorship
-   y el sign-off son siempre humanos.
+3. **No `Co-authored-by` for an AI.** An AI is not an author: it cannot
+   certify the DCO or be legally responsible for the contribution. Authorship
+   and sign-off are always human.
 
-`Assisted-by` es una declaración voluntaria y no verificable; su valor es la
-transparencia, no el cumplimiento. Lo que se exige y se verifica es el
-`Signed-off-by` humano.
+`Assisted-by` is a voluntary, unverifiable declaration; its value is
+transparency, not compliance. What is required and checked is the human
+`Signed-off-by`.
 
-### Formato de commit recomendado
+### Recommended commit format
 
 ```bash
 git commit -s --trailer "Assisted-by: Kimi:K3"
 ```
 
-produce:
+produces:
 
 ```
-fix: valida longitud de addr
+fix: validate addr length
 
 Assisted-by: Kimi:K3
 Signed-off-by: Iván Fuentes <ivan@example.com>
 ```
 
-### Configura tu agente
+### Configure your agent
 
-Si usas un agente de código (Claude Code, Kimi Code, Cursor…), configúralo para que:
+If you use a coding agent (Claude Code, Kimi Code, Cursor…), configure it so that it:
 
-- **nunca** añada `Signed-off-by` ni `Co-authored-by`,
-- **sí** añada el trailer `Assisted-by` correspondiente,
-- tenga desactivada la atribución automática (en Claude Code,
-  `includeCoAuthoredBy: false` en settings; confirma el nombre exacto en la
-  documentación de tu versión).
+- **never** adds `Signed-off-by` or `Co-authored-by`,
+- **does** add the matching `Assisted-by` trailer,
+- has automatic attribution turned off (in Claude Code,
+  `includeCoAuthoredBy: false` in settings; confirm the exact name in the
+  documentation for your version).
 
-Este repo incluye un [`AGENTS.md`](./AGENTS.md) con estas instrucciones, que
-la mayoría de agentes leen automáticamente.
+This repo includes an [`AGENTS.md`](./AGENTS.md) with these instructions, which
+most agents read automatically.
 
-### Hook local (opcional pero recomendado)
+### Local hook (optional but recommended)
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-El hook `commit-msg` rechaza commits sin `Signed-off-by` y sign-offs de
-identidades de IA o bots.
+The `commit-msg` hook rejects commits without `Signed-off-by` and sign-offs from
+AI or bot identities.
 
-## Merge: ojo con el squash
+## Merging: watch out for squash
 
-El **squash merge es la trampa habitual**: GitHub genera un mensaje nuevo y los
-trailers (`Signed-off-by`, `Assisted-by`) se pueden perder o duplicar.
-Preferimos **rebase merge** o **merge commit**. Si alguna vez se hace squash,
-quien fusiona debe copiar los trailers al mensaje final.
+**Squash merge is the usual trap**: GitHub generates a new message and the
+trailers (`Signed-off-by`, `Assisted-by`) can get lost or duplicated.
+We prefer **rebase merge** or **merge commit**. If a squash is ever done,
+whoever merges must copy the trailers into the final message.
 
-## Firma criptográfica (opcional pero recomendable)
+## Cryptographic signing (optional but advisable)
 
 ```bash
 git config commit.gpgsign true
@@ -96,4 +96,4 @@ git config gpg.format ssh
 git config user.signingkey ~/.ssh/id_ed25519.pub
 ```
 
-y activa "Require signed commits" en la protección de la rama `main` en GitHub.
+and turn on "Require signed commits" in the `main` branch protection on GitHub.

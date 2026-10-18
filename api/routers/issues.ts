@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createRouter, publicQuery } from "../middleware";
 import { PROJECTS, type Issue } from "@contracts/types";
 
-// ---------- caché en memoria (10 min) ----------
+// ---------- in-memory cache (10 min) ----------
 const CACHE_TTL = 10 * 60 * 1000;
 const cache = new Map<string, { at: number; data: Issue[] }>();
 
@@ -38,7 +38,7 @@ async function fetchGitHubIssues(repo: string, labels: string[]): Promise<Issue[
       },
       signal: AbortSignal.timeout(12_000),
     });
-    if (!res.ok) continue; // rate limit u otro: devolvemos lo que haya
+    if (!res.ok) continue; // rate limit or other: return whatever we have
     const data = (await res.json()) as Array<Record<string, unknown>>;
     const issues: Issue[] = [];
     for (const raw of data) {
@@ -67,15 +67,15 @@ async function fetchGitHubIssues(repo: string, labels: string[]): Promise<Issue[
     cache.set(key, { at: Date.now(), data: issues });
   }
 
-  // Fallback: el repo no usa la etiqueta — mostramos issues abiertas recientes
+  // Fallback: the repo does not use the label, so we show recent open issues
   if (results.size === 0) {
     const key = `gh:${repo}:__recent__`;
     const fromCache = cached(key);
     if (fromCache) {
       fromCache.forEach((i) => results.set(i.number, i));
     } else {
-      // pedimos 60 porque la API mezcla PRs y luego filtramos (bitcoin/bitcoin
-      // es casi todo PRs: con 15 solo quedaba 1 issue real)
+      // we ask for 60 because the API mixes in PRs and we filter afterwards (bitcoin/bitcoin
+      // is almost all PRs: with 15 only 1 real issue was left)
       const url = `https://api.github.com/repos/${repo}/issues?state=open&per_page=60&sort=created&direction=desc`;
       const res = await fetch(url, {
         headers: {
@@ -160,7 +160,7 @@ async function fetchGitLabIssues(repo: string, labels: string[]): Promise<Issue[
     cache.set(key, { at: Date.now(), data: issues });
   }
 
-  // Fallback: sin etiqueta "good first issue" — issues abiertas recientes
+  // Fallback: no "good first issue" label, so recent open issues
   if (results.size === 0) {
     const key = `gl:${repo}:__recent__`;
     const fromCache = cached(key);
@@ -212,8 +212,8 @@ export const issuesRouter = createRouter({
           project.host === "github"
             ? await fetchGitHubIssues(project.repo, project.labels)
             : await fetchGitLabIssues(project.repo, project.labels);
-        // fallback = el repo no usa/no tiene "good first issue": lo que mostramos
-        // son issues recientes sin etiquetar, NO curadas para empezar
+        // fallback = the repo does not use/have "good first issue": what we show
+        // are recent unlabeled issues, NOT curated for getting started
         const hasLabeled = issues.some((i) =>
           i.labels.some((l) => project.labels.some((pl) => pl.toLowerCase() === l.toLowerCase())),
         );

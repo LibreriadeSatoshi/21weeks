@@ -7,12 +7,12 @@ services:
       NODE_ENV: production
       PORT: "3000"
       DATABASE_URL: mysql://21weeks:21weeks@db:3306/21weeks
-      # Proveedor de IA OpenAI-compatible (elige el tuyo):
-      #   Moonshot:  https://api.moonshot.cn/v1   (modelo p.ej. kimi-k2-0905-preview)
-      #   OpenAI:    https://api.openai.com/v1    (modelo p.ej. gpt-4o)
-      AI_BASE_URL: ${AI_BASE_URL:?define AI_BASE_URL en .env}
-      AI_API_KEY: ${AI_API_KEY:?define AI_API_KEY en .env}
-      AI_MODEL_ID: ${AI_MODEL_ID:?define AI_MODEL_ID en .env}
+      # OpenAI-compatible AI provider (pick yours):
+      #   Moonshot:  https://api.moonshot.cn/v1   (model e.g. kimi-k2-0905-preview)
+      #   OpenAI:    https://api.openai.com/v1    (model e.g. gpt-4o)
+      AI_BASE_URL: ${AI_BASE_URL:?set AI_BASE_URL in .env}
+      AI_API_KEY: ${AI_API_KEY:?set AI_API_KEY in .env}
+      AI_MODEL_ID: ${AI_MODEL_ID:?set AI_MODEL_ID in .env}
     depends_on:
       db:
         condition: service_healthy

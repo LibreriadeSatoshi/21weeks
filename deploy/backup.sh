@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
-# Copia diaria de MySQL. Se ejecuta en el servidor desde cron (ver deploy/README.md).
-# Guarda los últimos 14 días en ~/backups y, si BACKUP_S3_URI está definido
-# (p. ej. s3://ismos-backups/21weeks), sube cada copia a S3.
+# Daily MySQL backup. Runs on the server from cron (see deploy/README.md).
+# Keeps the last 14 days in ~/backups and, if BACKUP_S3_URI is set
+# (e.g. s3://ismos-backups/21weeks), uploads each backup to S3.
 set -eu
 
 cd "$(dirname "$0")/.."

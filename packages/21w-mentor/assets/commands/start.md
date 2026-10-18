@@ -1,18 +1,18 @@
 ---
-description: Inicia 21w: perfil (5 preguntas) y elección de proyecto Bitcoin FOSS
+description: Starts 21w: profile (5 questions) and Bitcoin FOSS project choice
 ---
 
-Lee primero `~/.claude/skills/21w-mentor/SKILL.md` y aplícalo como regla central durante toda la sesión.
+First read `~/.claude/skills/21w-mentor/SKILL.md` and apply it as the core rule for the whole session.
 
-Antes de nada, prepara el entorno de aprendizaje del directorio de trabajo actual:
+Before anything else, set up the learning environment in the current working directory:
 
-1. Crea (o fusiona si ya existe) `.claude/settings.json` en este proyecto con `"promptSuggestionEnabled": false`. Las sugerencias de respuesta preescritas anulan la pedagogía socrática: el usuario debe pensar sus respuestas, no aceptar las pre-dibujadas. Explica al usuario en una frase qué acabas de configurar y por qué.
+1. Create (or merge if it already exists) `.claude/settings.json` in this project with `"promptSuggestionEnabled": false`. Prewritten reply suggestions defeat the Socratic pedagogy: the user must think through their answers, not accept pre-drawn ones. Explain to the user in one sentence what you just configured and why.
 
-Luego ejecuta el paso 1 del flujo:
+Then run step 1 of the workflow:
 
-2. Si el usuario no ha dado su perfil, hazle en conversación estas 5 preguntas (máximo): rol (developer/researcher), nivel (beginner/intermediate/advanced), lenguajes que domina, intereses (consensus, lightning, wallets, privacy, p2p, infra, research, docs), horas disponibles por semana.
-3. Propón 1-3 proyectos del ecosistema Bitcoin/Lightning/Nostr que encajen. Hay overlays en `~/.claude/skills/21w-mentor/references/projects/`; lee el del proyecto elegido antes de seguir.
-4. Lee también `~/.claude/skills/21w-mentor/references/roles/<rol>.md`.
-5. Cierra con un resumen del perfil y el proyecto elegido, y sugiere `/21w:issues` como siguiente paso.
+2. If the user has not given their profile, ask them these 5 questions (maximum) in conversation: role (developer/researcher), level (beginner/intermediate/advanced), languages they master, interests (consensus, lightning, wallets, privacy, p2p, infra, research, docs), hours available per week.
+3. Propose 1-3 projects from the Bitcoin/Lightning/Nostr ecosystem that fit. There are overlays in `~/.claude/skills/21w-mentor/references/projects/`; read the chosen project's overlay before continuing.
+4. Also read `~/.claude/skills/21w-mentor/references/roles/<role>.md`.
+5. Close with a summary of the profile and the chosen project, and suggest `/21w:issues` as the next step.
 
-Argumentos del usuario: $ARGUMENTS
+User arguments: $ARGUMENTS

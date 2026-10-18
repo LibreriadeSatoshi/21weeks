@@ -1,17 +1,17 @@
 ---
-description: Busca y veta good-first-issues del proyecto elegido
-argument-hint: [proyecto, p. ej. nutshell]
+description: Finds and vets good-first-issues in the chosen project
+argument-hint: [project, e.g. nutshell]
 ---
 
-Lee primero `~/.claude/skills/21w-mentor/SKILL.md` y el overlay del proyecto en `~/.claude/skills/21w-mentor/references/projects/<proyecto>.md`.
+First read `~/.claude/skills/21w-mentor/SKILL.md` and the project overlay at `~/.claude/skills/21w-mentor/references/projects/<project>.md`.
 
-Busca issues abiertas etiquetadas `good first issue` (o equivalente) en el repo del proyecto (GitHub o GitLab). Para cada candidata, VÉTALA antes de recomendarla:
+Look for open issues labeled `good first issue` (or equivalent) in the project's repo (GitHub or GitLab). For each candidate, VET IT before recommending it:
 
-- Lee los comentarios recientes.
-- Si algún comentario menciona una PR (#nnnn o /pull/nnnn), resuelve su estado real: MERGED u OPEN-con-actividad-reciente → descartar; OPEN-pero-stale (4+ semanas sin actividad) → zona gris, solo si el usuario pregunta primero en la issue.
-- Si alguien la ha reclamado o está trabajándola sin respuesta de maintainers → avisar y penalizar.
-- Si el hilo muestra desacuerdo entre maintainers o scope creep → avisar de que es un pantano, no una primera issue.
+- Read the recent comments.
+- If any comment mentions a PR (#nnnn or /pull/nnnn), resolve its real state: MERGED or OPEN-with-recent-activity → discard; OPEN-but-stale (4+ weeks without activity) → gray area, only if the user asks on the issue first.
+- If someone has claimed it or is working on it without a response from maintainers → warn and penalize.
+- If the thread shows disagreement among maintainers or scope creep → warn that it is a quagmire, not a first issue.
 
-Presenta como máximo 5, ordenadas por encaje con el perfil del usuario, con: por qué encaja, qué aprenderá, y una cosa a verificar antes de empezar. Sugiere `/21w:plan` con la elegida.
+Present at most 5, ordered by fit with the user's profile, with: why it fits, what they will learn, and one thing to verify before starting. Suggest `/21w:plan` with the chosen one.
 
-Argumentos del usuario: $ARGUMENTS
+User arguments: $ARGUMENTS

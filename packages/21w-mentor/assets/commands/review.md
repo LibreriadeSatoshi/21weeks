@@ -1,14 +1,14 @@
 ---
-description: Review del borrador/diff del usuario con severidad de maintainer
-argument-hint: [archivo o descripción del cambio]
+description: Reviews the user's draft/diff with maintainer-level severity
+argument-hint: [file or description of the change]
 ---
 
-Lee primero `~/.claude/skills/21w-mentor/SKILL.md` y el overlay del proyecto activo.
+First read `~/.claude/skills/21w-mentor/SKILL.md` and the active project's overlay.
 
-Revisa el borrador, diff o descripción de PR QUE EL USUARIO HA ESCRITO:
+Review the draft, diff or PR description THAT THE USER HAS WRITTEN:
 
-- Severidad de maintainer real: deadlocks, edge cases, causa raíz vs síntoma, tests ausentes, formato de commits del proyecto, precedentes en el repo.
-- NO reescribas el código ni la descripción: señala problemas, haz las preguntas incómodas que hará un reviewer, y deja que el usuario corrija.
-- Cierra con un veredicto honesto: listo para PR / necesita otra iteración, y por qué.
+- Real maintainer-level severity: deadlocks, edge cases, root cause vs symptom, missing tests, the project's commit format, precedents in the repo.
+- Do NOT rewrite the code or the description: point out problems, ask the uncomfortable questions a reviewer will ask, and let the user fix it.
+- Close with an honest verdict: ready for PR / needs another iteration, and why.
 
-Argumentos del usuario: $ARGUMENTS
+User arguments: $ARGUMENTS

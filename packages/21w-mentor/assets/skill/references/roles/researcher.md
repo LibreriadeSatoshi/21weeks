@@ -1,37 +1,39 @@
-# Overlay de rol: Researcher
+# Role overlay: Researcher
 
-Manda en la pedagogía: qué cuenta como trabajo del usuario y qué vale como
-contribución. Un researcher NO es un developer con menos código: su
-contribución es conceptual.
+Governs pedagogy: what counts as the user's work and what qualifies as a
+contribution. A researcher is NOT a developer with less code: their
+contribution is conceptual.
 
-## Qué cuenta como contribución
+## What counts as a contribution
 
-Análisis, comentarios sustantivos en specs (BIPs/BOLTs/NIPs/NUTs), erratas y
-aclaraciones de especificación, review conceptual de propuestas, resúmenes de
-debates en listas/Delving Bitcoin, reproducción y documentación de
-comportamientos. La vara de medir final: **texto de spec o análisis adoptado /
-referenciado por implementaciones o por la discusión del proyecto**.
+Analysis, substantive comments on specs (BIPs/BOLTs/NIPs/NUTs), errata and
+specification clarifications, conceptual review of proposals, summaries of
+debates on mailing lists/Delving Bitcoin, reproduction and documentation of
+behaviors. The final yardstick: **spec text or analysis adopted /
+referenced by implementations or by the project's discussion**.
 
-## Definition of done por fase
+## Definition of done per phase
 
-- Semanas 1-3: leída la spec relevante del proyecto + historia del debate
-  (listas de correo, Delving, PRs de spec cerrados); sabe citar qué
-  implementaciones hacen qué.
-- Semanas 4-6: primera contribución pública: pregunta bien formulada, errata
-  o aclaración en el repo de la spec o en la lista, escrita por el usuario.
-- Semanas 7-10: análisis propio de una propuesta abierta (qué resuelve, qué
-  rompe, qué implementaciones la apoyan), publicado donde el proyecto debate.
-- Semanas 11-15: participación regular en el debate; seguimiento de una
-  propuesta de principio a fin.
-- Semanas 16-21: autoría de una propuesta o sección de spec propia, iterada
-  con la comunidad.
+- Weeks 1-3: has read the project's relevant spec + the history of the
+  debate (mailing lists, Delving, closed spec PRs); can cite which
+  implementations do what.
+- Weeks 4-6: first public contribution: a well-formulated question, an
+  erratum or a clarification in the spec repo or on the list, written by the
+  user.
+- Weeks 7-10: their own analysis of an open proposal (what it solves, what
+  it breaks, which implementations support it), published where the project
+  debates.
+- Weeks 11-15: regular participation in the debate; following a proposal
+  from start to finish.
+- Weeks 16-21: authorship of their own proposal or spec section, iterated
+  with the community.
 
-## Pedagogía
+## Pedagogy
 
-- El mentor nunca redacta el texto de spec ni el rationale: pregunta, señala
-  lagunas argumentales y contradicciones con implementaciones existentes.
-- El vetado de "issues" aquí mira consenso conceptual: si una propuesta ya
-  fue rechazada en la lista hace un mes, no es una oportunidad; es una
-  trampa. Buscar el historial del debate antes de recomendar nada.
-- Enseñar a citar: toda afirmación sobre comportamiento de protocolo se
-  apoya en spec o código concreto, con enlace.
+- The mentor never drafts the spec text or the rationale: it asks, points
+  out gaps in the argument and contradictions with existing implementations.
+- Vetting "issues" here looks at conceptual consensus: if a proposal was
+  already rejected on the list a month ago, it is not an opportunity; it is
+  a trap. Look up the history of the debate before recommending anything.
+- Teach citing: every claim about protocol behavior is backed by a specific
+  spec or code, with a link.

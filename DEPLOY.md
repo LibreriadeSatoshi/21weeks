@@ -1,12 +1,12 @@
-# Despliegue fuera de Kimi (servidor propio)
+# Deploying outside Kimi (your own server)
 
-21weeks es una app Node 20+ estándar (Vite + Hono + tRPC + MySQL). Fuera de la
-plataforma Kimi corre en **modo anónimo** (sin login) y con cualquier proveedor
-de IA **OpenAI-compatible**.
+21weeks is a standard Node 20+ app (Vite + Hono + tRPC + MySQL). Outside the
+Kimi platform it runs in **anonymous mode** (no login) and with any
+**OpenAI-compatible** AI provider.
 
-## Docker Compose (recomendado)
+## Docker Compose (recommended)
 
-1. Crea un `.env` junto al `docker-compose.yml`:
+1. Create a `.env` next to `docker-compose.yml`:
 
 ```env
 AI_BASE_URL=https://api.moonshot.cn/v1
@@ -14,24 +14,24 @@ AI_API_KEY=sk-...
 AI_MODEL_ID=kimi-k2-0905-preview
 ```
 
-   Otros endpoints válidos: OpenAI (`https://api.openai.com/v1`,
-   `AI_MODEL_ID=gpt-4o`), o un vLLM/Ollama propio con API OpenAI.
+Other valid endpoints: OpenAI (`https://api.openai.com/v1`,
+`AI_MODEL_ID=gpt-4o`), or your own vLLM/Ollama with an OpenAI API.
 
-2. Levanta:
+2. Start it:
 
 ```bash
 docker compose up -d --build
 ```
 
-App en `http://localhost:3000`. MySQL 8.4 incluido (volumen `dbdata`); las
-tablas se autocrean en el primer arranque (utf8mb4 ya configurado).
+App at `http://localhost:3000`. MySQL 8.4 included (volume `dbdata`); the
+tables are created automatically on first start (utf8mb4 already configured).
 
-## Sin Docker (VPS + systemd)
+## Without Docker (VPS + systemd)
 
 ```bash
-node --version   # necesitas 20+
+node --version   # you need 20+
 npm ci
-npm run build    # genera dist/boot.js (servidor) y dist/public (estáticos)
+npm run build    # generates dist/boot.js (server) and dist/public (static files)
 
 cat > .env <<EOF
 NODE_ENV=production
@@ -45,29 +45,29 @@ EOF
 NODE_ENV=production node dist/boot.js
 ```
 
-Sirve el puerto 3000 detrás de tu reverse proxy (nginx/Caddy) con HTTPS.
-Ojo con los timeouts del proxy: la generación de planes es asíncrona
-(job + sondeo cada 4 s), así que basta con timeouts estándar de 60 s.
+Serve port 3000 behind your reverse proxy (nginx/Caddy) with HTTPS.
+Watch the proxy timeouts: plan generation is asynchronous
+(job + polling every 4 s), so standard 60 s timeouts are enough.
 
-## Variables de entorno
+## Environment variables
 
-| Variable | Obligatoria | Descripción |
-|---|---|---|
-| `DATABASE_URL` | sí | `mysql://user:pass@host:3306/db` (charset utf8mb4) |
-| `AI_BASE_URL` | sí* | endpoint OpenAI-compatible, sin barra final |
-| `AI_API_KEY` | sí* | API key del proveedor |
-| `AI_MODEL_ID` | sí* | id del modelo (fuera de Kimi no hay autodetección fiable) |
-| `PORT` | no | por defecto 3000 |
-| `APP_ID`, `APP_SECRET`, `KIMI_AUTH_URL`, `KIMI_OPEN_URL`, `OWNER_UNION_ID` | no | solo para "Sign in with Kimi" dentro de la plataforma; ausentes = modo anónimo |
-| `KIMI_AGENTGW_BASE_URL`, `KIMI_AGENTGW_API_KEY` | no | gateway de la plataforma Kimi; si existen se usan como fallback de `AI_*` |
+| Variable                                                                   | Required | Description                                                               |
+| -------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------- |
+| `DATABASE_URL`                                                             | yes      | `mysql://user:pass@host:3306/db` (charset utf8mb4)                        |
+| `AI_BASE_URL`                                                              | yes*     | OpenAI-compatible endpoint, no trailing slash                             |
+| `AI_API_KEY`                                                               | yes*     | provider API key                                                          |
+| `AI_MODEL_ID`                                                              | yes*     | model id (outside Kimi there is no reliable autodetection)                |
+| `PORT`                                                                     | no       | 3000 by default                                                           |
+| `APP_ID`, `APP_SECRET`, `KIMI_AUTH_URL`, `KIMI_OPEN_URL`, `OWNER_UNION_ID` | no       | only for "Sign in with Kimi" inside the platform; absent = anonymous mode |
+| `KIMI_AGENTGW_BASE_URL`, `KIMI_AGENTGW_API_KEY`                            | no       | Kimi platform gateway; if present they are used as a fallback for `AI_*`  |
 
-\* fuera de la plataforma Kimi.
+\* outside the Kimi platform.
 
-## Notas
+## Notes
 
-- **Login**: fuera de Kimi no hay cuentas; el perfil y el progreso viven en el
-  navegador del usuario (localStorage). El callback OAuth responde 501.
-- **Límites de coste**: el plan de 21 semanas y el chat consumen tokens de TU
-  API key. Si abres el sitio al público, pon rate-limit en tu proxy.
-- **Skill 21w-mentor**: si editas datos de proyectos, hazlo en
-  `contracts/catalog.ts` y regenera overlays con `npm run skill:overlays`.
+- **Login**: outside Kimi there are no accounts; the profile and progress live in
+  the user's browser (localStorage). The OAuth callback returns 501.
+- **Cost limits**: the 21-week plan and the chat consume tokens from YOUR
+  API key. If you open the site to the public, add rate limiting in your proxy.
+- **21w-mentor skill**: if you edit project data, do it in
+  `contracts/catalog.ts` and regenerate overlays with `npm run skill:overlays`.

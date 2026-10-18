@@ -2,10 +2,10 @@ import crypto from "node:crypto";
 import type { MiddlewareHandler } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
-// Acceso privado hasta el lanzamiento: si SITE_PASSWORD está definida, todo
-// (páginas, JS, API) queda detrás de una contraseña. Solo pasan la página de
-// acceso y /api/health (para el despliegue). La cookie va
-// con Domain=COOKIE_DOMAIN para valer en ismos.xyz/21weeks y en app.ismos.xyz.
+// Private access until launch: if SITE_PASSWORD is set, everything
+// (pages, JS, API) sits behind a password. Only the access page and
+// /api/health (for deployment) get through. The cookie is set
+// with Domain=COOKIE_DOMAIN so it works on ismos.xyz/21weeks and on app.ismos.xyz.
 
 export const ACCESS_COOKIE = "w21_access";
 const ACCESS_PATH = "/__access";
@@ -18,7 +18,7 @@ export type SiteGateOptions = {
   secure: boolean;
 };
 
-/** El valor de la cookie depende de la contraseña: cambiarla invalida los accesos. */
+/** The cookie value depends on the password: changing it invalidates existing access. */
 export function accessToken(password: string): string {
   return crypto
     .createHmac("sha256", password)
@@ -32,7 +32,7 @@ function safeEqual(a: string, b: string): boolean {
   return ab.length === bb.length && crypto.timingSafeEqual(ab, bb);
 }
 
-/** Solo rutas internas bajo el prefijo; cualquier otra cosa vuelve a la portada. */
+/** Only internal paths under the prefix; anything else goes back to the home page. */
 function safeNext(next: string | undefined, basePath: string): string {
   const home = `${basePath}/`;
   if (
@@ -49,8 +49,8 @@ function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
 }
 
-// Página genérica a propósito: no dice qué sitio protege (ni nombre, ni logo,
-// ni estilos de la app), igual que la protección por contraseña de Netlify.
+// Deliberately generic page: it does not reveal which site it protects (no name,
+// logo or app styles), just like Netlify's password protection.
 const GATE_STYLE = `
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:48px 16px;background:#131d24;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#131d24}

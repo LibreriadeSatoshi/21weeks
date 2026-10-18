@@ -1,9 +1,9 @@
 import { asset } from "@/lib/paths";
 
 /**
- * Logo oficial del proyecto, normalizado a 128×128 en /public/logos/{id}.png.
- * Formato estándar en toda la app: tile cuadrado con esquinas redondeadas
- * y borde hairline; el tamaño lo fija quien lo usa.
+ * Official project logo, normalized to 128×128 in /public/logos/{id}.png.
+ * Standard format across the app: square tile with 4 px corners
+ * and a hairline border; the size is set by the caller.
  */
 export function ProjectLogo({
   id,

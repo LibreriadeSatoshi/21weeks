@@ -26,23 +26,23 @@ const issueSchema = z.object({
   body: z.string(),
 });
 
-// caché de comentarios de issues (10 min) — señales de "ya hay PR", "está cogida", etc.
+// issue comment cache (10 min): signals like "there is already a PR", "it's taken", etc.
 const commentsCache = new Map<string, { at: number; data: string[] }>();
 
-// Trabajos de generación de planes en segundo plano (ver startPlanJob).
-// EN BASE DE DATOS, no en memoria: la plataforma de producción es serverless
-// (Function Compute) y cada petición puede caer en una instancia distinta —
-// un Map en memoria haría que el sondeo no encontrara el trabajo. MySQL es
-// el único estado compartido entre instancias.
+// Background plan generation jobs (see startPlanJob).
+// IN THE DATABASE, not in memory: the production platform is serverless
+// (Function Compute) and each request may land on a different instance;
+// an in-memory Map would make polling fail to find the job. MySQL is
+// the only state shared between instances.
 import { getDb } from "../queries/connection";
 import { planJobs as planJobsTable } from "@db/schema";
 import { eq, sql } from "drizzle-orm";
 
 type PlanResult = Awaited<ReturnType<typeof buildPlan>>;
 
-// La plataforma serverless no ejecuta `db:push` en el despliegue, así que la
-// tabla se crea perezosamente la primera vez que se toca. CREATE TABLE IF NOT
-// EXISTS es idempotente; el promise cacheado evita repetirlo por petición.
+// The serverless platform does not run `db:push` on deploy, so the
+// table is created lazily the first time it is touched. CREATE TABLE IF NOT
+// EXISTS is idempotent; the cached promise avoids repeating it per request.
 let tableReady: Promise<void> | null = null;
 function ensurePlanJobsTable(): Promise<void> {
   if (!tableReady) {
@@ -57,16 +57,16 @@ function ensurePlanJobsTable(): Promise<void> {
           createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
       `);
-      // La BD de producción (Aliyun) puede usar utf8 (3 bytes) por defecto, lo
-      // que rechaza emojis y cualquier UTF-8 de 4 bytes del plan JSON con
-      // "Incorrect string value". CONVERT TO es idempotente y también arregla
-      // una tabla ya creada con el charset equivocado.
+      // The production DB (Aliyun) may default to utf8 (3 bytes), which
+      // rejects emojis and any 4-byte UTF-8 in the plan JSON with
+      // "Incorrect string value". CONVERT TO is idempotent and also fixes
+      // a table already created with the wrong charset.
       await getDb().execute(
         sql`ALTER TABLE plan_jobs CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
       );
-      // la columna stage puede faltar en tablas creadas por versiones viejas;
-      // MySQL no admite ADD COLUMN IF NOT EXISTS, así que ignoramos el error
-      // de columna duplicada y propagamos cualquier otro.
+      // the stage column may be missing in tables created by old versions;
+      // MySQL does not support ADD COLUMN IF NOT EXISTS, so we ignore the
+      // duplicate column error and propagate any other.
       await getDb()
         .execute(sql`ALTER TABLE plan_jobs ADD COLUMN stage VARCHAR(40) NULL`)
         .catch((e) => {
@@ -83,9 +83,9 @@ function ensurePlanJobsTable(): Promise<void> {
           );
           if (!isDuplicate) throw e;
         });
-      console.log("[plan-job] tabla plan_jobs verificada/creada (utf8mb4)");
+      console.log("[plan-job] plan_jobs table verified/created (utf8mb4)");
     })().catch((e) => {
-      tableReady = null; // permitir reintento en la siguiente llamada
+      tableReady = null; // allow a retry on the next call
       throw e;
     });
   }
@@ -104,9 +104,9 @@ async function jobDone(id: string, plan: PlanResult) {
       .set({ status: "done", plan: json })
       .where(eq(planJobsTable.id, id));
   } catch (err) {
-    // respaldo: si la columna sigue rechazando UTF-8 de 4 bytes, guardamos el
-    // plan sin esos caracteres (solo afecta a emojis/símbolos exóticos)
-    console.warn(`[plan-job ${id}] update falló, reintento sin chars >BMP:`, err);
+    // fallback: if the column still rejects 4-byte UTF-8, we save the
+    // plan without those characters (only affects emojis/exotic symbols)
+    console.warn(`[plan-job ${id}] update failed, retrying without >BMP chars:`, err);
     const asciiSafe = json.replace(/[\u{10000}-\u{10FFFF}]/gu, "");
     await getDb()
       .update(planJobsTable)
@@ -120,8 +120,8 @@ async function jobError(id: string, error: string) {
     .set({ status: "error", error: error.slice(0, 1000) })
     .where(eq(planJobsTable.id, id));
 }
-// fase visible para la UI mientras el trabajo corre (nada sensible: solo
-// nombres de paso genéricos que el frontend traduce a mensajes amigables)
+// stage visible to the UI while the job runs (nothing sensitive: only
+// generic step names that the frontend translates into friendly messages)
 async function jobStage(id: string, stage: string) {
   await getDb().update(planJobsTable).set({ stage }).where(eq(planJobsTable.id, id));
 }
@@ -132,7 +132,7 @@ async function jobGet(id: string) {
 }
 
 async function fetchRecentComments(issueId: string): Promise<string[]> {
-  // solo GitHub: id = github:owner/repo:number
+  // GitHub only: id = github:owner/repo:number
   const parts = issueId.split(":");
   if (parts[0] !== "github" || parts.length !== 3) return [];
   const hit = commentsCache.get(issueId);
@@ -161,9 +161,9 @@ async function fetchRecentComments(issueId: string): Promise<string[]> {
   }
 }
 
-// Si un comentario menciona una PR ("#9421", "/pull/9421"), resolvemos su
-// estado real: open/merged/closed + última actividad. Así el ranking distingue
-// "hay PR activa que lo arregla" de "hay PR abandonada: hueco para ti".
+// If a comment mentions a PR ("#9421", "/pull/9421"), we resolve its
+// actual state: open/merged/closed + last activity. That way the ranking tells
+// "there is an active PR fixing it" apart from "there is an abandoned PR: room for you".
 const prCache = new Map<string, { at: number; data: string }>();
 
 async function resolveReferencedPRs(issueId: string, comments: string[]): Promise<string[]> {
@@ -204,15 +204,15 @@ async function resolveReferencedPRs(issueId: string, comments: string[]): Promis
       prCache.set(key, { at: Date.now(), data: summary });
       out.push(summary);
     } catch {
-      // sin dato: el comentario sigue estando
+      // no data: the comment is still there
     }
   }
   return out;
 }
 
-// Reintento corto para errores transitorios del gateway (saturación, 5xx, cortes
-// de red). Solo se reintenta AiTransient; los errores terminales (cuota agotada,
-// contenido rechazado, mala configuración) se propagan tal cual.
+// Short retry for transient gateway errors (overload, 5xx, network
+// drops). Only AiTransient is retried; terminal errors (quota exhausted,
+// content rejected, misconfiguration) are propagated as is.
 async function withAiRetry<T>(fn: () => Promise<T>, attempts = 2, delayMs = 4000): Promise<T> {
   let lastErr: unknown;
   for (let i = 0; i <= attempts; i++) {
@@ -222,22 +222,22 @@ async function withAiRetry<T>(fn: () => Promise<T>, attempts = 2, delayMs = 4000
       lastErr = err;
       const raw = err as { text?: unknown; finishReason?: unknown };
       if (raw.text !== undefined || raw.finishReason !== undefined) {
-        console.warn("[ai] salida estructurada fallida:", {
+        console.warn("[ai] structured output failed:", {
           finishReason: raw.finishReason,
           text: typeof raw.text === "string" ? raw.text.slice(0, 4000) : raw.text,
         });
       }
       const mapped = classifyAiError(err);
       if (!isRetryableAiError(mapped) || i === attempts) throw mapped;
-      console.warn(`[ai] error transitorio (${mapped.message?.slice(0, 120)}), reintento ${i + 1}/${attempts}`);
+      console.warn(`[ai] transient error (${mapped.message?.slice(0, 120)}), retry ${i + 1}/${attempts}`);
       await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
     }
   }
   throw lastErr;
 }
 
-// Fase de investigación: busca fuentes primarias y devuelve el pool completo
-// de recursos verificados (canónicos + investigados + cursos curados).
+// Research phase: looks for primary sources and returns the full pool
+// of verified resources (canonical + researched + curated courses).
 async function researchResources(
   project: (typeof PROJECTS)[number],
   profile: Profile,
@@ -268,8 +268,8 @@ Every URL must come verbatim from a tool result. No invented URLs.`,
         providerOptions: { "kimi-gw": { max_completion_tokens: 3000 } },
       }),
     );
-    // 1) cosecha determinista: URLs directamente de los tool results
-    //    (inmune a que el modelo se quede sin tokens para el JSON)
+    // 1) deterministic harvest: URLs straight from the tool results
+    //    (immune to the model running out of tokens for the JSON)
     const seen = new Set<string>();
     for (const step of (research as { steps?: unknown[] }).steps ?? []) {
       const toolResults = (step as { toolResults?: unknown[] }).toolResults ?? [];
@@ -286,7 +286,7 @@ Every URL must come verbatim from a tool result. No invented URLs.`,
         }
       }
     }
-    // 2) fallback: parsear el JSON del modelo
+    // 2) fallback: parse the model's JSON
     if (researched.length === 0) {
       const match = research.text.match(/\[[\s\S]*\]/);
       if (match) {
@@ -298,16 +298,16 @@ Every URL must come verbatim from a tool result. No invented URLs.`,
     }
     researched = researched.slice(0, 14);
   } catch (e) {
-    // si la investigación falla, seguimos solo con los enlaces canónicos
+    // if research fails, we continue with the canonical links only
     console.warn("[plan] research phase failed:", (e as Error)?.message ?? e);
   }
   console.log(`[plan] researched resources: ${researched.length}`);
 
-  // Cursos curados (Librería de Satoshi / Bitcoin Dev Project) que
-  // solapan con las tracks del proyecto y el nivel del usuario.
-  // Excepción: un CURSO de la materia del proyecto vale como rampa al
-  // protocolo aunque esté pensado para un nivel menor — un dev avanzado
-  // que entra en Cashu se beneficia igual del curso "beginner" de Cashu.
+  // Curated courses (Librería de Satoshi / Bitcoin Dev Project) that
+  // overlap with the project's tracks and the user's level.
+  // Exception: a COURSE on the project's subject counts as an on-ramp to the
+  // protocol even if it targets a lower level; an advanced dev
+  // getting into Cashu still benefits from the Cashu "beginner" course.
   const LEVEL_RANK: Record<string, number> = { beginner: 1, intermediate: 2, advanced: 3 };
   const userRank = LEVEL_RANK[profile.level] ?? 2;
   const curated = LEARNING_RESOURCES.filter(
@@ -340,9 +340,9 @@ export const mentorRouter = createRouter({
       const locale = input.locale as Locale;
       const langName = locale === "es" ? "Spanish" : "English";
 
-      // Enriquecer con comentarios recientes: ahí se ve si una issue ya tiene
-      // PR abierta ("would this be solved by #N?"), si alguien la ha reclamado
-      // o si el hilo es un pantano — señales clave antes de recomendarla.
+      // Enrich with recent comments: they show whether an issue already has
+      // an open PR ("would this be solved by #N?"), whether someone has claimed it
+      // or whether the thread is a swamp; key signals before recommending it.
       const enriched = await Promise.all(
         input.issues.slice(0, 10).map(async (i) => {
           const comments = i.comments > 0 ? await fetchRecentComments(i.id) : [];
@@ -439,8 +439,8 @@ ${issuesDigest}`,
         ? `\nThe user has chosen this first issue to anchor the plan:\n#${input.issue.number} ${input.issue.title}\n${input.issue.url}\nlabels: ${input.issue.labels.join(", ")}\n${input.issue.body.slice(0, 400)}`
         : "";
 
-      // El pool llega del cliente (fase 1 ya hecha en researchPlanResources);
-      // si no llega (llamada directa), investigamos aquí como fallback.
+      // The pool comes from the client (phase 1 already done in researchPlanResources);
+      // if it is missing (direct call), we research here as a fallback.
       const resourcePool =
         input.pool && input.pool.length > 0
           ? input.pool
@@ -448,14 +448,14 @@ ${issuesDigest}`,
       return { plan: await buildPlan(project, input, locale, langName, resourcePool, issueBlock) };
     }),
 
-  // ---- Generación asíncrona con sondeo -----------------------------------
-  // El proxy de producción corta las peticiones HTTP largas (~1 min), y un
-  // plan tarda 1-3 min. Solución: startPlanJob responde al instante con un
-  // jobId y el trabajo corre en segundo plano en el servidor; el cliente
-  // sondea planJob cada pocos segundos (peticiones de milisegundos) hasta
-  // que el estado sea "done" o "error". Los trabajos viven en MySQL (tabla
-  // plan_jobs autocreada) porque la plataforma es serverless: cada petición
-  // puede caer en una instancia distinta y la memoria no se comparte.
+  // ---- Asynchronous generation with polling ------------------------------
+  // The production proxy cuts long HTTP requests (~1 min), and a
+  // plan takes 1-3 min. Solution: startPlanJob responds instantly with a
+  // jobId and the job runs in the background on the server; the client
+  // polls planJob every few seconds (millisecond requests) until
+  // the status is "done" or "error". Jobs live in MySQL (auto-created
+  // plan_jobs table) because the platform is serverless: each request
+  // may land on a different instance and memory is not shared.
   startPlanJob: publicQuery
     .input(
       z.object({
@@ -471,8 +471,8 @@ ${issuesDigest}`,
       const jobId = crypto.randomUUID();
       await jobCreate(jobId);
       await jobStage(jobId, "researching").catch(() => {});
-      console.log(`[plan-job ${jobId}] iniciado (proyecto ${input.projectId})`);
-      // sin await: el trabajo corre en segundo plano
+      console.log(`[plan-job ${jobId}] started (project ${input.projectId})`);
+      // no await: the job runs in the background
       void (async () => {
         try {
           const locale = input.locale as Locale;
@@ -481,19 +481,19 @@ ${issuesDigest}`,
             ? `\nThe user has chosen this first issue to anchor the plan:\n#${input.issue.number} ${input.issue.title}\n${input.issue.url}\nlabels: ${input.issue.labels.join(", ")}\n${input.issue.body.slice(0, 400)}`
             : "";
           const resourcePool = await researchResources(project, input.profile as Profile, input.issue);
-          console.log(`[plan-job ${jobId}] investigación lista (${resourcePool.length} recursos), generando…`);
+          console.log(`[plan-job ${jobId}] research ready (${resourcePool.length} resources), generating…`);
           await jobStage(jobId, "writing").catch(() => {});
           const plan = await buildPlan(project, input, locale, langName, resourcePool, issueBlock);
           await jobStage(jobId, "done").catch(() => {});
           await jobDone(jobId, plan);
-          console.log(`[plan-job ${jobId}] completado`);
+          console.log(`[plan-job ${jobId}] completed`);
         } catch (err) {
           const mapped = classifyAiError(err);
-          // el mensaje raíz de MySQL/Drizzle suele estar en la causa o el stack;
-          // lo volcamos entero a los logs del servidor para no quedarnos ciegos
+          // the root MySQL/Drizzle message is usually in the cause or the stack;
+          // we dump it whole to the server logs so we are not left blind
           const cause = (err as { cause?: { message?: string } })?.cause?.message;
           const fullMsg = [mapped.message, cause].filter(Boolean).join(" | causa: ");
-          console.error(`[plan-job ${jobId}] falló:`, fullMsg, err);
+          console.error(`[plan-job ${jobId}] failed:`, fullMsg, err);
           await jobError(jobId, fullMsg || String(err)).catch(() => {});
         }
       })();
@@ -505,7 +505,7 @@ ${issuesDigest}`,
     .query(async ({ input }) => {
       const job = await jobGet(input.jobId);
       if (!job) {
-        console.warn(`[planJob] ${input.jobId} no encontrado en BD`);
+        console.warn(`[planJob] ${input.jobId} not found in DB`);
         return { status: "error" as const, error: "job not found" };
       }
       if (job.status === "done" && job.plan) {
@@ -516,8 +516,8 @@ ${issuesDigest}`,
     }),
 });
 
-// Cuerpo compartido de la generación de planes (usado por generatePlan y por
-// el trabajador en segundo plano de startPlanJob).
+// Shared body of plan generation (used by generatePlan and by
+// the startPlanJob background worker).
 async function buildPlan(
   project: (typeof PROJECTS)[number],
   input: {

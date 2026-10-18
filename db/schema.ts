@@ -27,14 +27,14 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// Trabajos de generación de planes (startPlanJob/planJob). En BD y no en
-// memoria porque la plataforma es serverless: cada petición puede caer en
-// una instancia distinta y solo MySQL es estado compartido entre ellas.
+// Plan generation jobs (startPlanJob/planJob). In the DB and not in
+// memory because the platform is serverless: each request may land on
+// a different instance and only MySQL is state shared between them.
 export const planJobs = mysqlTable("plan_jobs", {
   id: varchar("id", { length: 36 }).primaryKey(), // UUID
   status: mysqlEnum("status", ["running", "done", "error"]).notNull().default("running"),
-  stage: varchar("stage", { length: 40 }), // fase visible para la UI: researching | writing | done
-  plan: mediumtext("plan"), // JSON del plan cuando status=done (hasta 16MB)
+  stage: varchar("stage", { length: 40 }), // stage visible to the UI: researching | writing | done
+  plan: mediumtext("plan"), // plan JSON when status=done (up to 16MB)
   error: text("error"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

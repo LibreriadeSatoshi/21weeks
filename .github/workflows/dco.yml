@@ -33,13 +33,13 @@ jobs:
               continue
             fi
 
-            # El sign-off debe coincidir con el email del autor del commit
+            # The sign-off must match the commit author's email
             if ! grep '^Signed-off-by: ' <<<"$msg" | grep -qF "<${author_email}>"; then
               echo "::error::Commit $sha: ningún Signed-off-by coincide con el autor <${author_email}>."
               failed=1
             fi
 
-            # Rechazar sign-offs de identidades de IA / bots
+            # Reject sign-offs from AI / bot identities
             if grep '^Signed-off-by: ' <<<"$msg" | grep -qiE 'noreply@anthropic\.com|copilot@github\.com|@anthropic\.com|[Bb]ot@'; then
               echo "::error::Commit $sha: Signed-off-by de una identidad de IA/bot. El DCO solo lo certifica una persona."
               failed=1

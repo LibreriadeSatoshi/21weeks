@@ -1,60 +1,60 @@
-# Formato de plan: `json21weeks@v1`
+# Plan format: `json21weeks@v1`
 
-El plan de 21 semanas es un archivo Markdown legible por humanos Y agentes,
-con un bloque JSON de estado al final. Es el formato de intercambio con la web
-21weeks (botón «Importar plan»): respétalo exactamente para que los planes
-generados aquí se puedan importar allí.
+The 21-week plan is a Markdown file readable by humans AND agents, with a
+JSON state block at the end. It is the exchange format with the 21weeks web
+app («Import plan» button): follow it exactly so that plans generated here
+can be imported there.
 
-## Estructura
+## Structure
 
 ```markdown
-# 21 Weeks to Bitcoin OSS: <Nombre del proyecto>
+# 21 Weeks to Bitcoin OSS: <Project name>
 
-> Plan de 21 semanas (mentoría autor-primero): la persona escribe el código,
-> los tests y los PRs; el agente guía, pregunta y revisa.
+> 21-week plan (author-first mentoring): the person writes the code,
+> the tests and the PRs; the agent guides, asks and reviews.
 
-- Proyecto: **<nombre>**
-- Perfil: <rol> · <nivel> · <lenguajes> · <horas> h/semana
-- Intereses: <tracks>
-- Issue ancla: [#<n> <título>](<url>)        (opcional)
-- Generado: <YYYY-MM-DD>
-- Progreso al exportar: <n>/21 semanas
+- Project: **<name>**
+- Profile: <role> · <level> · <languages> · <hours> h/week
+- Interests: <tracks>
+- Anchor issue: [#<n> <title>](<url>)        (optional)
+- Generated: <YYYY-MM-DD>
+- Progress at export: <n>/21 weeks
 
-## Introducción
+## Introduction
 
-<2-3 frases>
+<2-3 sentences>
 
-## Las 21 semanas
+## The 21 weeks
 
-### [ ] Semana 1: <fase>. <título>
+### [ ] Week 1: <phase>. <title>
 
-**Objetivos**
-- <2-4 objetivos, ≤14 palabras cada uno>
+**Objectives**
+- <2-4 objectives, ≤14 words each>
 
-**Tareas**
-- [ ] <3-5 acciones concretas que hace EL USUARIO>
+**Tasks**
+- [ ] <3-5 concrete actions that THE USER does>
 
-**Recursos**
-- [<etiqueta corta y específica>](<url real verificada>)
+**Resources**
+- [<short, specific label>](<real, verified url>)
 
-**Entregable**: <resultado tangible de la semana>
+**Deliverable**: <tangible outcome of the week>
 
-(...semanas 2-21 igual; marcar `[x]` las completadas)
+(...weeks 2-21 the same; mark completed ones `[x]`)
 
-## Graduación: semana 21
+## Graduation: week 21
 
-<3-4 frases: qué significa "ser contribuidor" en ese proyecto>
+<3-4 sentences: what "being a contributor" means in that project>
 
 ---
-El bloque siguiente contiene el estado completo para reimportar este plan en
-21weeks. No lo edites a mano.
+The following block holds the full state to reimport this plan into
+21weeks. Do not edit by hand.
 
 ​```json21weeks
-{ ...estado... }
+{ ...state... }
 ​```
 ```
 
-## Bloque de estado `json21weeks` (v1)
+## `json21weeks` state block (v1)
 
 ```json
 {
@@ -86,12 +86,12 @@ El bloque siguiente contiene el estado completo para reimportar este plan en
 }
 ```
 
-Reglas:
+Rules:
 
-- `weeks` tiene exactamente 21 entradas, en orden.
-- Toda URL de `resources` debe ser real y haber sido verificada (repo
-  oficial, docs, specs). Nunca inventes URLs.
-- `issue` es `null` o `{ "id": "github:owner/repo:N", "number": N, "title":
+- `weeks` has exactly 21 entries, in order.
+- Every URL in `resources` must be real and verified (official
+  repo, docs, specs). Never invent URLs.
+- `issue` is `null` or `{ "id": "github:owner/repo:N", "number": N, "title":
   "...", "url": "...", "labels": [...], "comments": 0, "body": "..." }`.
-- Versionado: este documento es `json21weeks@v1`. Cualquier cambio de
-  estructura es un cambio de protocolo; no edites campos existentes.
+- Versioning: this document is `json21weeks@v1`. Any structural change is a
+  protocol change; do not edit existing fields.

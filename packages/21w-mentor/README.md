@@ -1,45 +1,45 @@
 # 21w-mentor
 
-Mentor **autor-primero** para entrar a contribuir a open source de Bitcoin,
-Lightning, Nostr y ecash para tu agente de código (Claude Code y
-compatibles). Tú escribes el código, los tests y los PRs; el agente guía,
-pregunta y revisa. Nunca hace el trabajo por ti.
+An **author-first** mentor for your coding agent (Claude Code and
+compatible) to help you start contributing to Bitcoin, Lightning, Nostr and
+ecash open source. You write the code, the tests and the PRs; the agent
+guides, asks and reviews. It never does the work for you.
 
-## Instalación
+## Installation
 
 ```bash
-npx 21w-mentor init              # global: ~/.claude (todos tus proyectos)
-npx 21w-mentor init --project    # solo este proyecto: ./.claude (viaja con el repo)
+npx 21w-mentor init              # global: ~/.claude (all your projects)
+npx 21w-mentor init --project    # this project only: ./.claude (travels with the repo)
 ```
 
-Desinstalar: `npx 21w-mentor uninstall`
+Uninstall: `npx 21w-mentor uninstall`
 
-Tras instalar, abre una **sesión nueva** de Claude Code.
+After installing, open a **new session** of Claude Code.
 
-## Comandos
+## Commands
 
-| Comando | Qué hace |
-|---|---|
-| `/21w:start` | Perfil (5 preguntas) + elección de proyecto entre 17 del ecosistema |
-| `/21w:issues [proyecto]` | Good-first-issues **vetadas**: detecta PRs en vuelo, issues reclamadas y pantanos |
-| `/21w:plan [proyecto] [#issue]` | Plan de 21 semanas (4 h/día), exportable e importable en la web 21weeks |
-| `/21w:week <n>` | Mentoría de la semana: guía con comandos que ejecutas TÚ (`!`) |
-| `/21w:review` | Review de tu borrador/diff con severidad de maintainer |
+| Command                        | What it does                                                                      |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| `/21w:start`                   | Profile (5 questions) + project choice among 17 from the ecosystem                |
+| `/21w:issues [project]`        | **Vetted** good-first-issues: detects in-flight PRs, claimed issues and quagmires |
+| `/21w:plan [project] [#issue]` | 21-week plan (4 h/day), exportable to and importable into the 21weeks web app     |
+| `/21w:week <n>`                | Weekly mentoring: guidance with commands that YOU run (`!`)                       |
+| `/21w:review`                  | Review of your draft/diff with maintainer-level severity                          |
 
-## Qué instala
+## What it installs
 
-- **Skill** `21w-mentor`: regla autor-primero, composición de overlays
-  (17 proyectos × 2 roles), formato de plan `json21weeks@v1` compatible con
-  la web.
-- **Comandos** `/21w:*` como gatillos explícitos del flujo.
+- **Skill** `21w-mentor`: the author-first rule, overlay composition
+  (17 projects × 2 roles), and the `json21weeks@v1` plan format compatible
+  with the web app.
+- **Commands** `/21w:*` as explicit triggers for the workflow.
 
-## La regla central
+## The core rule
 
-El agente nunca escribe diffs, tests, commit messages ni respuestas a review
-listos para pegar. Tampoco prepara tu entorno ejecutando los comandos por
-ti. Guía con preguntas abiertas y comandos concretos que ejecutas tú. Si tu
-proyecto tiene su propio `AGENTS.md` o política de IA (Bitcoin Core, Cashu,
-Mostro, VLS la tienen), el mentor la respeta.
+The agent never writes ready-to-paste diffs, tests, commit messages or
+review replies. Nor does it set up your environment by running the commands
+for you. It guides with open questions and concrete commands that you run.
+If your project has its own `AGENTS.md` or AI policy (Bitcoin Core, Cashu,
+Mostro and VLS do), the mentor respects it.
 
-Parte del proyecto [21weeks](https://github.com/ifuensan/21weeks):
-Librería de Satoshi / HackNodes Lab. Licencia MIT.
+Part of the [21weeks](https://github.com/ifuensan/21weeks) project:
+Librería de Satoshi / HackNodes Lab. MIT License.

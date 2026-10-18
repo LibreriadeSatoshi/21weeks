@@ -42,7 +42,7 @@ function save(key: string, value: unknown) {
     if (value === null || value === undefined) localStorage.removeItem(key);
     else localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    // storage lleno o no disponible: ignoramos
+    // storage full or unavailable: ignore
   }
 }
 
@@ -66,7 +66,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setProjectId: (id) => {
       setProjectIdState(id);
       save("oss21.projectId", id);
-      // cambiar de proyecto invalida issue/plan anteriores
+      // switching projects invalidates the previous issue/plan
       setPickedIssueState(null);
       save("oss21.issue", null);
       setPlanState(null);

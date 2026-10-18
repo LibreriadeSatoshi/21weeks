@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "vite"
 import { inspectAttr } from 'kimi-plugin-inspect-react'
 
-// BASE_PATH: prefijo de despliegue (p. ej. "/21weeks/"); "/" en local.
+// BASE_PATH: deployment prefix (e.g. "/21weeks/"); "/" locally.
 const base = `/${(process.env.BASE_PATH ?? "").replace(/^\/+|\/+$/g, "")}/`.replace(/^\/\/$/, "/")
 
 // https://vite.dev/config/

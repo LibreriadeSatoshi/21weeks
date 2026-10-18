@@ -4,8 +4,8 @@ import { Language } from "iconoir-react";
 import { useI18n, type TKey } from "@/i18n";
 import ismosMark from "../../design/ismos/logos/ismos-mark-paper.svg";
 
-// Cuatro enlaces como máximo (ISMOS 10 §2, barra de navegación web).
-// El perfil se abre desde la portada y "En tu terminal" está en el pie.
+// Four links at most (ISMOS 10 §2, web navigation bar).
+// The profile opens from the home page and "En tu terminal" is in the footer.
 const NAV: { to: string; key: TKey }[] = [
   { to: "/projects", key: "nav.projects" },
   { to: "/plan", key: "nav.plan" },

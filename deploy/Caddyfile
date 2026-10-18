@@ -1,14 +1,14 @@
-# Origen de la app (p. ej. app.ismos.xyz). Netlify hace de proxy desde
-# ismos.xyz/21weeks/* hacia aquí; la API se llama directamente a este dominio.
+# App origin (e.g. app.ismos.xyz). Netlify proxies from
+# ismos.xyz/21weeks/* to here; the API is called directly on this domain.
 {$DOMAIN} {
 	encode zstd gzip
 
-	# Fuera del prefijo no hay nada: lleva a la app.
+	# There is nothing outside the prefix: redirect to the app.
 	@outside not path {$BASE_PATH}*
 	redir @outside {$BASE_PATH} 302
 
 	reverse_proxy app:3000 {
-		# El chat del mentor va en streaming: no acumular la respuesta.
+		# The mentor chat streams: do not buffer the response.
 		flush_interval -1
 	}
 }

@@ -8,20 +8,20 @@ function required(name: string): string {
   return value ?? "";
 }
 
-// Opcional fuera de la plataforma Kimi: la app funciona en modo anónimo.
+// Optional outside the Kimi platform: the app works in anonymous mode.
 function optional(name: string): string {
   return process.env[name] ?? "";
 }
 
-/** "/21weeks" a partir de BASE_PATH="/21weeks/" (o "" si no hay prefijo). */
+/** "/21weeks" from BASE_PATH="/21weeks/" (or "" if there is no prefix). */
 function basePath(value: string | undefined): string {
   const trimmed = (value ?? "").replace(/^\/+|\/+$/g, "");
   return trimmed ? `/${trimmed}` : "";
 }
 
 export const env = {
-  // — Login "Sign in with Kimi" (solo dentro de la plataforma Kimi) —
-  // Fuera de Kimi se dejan vacías y la app corre en modo anónimo.
+  // "Sign in with Kimi" login (only inside the Kimi platform).
+  // Outside Kimi these are left empty and the app runs in anonymous mode.
   appId: optional("APP_ID"),
   appSecret: optional("APP_SECRET"),
   isProduction: process.env.NODE_ENV === "production",
@@ -29,12 +29,12 @@ export const env = {
   kimiAuthUrl: optional("KIMI_AUTH_URL"),
   kimiOpenUrl: optional("KIMI_OPEN_URL"),
   ownerUnionId: optional("OWNER_UNION_ID"),
-  // — Despliegue —
+  // Deployment
   basePath: basePath(process.env.BASE_PATH),
-  // Orígenes que pueden llamar a la API desde otro dominio (p. ej. https://ismos.xyz)
-  // Contraseña de acceso hasta el lanzamiento (vacía = sitio abierto)
+  // Origins allowed to call the API from another domain (e.g. https://ismos.xyz)
+  // Access password until launch (empty = open site)
   sitePassword: optional("SITE_PASSWORD"),
-  // Dominio de la cookie de acceso, p. ej. ismos.xyz para ismos.xyz y app.ismos.xyz
+  // Access cookie domain, e.g. ismos.xyz for ismos.xyz and app.ismos.xyz
   cookieDomain: optional("COOKIE_DOMAIN"),
   corsOrigins: optional("CORS_ORIGINS")
     .split(",")
@@ -42,5 +42,5 @@ export const env = {
     .filter(Boolean),
 };
 
-/** true si el login con Kimi está configurado (plataforma). false = anónimo. */
+/** true if Kimi login is configured (platform). false = anonymous. */
 export const kimiAuthEnabled = Boolean(env.appId && env.kimiAuthUrl);

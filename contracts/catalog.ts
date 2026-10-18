@@ -1,11 +1,11 @@
 /**
- * contracts/catalog.ts: datos compartidos entre frontend y backend.
- * Catálogo curado del ecosistema Bitcoin / Lightning (sin shitcoins),
- * tipos de perfil de usuario y tipos de issues / plan.
+ * contracts/catalog.ts: data shared between frontend and backend.
+ * Curated catalog of the Bitcoin / Lightning ecosystem (no shitcoins),
+ * user profile types and issue / plan types.
  *
- * FUENTE ÚNICA del conocimiento por proyecto: PROJECTS + CULTURE +
- * MENTOR_ADDENDA + LEARNING_RESOURCES. De aquí comen la web y los
- * overlays del skill 21w-mentor (npm run skill:overlays).
+ * SINGLE SOURCE of per-project knowledge: PROJECTS + CULTURE +
+ * MENTOR_ADDENDA + LEARNING_RESOURCES. Both the website and the
+ * 21w-mentor skill overlays feed from here (npm run skill:overlays).
  */
 
 export type Role = "developer" | "researcher";
@@ -51,18 +51,18 @@ export interface Project {
   tagline: { es: string; en: string };
   summary: { es: string; en: string };
   host: "github" | "gitlab";
-  repo: string; // owner/repo o grupo/proyecto
-  labels: string[]; // etiquetas de "good first issue" a consultar
+  repo: string; // owner/repo or group/project
+  labels: string[]; // "good first issue" labels to query
   languages: string[];
   tracks: Track[];
-  difficulty: 1 | 2 | 3; // 1 = amable para empezar, 3 = exigente
+  difficulty: 1 | 2 | 3; // 1 = friendly for starting out, 3 = demanding
   roles: Role[];
   urls: {
     repo: string;
     contributing?: string;
     docs?: string;
     chat?: string;
-    chatAlt?: string; // segundo canal (p.ej. Matrix dev junto a Telegram general)
+    chatAlt?: string; // second channel (e.g. dev Matrix alongside general Telegram)
   };
 }
 
@@ -438,7 +438,7 @@ export interface Issue {
   createdAt: string;
   updatedAt: string;
   comments: number;
-  body: string; // recortado
+  body: string; // truncated
   author?: string;
 }
 
@@ -448,16 +448,16 @@ export interface RankedIssue {
   reason: string;
 }
 
-// ---------- Plan 21 semanas ----------
+// ---------- 21-week plan ----------
 
 export interface PlanWeek {
   week: number; // 1..21
-  phase: string; // nombre corto de la fase
+  phase: string; // short phase name
   title: string;
   objectives: string[];
   tasks: string[];
   resources: { label: string; url: string }[];
-  outcome: string; // entregable de la semana
+  outcome: string; // deliverable for the week
 }
 
 export interface Plan {
@@ -467,10 +467,10 @@ export interface Plan {
   issueId?: string;
   weeks: PlanWeek[];
   intro: string;
-  graduation: string; // cómo se ve "ser contributor" al final
+  graduation: string; // what "being a contributor" looks like at the end
 }
 
-// ---------- Recursos de aprendizaje curados (LdS + The Bitcoin Dev Project) ----------
+// ---------- Curated learning resources (LdS + The Bitcoin Dev Project) ----------
 
 export interface LearningResource {
   title: { es: string; en: string };
@@ -478,13 +478,13 @@ export interface LearningResource {
   provider: "lds" | "bdev" | "nostrbook";
   kind: "course" | "library" | "contribute" | "funding" | "reference";
   tracks: Track[];
-  levels: Level[]; // para quién encaja mejor
+  levels: Level[]; // who it fits best
   lang: "es" | "en" | "pt";
   note: { es: string; en: string };
 }
 
 export const LEARNING_RESOURCES: LearningResource[] = [
-  // Librería de Satoshi (cursos, español/portugués)
+  // Librería de Satoshi (courses, Spanish/Portuguese)
   {
     title: { es: "Aprende GitHub para Open Source", en: "Learn GitHub for Open Source" },
     url: "https://moodle.libreriadesatoshi.com/course/view.php?id=27",
@@ -671,7 +671,7 @@ export const LEARNING_RESOURCES: LearningResource[] = [
   },
 ];
 
-// ---------- Cultura de contribución y tolerancia a IA por proyecto ----------
+// ---------- Contribution culture and AI tolerance per project ----------
 
 export const CULTURE: Record<string, { es: string; en: string }> = {
   "bitcoin-core": {
@@ -740,29 +740,29 @@ export const CULTURE: Record<string, { es: string; en: string }> = {
   },
 };
 
-// ---------- Matching determinista ----------
+// ---------- Deterministic matching ----------
 
 export function matchScore(profile: Profile, project: Project): number {
   let score = 0;
-  // rol
+  // role
   if (project.roles.includes(profile.role)) score += 25;
-  // lenguajes
+  // languages
   const langHits = project.languages.filter((l) => profile.languages.includes(l)).length;
   score += Math.min(35, langHits * 18);
   if (profile.languages.length > 0 && langHits === 0 && !project.languages.includes("Specs")) score -= 10;
   // tracks
   const trackHits = project.tracks.filter((t) => profile.tracks.includes(t as string)).length;
   score += Math.min(30, trackHits * 12);
-  // dificultad vs nivel
+  // difficulty vs level
   const levelNum = profile.level === "beginner" ? 1 : profile.level === "intermediate" ? 2 : 3;
   const gap = project.difficulty - levelNum;
   score += gap <= 0 ? 10 : gap === 1 ? 4 : -6;
   return Math.max(0, Math.min(100, score));
 }
 
-// ---------- Reglas del mentor por proyecto (fuente única) ----------
-// Las consumen el mentor web (api/ai/mentor.ts) y el generador de overlays
-// del skill 21w-mentor (scripts/generate-skill-overlays.ts).
+// ---------- Per-project mentor rules (single source) ----------
+// Consumed by the web mentor (api/ai/mentor.ts) and the overlay generator
+// of the 21w-mentor skill (scripts/generate-skill-overlays.ts).
 
 export const MENTOR_ADDENDA: Record<string, string> = {
   "bitcoin-core": `

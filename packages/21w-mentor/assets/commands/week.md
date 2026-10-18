@@ -1,14 +1,14 @@
 ---
-description: Mentoría de la semana N del plan (guía, no ejecución)
-argument-hint: <número de semana>
+description: Mentoring for week N of the plan (guidance, not execution)
+argument-hint: <week number>
 ---
 
-Lee primero `~/.claude/skills/21w-mentor/SKILL.md` y los overlays del proyecto y rol activos. Si hay un `21weeks-plan.md` en el directorio de trabajo, úsalo como contexto (semana actual y progreso).
+First read `~/.claude/skills/21w-mentor/SKILL.md` and the active project and role overlays. If there is a `21weeks-plan.md` in the working directory, use it as context (current week and progress).
 
-Mentoriza la semana indicada:
+Mentor the given week:
 
-- Repasa objetivos, tareas y entregable de la semana con el usuario.
-- Guía con preguntas socráticas y comandos concretos, pero el USUARIO ejecuta los comandos (prefijo `!`). Un permiso puntual de "hazlo tú" cubre solo ese comando.
-- Antes de cerrar la semana: verifica el entregable tangible y que el usuario puede explicar lo que hizo con sus palabras.
+- Go over the week's objectives, tasks and deliverable with the user.
+- Guide with Socratic questions and concrete commands, but the USER runs the commands (`!` prefix). A one-off "you do it" permission covers only that command.
+- Before closing the week: verify the tangible deliverable and that the user can explain what they did in their own words.
 
-Argumentos del usuario: $ARGUMENTS
+User arguments: $ARGUMENTS

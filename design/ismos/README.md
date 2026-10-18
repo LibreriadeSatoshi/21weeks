@@ -1,79 +1,79 @@
-# ISMOS design kit para desarrollo con LLMs
+# ISMOS design kit for development with LLMs
 
-Kit para meter el design system de ISMOS (v1 final, oct 2026) en cualquier repo y que Claude Code, Cursor, Copilot o cualquier agente lo respete.
+A kit to drop the ISMOS design system (v1 final, Oct 2026) into any repo so that Claude Code, Cursor, Copilot or any agent respects it.
 
-## Estado en este repo (21weeks)
+## Status in this repo (21weeks)
 
-El kit está **activado**: la app usa Tailwind 4 con `design/ismos/tailwind/theme.css` y `ismos.css` desde `src/index.css`, el body lleva `ism-root` (en `index.html`) y los iconos son `iconoir-react@7.11.0`.
+The kit is **active**: the app uses Tailwind 4 with `design/ismos/tailwind/theme.css` and `ismos.css` from `src/index.css`, the body has `ism-root` (in `index.html`) and the icons are `iconoir-react@7.11.0`.
 
-- Scripts: `npm run ismos:tokens`, `npm run ismos:check` (sobre `src`, `contracts` e `index.html`) y `npm run test:ismos` (incluido en `npm test` y, por tanto, en CI).
-- Instrucciones para agentes: sección "Design system" de `AGENTS.md` y el skill `.claude/skills/ismos-ui/`.
-- Pendiente: los SVG oficiales del logo en `logos/` (la cabecera muestra el nombre del producto hasta que lleguen).
-- Licencias de las fuentes: `fonts/OFL.txt` y `fonts/COPYRIGHT.md`.
-- Demo: `examples/tailwind-demo.html`. `examples/out.css` se genera desde `examples/input.css` (que solo escanea `examples/`):
+- Scripts: `npm run ismos:tokens`, `npm run ismos:check` (over `src`, `contracts` and `index.html`) and `npm run test:ismos` (included in `npm test` and therefore in CI).
+- Instructions for agents: the "Design system" section of `AGENTS.md` and the `.claude/skills/ismos-ui/` skill.
+- Pending: the official logo SVGs in `logos/` (the header shows the product name until they arrive).
+- Font licenses: `fonts/OFL.txt` and `fonts/COPYRIGHT.md`.
+- Demo: `examples/tailwind-demo.html`. `examples/out.css` is generated from `examples/input.css` (which only scans `examples/`):
   ```bash
   npx @tailwindcss/cli@4.1.11 -i examples/input.css -o examples/out.css
   ```
-  Ábrelo directamente en el navegador; las fuentes se cargan desde `design/ismos/css/fonts.css`.
+  Open it directly in the browser; the fonts load from `design/ismos/css/fonts.css`.
 
-## Qué hay
+## What is included
 
 ```
 design/ismos/
-  tokens.json            ← fuente de verdad (copiada del design system, no tocar salvo cambio de marca)
+  tokens.json            ← source of truth (copied from the design system, do not touch except for a brand change)
   css/
-    ismos.css            ← punto de entrada: fonts + tokens + typography + components
-    tokens.css           ← GENERADO: variables CSS, light + hacker (data-theme / prefers-color-scheme)
-    fonts.css            ← GENERADO: @font-face con rutas relativas (Vite/Astro)
-    fonts.public.css     ← GENERADO: @font-face con /fonts/ismos/ (Tailwind CLI, PostCSS sin rebase)
-    typography.css       ← GENERADO: clases .ism-t-display … .ism-t-figure
-    components.css       ← bundle oficial ism-* (+1 fix, ver abajo)
-  tailwind/theme.css     ← GENERADO: tema Tailwind v4, sin defaults (p-16 = 16px, rounded-4, bg-surface…)
-  js/tokens.ts           ← GENERADO: tokens para emails, OG images, canvas
+    ismos.css            ← entry point: fonts + tokens + typography + components
+    tokens.css           ← GENERATED: CSS variables, light + hacker (data-theme / prefers-color-scheme)
+    fonts.css            ← GENERATED: @font-face with relative paths (Vite/Astro)
+    fonts.public.css     ← GENERATED: @font-face with /fonts/ismos/ (Tailwind CLI, PostCSS without rebase)
+    typography.css       ← GENERATED: classes .ism-t-display … .ism-t-figure
+    components.css       ← official ism-* bundle (+1 fix, see below)
+  tailwind/theme.css     ← GENERATED: Tailwind v4 theme, no defaults (p-16 = 16px, rounded-4, bg-surface…)
+  js/tokens.ts           ← GENERATED: tokens for emails, OG images, canvas
   fonts/                 ← Literata, IBM Plex Sans/Mono, Bricolage Grotesque (OFL)
-  docs/                  ← guía completa 01–10 + un .md por componente
-  logos/                 ← PENDIENTE: SVG oficiales (ver README dentro)
-.claude/skills/ismos-ui/SKILL.md   ← skill para Claude Code (resumen operativo de la guía)
-AGENTS.md                          ← lo mismo para cualquier agente (Codex, Copilot, Gemini CLI…)
-.cursor/rules/ismos.mdc            ← regla de Cursor
-CLAUDE.md.snippet                  ← pegar en tu CLAUDE.md
-scripts/build-tokens.mjs           ← regenera todo lo GENERADO desde tokens.json (sin dependencias)
-scripts/check-ismos.mjs            ← guardia: hex fuera de paleta, spacing/radius fuera de escala, gradientes, sombras, emoji, em dash, palabras e iconos prohibidos
-examples/tailwind-demo.html        ← página de referencia con todos los componentes
-package.scripts.json               ← scripts y dependencia a fusionar en tu package.json
+  docs/                  ← full guide 01–10 + one .md per component
+  logos/                 ← PENDING: official SVGs (see README inside)
+.claude/skills/ismos-ui/SKILL.md   ← skill for Claude Code (working summary of the guide)
+AGENTS.md                          ← the same for any agent (Codex, Copilot, Gemini CLI…)
+.cursor/rules/ismos.mdc            ← Cursor rule
+CLAUDE.md.snippet                  ← paste into your CLAUDE.md
+scripts/build-tokens.mjs           ← regenerates everything GENERATED from tokens.json (no dependencies)
+scripts/check-ismos.mjs            ← guard: off-palette hex, off-scale spacing/radius, gradients, shadows, emoji, em dash, banned words and icons
+examples/tailwind-demo.html        ← reference page with every component
+package.scripts.json               ← scripts and dependency to merge into your package.json
 ```
 
-## Instalación (Astro / Vite)
+## Installation (Astro / Vite)
 
-1. Copia `design/`, `scripts/`, `.claude/`, `AGENTS.md` y `.cursor/` a la raíz del repo.
-2. Pega `CLAUDE.md.snippet` en tu `CLAUDE.md`. Fusiona `package.scripts.json` en `package.json` y ejecuta `npm i`.
-3. En tu CSS global:
+1. Copy `design/`, `scripts/`, `.claude/`, `AGENTS.md` and `.cursor/` to the repo root.
+2. Paste `CLAUDE.md.snippet` into your `CLAUDE.md`. Merge `package.scripts.json` into `package.json` and run `npm i`.
+3. In your global CSS:
    ```css
    @import "tailwindcss";
    @import "../../design/ismos/css/ismos.css";
    @import "../../design/ismos/tailwind/theme.css";
    ```
-   Sin Tailwind, basta con `ismos.css`. Envuelve el layout en `<body class="ism-root">`.
-4. Tema: `<html data-theme="hacker">` fuerza Hacker mode, `data-theme="light"` fuerza claro, sin atributo sigue al dispositivo.
-5. Iconos: `iconoir` (o `iconoir-react`), versión 7.11.0, estilo regular y `currentColor`.
+   Without Tailwind, `ismos.css` is enough. Wrap the layout in `<body class="ism-root">`.
+4. Theme: `<html data-theme="hacker">` forces Hacker mode, `data-theme="light"` forces light, no attribute follows the device.
+5. Icons: `iconoir` (or `iconoir-react`), version 7.11.0, regular style and `currentColor`.
 
-**Si usas Tailwind CLI o PostCSS sin rebase de `url()`:** importa `fonts.public.css` en vez de `ismos.css` (más `tokens.css`, `typography.css` y `components.css` por separado) y copia `design/ismos/fonts/*` a `public/fonts/ismos/`. Vite y Astro reescriben las rutas solos, así que ahí no hace falta.
+**If you use Tailwind CLI or PostCSS without `url()` rebasing:** import `fonts.public.css` instead of `ismos.css` (plus `tokens.css`, `typography.css` and `components.css` separately) and copy `design/ismos/fonts/*` to `public/fonts/ismos/`. Vite and Astro rewrite the paths on their own, so it is not needed there.
 
-## Uso con LLMs
+## Use with LLMs
 
-- **Claude Code:** carga el skill `ismos-ui` solo para trabajo de UI. Pídelo explícitamente con "usa el skill ismos-ui".
-- **Cursor:** usa `.cursor/rules/ismos.mdc`. **Codex, Copilot, Gemini CLI y otros:** leen `AGENTS.md`.
-- **Chat suelto (ChatGPT, Gemini, claude.ai):** adjunta `SKILL.md`, `tokens.json` y `components.css`. Para assets que no sean código (posts, slides), usa el bloque de `docs/08-production.md`.
-- **Red de seguridad:** `npm run ismos:check` en el pre-commit o en CI. Un LLM se salta reglas de vez en cuando; el check no.
+- **Claude Code:** loads the `ismos-ui` skill only for UI work. Ask for it explicitly with "use the ismos-ui skill".
+- **Cursor:** uses `.cursor/rules/ismos.mdc`. **Codex, Copilot, Gemini CLI and others:** read `AGENTS.md`.
+- **Standalone chat (ChatGPT, Gemini, claude.ai):** attach `SKILL.md`, `tokens.json` and `components.css`. For non-code assets (posts, slides), use the block in `docs/08-production.md`.
+- **Safety net:** `npm run ismos:check` in pre-commit or in CI. An LLM skips rules now and then; the check does not.
 
-## Mantenimiento
+## Maintenance
 
-Si cambia la marca, reemplaza `design/ismos/tokens.json` y `docs/`, ejecuta `npm run ismos:tokens` y revisa `SKILL.md` si cambió alguna regla dura.
+If the brand changes, replace `design/ismos/tokens.json` and `docs/`, run `npm run ismos:tokens` and review `SKILL.md` if any hard rule changed.
 
-## Incidencias encontradas en el design system (para Dulce)
+## Issues found in the design system (for Dulce)
 
-1. **Bug en el bundle:** `.ism-root a` tenía más especificidad que `.ism-btn`, así que un `<a class="ism-btn">` salía Mauveine y subrayado. Está corregido en `components.css` con dos reglas marcadas como "Kit fix". Convendría subirlo al bundle oficial.
-2. **Inconsistencia en TextField:** `docs/components/TextField.md` dice "borde por defecto 2 px `text` (Ink)", pero `tokens.json` (`border-input`) y el bundle usan 1,5 px Logwood 700. El kit sigue lo que dicen los tokens y el bundle.
-3. **El bundle usa valores fuera de escala** (gaps de 6 px, padding de 18/20 px en Terminal, bordes de 1,5 px). El checker ignora `design/ismos/` para no marcarlos, pero conviene normalizarlos.
-4. **Los SVG del logo no se publican** como ficheros del artifact; hay que añadirlos a mano en `design/ismos/logos/`. Tampoco existe todavía artwork de lockup ni de favicon.
-5. **`tokens.json` usa un formato propio**, no DTCG. Por eso el build es un script propio y no Style Dictionary.
+1. **Bug in the bundle:** `.ism-root a` had higher specificity than `.ism-btn`, so an `<a class="ism-btn">` came out Mauveine and underlined. It is fixed in `components.css` with two rules marked "Kit fix". It would be good to push this upstream to the official bundle.
+2. **Inconsistency in TextField:** `docs/components/TextField.md` says "default border 2 px `text` (Ink)", but `tokens.json` (`border-input`) and the bundle use 1.5 px Logwood 700. The kit follows the tokens and the bundle.
+3. **The bundle uses off-scale values** (6 px gaps, 18/20 px padding in Terminal, 1.5 px borders). The checker ignores `design/ismos/` so it does not flag them, but they should be normalized.
+4. **The logo SVGs are not published** as artifact files; they have to be added by hand in `design/ismos/logos/`. There is also no lockup or favicon artwork yet.
+5. **`tokens.json` uses its own format**, not DTCG. That is why the build is a custom script and not Style Dictionary.

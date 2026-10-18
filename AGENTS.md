@@ -1,50 +1,50 @@
-# AGENTS.md — Instrucciones para agentes de IA en este repo
+# AGENTS.md: instructions for AI agents in this repo
 
-Este repo adopta el DCO 1.1 (ver `DCO` y `CONTRIBUTING.md`). Si eres un agente
-de IA trabajando aquí, estas reglas son **obligatorias**:
+This repo adopts the DCO 1.1 (see `DCO` and `CONTRIBUTING.md`). If you are an
+AI agent working here, these rules are **mandatory**:
 
-## Al hacer commits
+## When committing
 
-1. **NUNCA añadas `Signed-off-by`.** Solo lo pone el humano que responde del
-   commit (con `git commit -s`). Tú no puedes certificar el DCO.
-2. **NUNCA añadas `Co-authored-by` con una identidad de IA.** Una IA no es
-   autora de nada en este repo.
-3. **SÍ añade un trailer `Assisted-by`** declarándote:
+1. **NEVER add `Signed-off-by`.** Only the human who answers for the
+   commit adds it (with `git commit -s`). You cannot certify the DCO.
+2. **NEVER add `Co-authored-by` with an AI identity.** An AI is not the
+   author of anything in this repo.
+3. **DO add an `Assisted-by` trailer** declaring yourself:
 
    ```
-   Assisted-by: AGENTE:MODELO [herramientas]
+   Assisted-by: AGENT:MODEL [tools]
    ```
 
-   Ejemplos: `Assisted-by: Kimi:K3`, `Assisted-by: Claude:claude-opus-4-5 [claude-code]`.
+   Examples: `Assisted-by: Kimi:K3`, `Assisted-by: Claude:claude-opus-4-5 [claude-code]`.
 
-4. El comando correcto lo ejecuta el humano:
+4. The human runs the correct command:
 
    ```bash
-   git commit -s --trailer "Assisted-by: AGENTE:MODELO"
+   git commit -s --trailer "Assisted-by: AGENT:MODEL"
    ```
 
-5. Si tu herramienta tiene atribución automática de co-autoría, debe estar
-   desactivada (p. ej. `includeCoAuthoredBy: false` en Claude Code).
+5. If your tool has automatic co-author attribution, it must be
+   turned off (e.g. `includeCoAuthoredBy: false` in Claude Code).
 
-## Al escribir código
+## When writing code
 
-- El humano revisa y entiende cada cambio antes de firmarlo: explícale qué
-  hace tu diff y por qué, de forma que pueda certificarlo de buena fe.
-- Sigue el estilo del proyecto (Prettier, ESLint) y no añadas dependencias
-  sin justificarlo.
+- The human reviews and understands every change before signing it: explain
+  what your diff does and why, so they can certify it in good faith.
+- Follow the project style (Prettier, ESLint) and do not add dependencies
+  without justifying them.
 
 ## Design system (ISMOS)
 
-Cualquier trabajo de UI, estilos, maquetación, textos o iconos sigue el design
-system de ISMOS.
+Any UI, styling, layout, copy or icon work follows the ISMOS design
+system.
 
-- Lee `.claude/skills/ismos-ui/SKILL.md` antes de tocar UI. Es el resumen
-  operativo; la guía completa está en `design/ismos/docs/` (01–10) y manda en
-  caso de conflicto.
-- Usa los tokens y las clases `ism-*` (ya importados en `src/index.css`).
-  Nunca hex, espaciados en px, radios ni sombras fuera de los tokens.
-- No edites los ficheros generados de `design/ismos/css/` (salvo
-  `components.css`), `tailwind/` ni `js/`: cambia `design/ismos/tokens.json` y
-  ejecuta `npm run ismos:tokens`.
-- Antes de terminar, `npm run ismos:check` debe pasar. Revisa modo claro y
-  `data-theme="hacker"`, a 360 px y en escritorio.
+- Read `.claude/skills/ismos-ui/SKILL.md` before touching UI. It is the working
+  summary; the full guide is in `design/ismos/docs/` (01–10) and wins in
+  case of conflict.
+- Use the tokens and the `ism-*` classes (already imported in `src/index.css`).
+  Never hex, px spacing, radii or shadows outside the tokens.
+- Do not edit the generated files in `design/ismos/css/` (except
+  `components.css`), `tailwind/` or `js/`: change `design/ismos/tokens.json` and
+  run `npm run ismos:tokens`.
+- Before finishing, `npm run ismos:check` must pass. Check light mode and
+  `data-theme="hacker"`, at 360 px and on desktop.

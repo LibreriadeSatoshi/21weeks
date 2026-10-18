@@ -2,12 +2,12 @@ import { tool } from "ai";
 import { z } from "zod";
 
 /**
- * Bitcoin Knowledge Base (https://bitcoinknowledge.dev/) como herramienta
- * del mentor. La API pública expone:
+ * Bitcoin Knowledge Base (https://bitcoinknowledge.dev/) as a mentor
+ * tool. The public API exposes:
  *   GET /search?q=...&limit=N&source_type=...   → { results: [...] }
  *   GET /bip|bolt|blip|lud|nut/{n}              → { document: { body } }
- * Fuentes indexadas: mailing list bitcoin-dev, Delving Bitcoin, PRs/issues
- * de GitHub, BIPs, BOLTs, BLIPs, LUDs, NUTs…
+ * Indexed sources: bitcoin-dev mailing list, Delving Bitcoin, GitHub
+ * PRs/issues, BIPs, BOLTs, BLIPs, LUDs, NUTs…
  */
 
 const BASE = "https://bitcoinknowledge.dev";
@@ -40,11 +40,11 @@ async function fetchMarkdown(url: string): Promise<{ ok: boolean; body: string; 
 }
 
 /**
- * Nostrbook (https://nostrbook.dev) como herramienta del mentor.
- * No usamos su servidor MCP (stdio, pensado para clientes de escritorio);
- * el sitio expone la misma documentación en Markdown por HTTP:
+ * Nostrbook (https://nostrbook.dev) as a mentor tool.
+ * We do not use its MCP server (stdio, meant for desktop clients);
+ * the site exposes the same documentation as Markdown over HTTP:
  *   /kinds/{n}.md · /tags/{t}.md · /protocol/{event,filter,client,relay,index}.md
- * Los NIPs viven en el repo oficial (raw.githubusercontent.com).
+ * The NIPs live in the official repo (raw.githubusercontent.com).
  */
 export const nostrbookTools = {
   readNostrDoc: tool({
@@ -163,5 +163,5 @@ export const bitcoinKnowledgeTools = {
   }),
 };
 
-/** Conjunto completo de herramientas de conocimiento del mentor. */
+/** Full set of mentor knowledge tools. */
 export const knowledgeTools = { ...bitcoinKnowledgeTools, ...nostrbookTools };

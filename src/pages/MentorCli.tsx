@@ -3,9 +3,9 @@ import { OpenNewWindow } from "iconoir-react";
 import { PageHeader, SectionHead } from "@/components/ismos";
 
 /**
- * /21w: la cara del paquete npm `21w-mentor` y los comandos /21w:*.
- * Escrita para dos lectores a la vez: la persona que quiere el mentor en su
- * terminal, y el agente que llega aquí para aprender a usarlo.
+ * /21w: the face of the `21w-mentor` npm package and the /21w:* commands.
+ * Written for two readers at once: the person who wants the mentor in their
+ * terminal, and the agent that lands here to learn how to use it.
  */
 
 const COMMANDS = [

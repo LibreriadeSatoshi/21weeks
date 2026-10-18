@@ -1,5 +1,5 @@
-// Piezas de página de ISMOS que no están en el bundle del kit (components.css).
-// Siguen design/ismos/docs/10-accepted-decisions.md §2.
+// ISMOS page pieces that are not in the kit bundle (components.css).
+// They follow design/ismos/docs/10-accepted-decisions.md §2.
 import type { ReactNode } from "react";
 import {
   Check,
@@ -9,7 +9,7 @@ import {
 } from "iconoir-react";
 import ismosMarkPaper from "../../design/ismos/logos/ismos-mark-paper.svg";
 
-/** Cabecera de página: barra de 6 px, etiqueta, título y entradilla. */
+/** Page header: 6 px bar, label, title and standfirst. */
 export function PageHeader({
   label,
   title,
@@ -32,7 +32,7 @@ export function PageHeader({
   );
 }
 
-/** Cabecera de sección: número, título y la regla de 2 px que la cierra. */
+/** Section header: number, title and the 2 px rule that closes it. */
 export function SectionHead({
   num,
   title,
@@ -52,7 +52,7 @@ export function SectionHead({
   );
 }
 
-/** Progreso: "2 de 5" + barra + una frase. Nunca un porcentaje solo. */
+/** Progress: "2 of 5" + bar + a sentence. Never a bare percentage. */
 export function Progress({
   label,
   done,
@@ -90,7 +90,7 @@ export function Progress({
   );
 }
 
-/** Opción seleccionable: radio (una de 2–5) o casilla (varias). */
+/** Selectable option: radio (one of 2–5) or checkbox (several). */
 export function Choice({
   type,
   name,
@@ -133,7 +133,7 @@ export function Choice({
   );
 }
 
-/** Aviso: etiqueta de estado (color + icono + PALABRA) y el texto debajo, entre reglas. */
+/** Notice: status label (colour + icon + WORD) and the text below, between rules. */
 export function Notice({
   tone,
   word,
@@ -167,7 +167,7 @@ export function Notice({
   );
 }
 
-/** Enlace que abre otra web: palabra + icono, nunca el icono solo. */
+/** Link that opens another site: word + icon, never the icon alone. */
 export function ExternalLink({
   href,
   children,
@@ -188,15 +188,15 @@ export function ExternalLink({
   );
 }
 
-/** Material generado por IA: siempre etiquetado (05 Voice and tone). */
+/** AI-generated material: always labelled (05 Voice and tone). */
 export function AiLabel({ children }: { children: ReactNode }) {
   return <span className="ism-label ism-label--ai">{children}</span>;
 }
 
 /**
- * Cabecera con bloque de color de un cuarto de la superficie (01.1, dispositivo 4):
- * el texto a la izquierda sobre Paper y, a sangre hasta el borde derecho, un bloque
- * Indigo plano con el mark en Paper. En móvil el bloque pasa a ser una banda superior.
+ * Header with a colour block covering a quarter of the surface (01.1, device 4):
+ * the text on the left over Paper and, bleeding to the right edge, a flat Indigo
+ * block with the mark in Paper. On mobile the block becomes a top band.
  */
 export function QuarterHeader(props: Parameters<typeof PageHeader>[0]) {
   return (

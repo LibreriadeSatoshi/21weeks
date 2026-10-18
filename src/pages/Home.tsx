@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* Portada: bloque Mauveine a todo el ancho */}
+      {/* Hero: full-width Mauveine block */}
       <section className="app-mauveine py-64 md:py-96">
         <div className="app-container">
           <Reveal>
@@ -55,7 +55,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cómo funciona */}
+      {/* How it works */}
       <section className="app-container py-64 md:py-96">
         <Reveal>
           <SectionHead num="01" title={t("how.title")} />
@@ -74,7 +74,7 @@ export default function Home() {
         </ol>
       </section>
 
-      {/* Catálogo */}
+      {/* Catalog */}
       <section className="app-container pb-64 md:pb-96">
         <Reveal>
           <SectionHead num="02" title={t("catalog.title")} />
@@ -104,7 +104,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* El mentor en tu terminal */}
+      {/* The mentor in your terminal */}
       <section className="app-ink py-64 md:py-96">
         <div className="app-container">
           <Reveal>

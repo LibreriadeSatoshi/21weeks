@@ -1,25 +1,25 @@
-# Producción en Lightsail: app + MySQL + Caddy (HTTPS automático).
-# Uso: docker compose -f docker-compose.prod.yml up -d --build
-# Variables en .env junto a este fichero (ver deploy/README.md).
+# Production on Lightsail: app + MySQL + Caddy (automatic HTTPS).
+# Usage: docker compose -f docker-compose.prod.yml up -d --build
+# Variables in .env next to this file (see deploy/README.md).
 services:
   app:
     build:
       context: .
       args:
         BASE_PATH: ${BASE_PATH:-/21weeks/}
-        VITE_API_URL: https://${DOMAIN:?define DOMAIN en .env}${BASE_PATH:-/21weeks/}api
+        VITE_API_URL: https://${DOMAIN:?set DOMAIN in .env}${BASE_PATH:-/21weeks/}api
     environment:
       NODE_ENV: production
       PORT: "3000"
       BASE_PATH: ${BASE_PATH:-/21weeks/}
       CORS_ORIGINS: ${CORS_ORIGINS:-https://ismos.xyz}
-      # Acceso privado hasta el lanzamiento (vacío = abierto)
+      # Private access until launch (empty = open)
       SITE_PASSWORD: ${SITE_PASSWORD:-}
       COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
-      DATABASE_URL: mysql://21weeks:${MYSQL_PASSWORD:?define MYSQL_PASSWORD en .env}@db:3306/21weeks
-      AI_BASE_URL: ${AI_BASE_URL:?define AI_BASE_URL en .env}
-      AI_API_KEY: ${AI_API_KEY:?define AI_API_KEY en .env}
-      AI_MODEL_ID: ${AI_MODEL_ID:?define AI_MODEL_ID en .env}
+      DATABASE_URL: mysql://21weeks:${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}@db:3306/21weeks
+      AI_BASE_URL: ${AI_BASE_URL:?set AI_BASE_URL in .env}
+      AI_API_KEY: ${AI_API_KEY:?set AI_API_KEY in .env}
+      AI_MODEL_ID: ${AI_MODEL_ID:?set AI_MODEL_ID in .env}
     depends_on:
       db:
         condition: service_healthy
@@ -27,11 +27,11 @@ services:
 
   db:
     image: mysql:8.4
-    # Sin "ports": MySQL solo es accesible desde la red interna de Docker.
+    # No "ports": MySQL is only reachable from the internal Docker network.
     environment:
       MYSQL_DATABASE: 21weeks
       MYSQL_USER: 21weeks
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?define MYSQL_PASSWORD en .env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
